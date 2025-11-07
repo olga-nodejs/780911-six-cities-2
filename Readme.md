@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
-* Студент: [Olga Tikhonova](https://up.htmlacademy.ru/nodejs-api-individual/2/user/780911).
-* Наставник: `Неизвестно`.
+- Студент: [Olga Tikhonova](https://up.htmlacademy.ru/nodejs-api-individual/2/user/780911).
+- Наставник: [Владислав Поклонский](https://htmlacademy.ru/profile/id2210683).
 
 ---
 
