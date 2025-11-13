@@ -3,6 +3,7 @@ import path from 'node:path';
 import chalk from 'chalk';
 
 import { Command } from './command.interface.js';
+import { generateErrorMessage } from '../../helpers/generateErrorMessage.js';
 
 type PackageJSONConfig = {
   version: string;
@@ -48,11 +49,7 @@ export class VersionCommand implements Command {
 
       console.log(chalk.blue(version));
     } catch (error: unknown) {
-      console.error(chalk.red('Failed to read version from package.json'));
-
-      if (error instanceof Error) {
-        console.error(chalk.red(error.message));
-      }
+      generateErrorMessage(error, 'Failed to read version from package.json');
     }
   }
 }

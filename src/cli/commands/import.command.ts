@@ -3,6 +3,7 @@ import chalk from 'chalk';
 
 import { Command } from './command.interface.js';
 import { TSVFileReader } from '../../lib/TSVFileReader/TSVFileReader.js';
+import { generateErrorMessage } from '../../helpers/generateErrorMessage.js';
 
 export class ImportCommand implements Command {
   public getName(): string {
@@ -22,11 +23,8 @@ export class ImportCommand implements Command {
       reader.read();
       console.log(chalk.green(reader.toOffersArray()));
     } catch (error: unknown) {
+      generateErrorMessage(error, 'Failed to import file');
       console.error(chalk.red('Failed to import file'));
-
-      if (error instanceof Error) {
-        console.error(chalk.red(error.message));
-      }
     }
   }
 }
