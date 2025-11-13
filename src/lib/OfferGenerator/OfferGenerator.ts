@@ -23,6 +23,12 @@ const MAX_GUESTS = 10;
 const MIN_RENTAL_COST = 100;
 const MAX_RENTAL_COST = 100000;
 
+/**
+ * Class responsible for generating mock `Offer` objects
+ * using the provided mock data.
+ * @implements {OfferGeneratorInterface}
+ */
+
 export class OfferGenerator implements OfferGeneratorInterface {
   constructor(private readonly mockData: MockServerData) {}
 

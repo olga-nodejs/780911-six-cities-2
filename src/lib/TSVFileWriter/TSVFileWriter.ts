@@ -2,6 +2,13 @@ import { createWriteStream, WriteStream } from 'node:fs';
 import { FileWriter } from './FileWriter.interface.js';
 import { isNumber } from '../../helpers/common.js';
 
+/**
+ * Class responsible for writing an array of objects to a TSV (tab-separated values) file.
+ * Supports nested objects and arrays up to one level deep.
+ * Arrays are joined with commas, objects are flattened into their values.
+ * @implements {FileWriter}
+ */
+
 export class TSVFileWriter implements FileWriter {
   private stream: WriteStream;
 
