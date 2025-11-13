@@ -4,6 +4,7 @@ import { generateErrorMessage } from '../../helpers/index.js';
 import { OfferGenerator } from '../../lib/OfferGenerator/index.js';
 import { Command } from './command.interface.js';
 import { MockServerData } from '../../types/mockServerData.js';
+import { TSVFileWriter } from '../../lib/TSVFileWriter/TSVFileWriter.js';
 
 export class GenerateCommand implements Command {
   private rawData = {} as MockServerData;
@@ -16,7 +17,7 @@ export class GenerateCommand implements Command {
   private async getData(APIURL: string) {
     try {
       const response = await axios.get(APIURL || GenerateCommand.MOCK_API_URL);
-      console.log(response.data);
+
       this.rawData = response.data;
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -36,9 +37,15 @@ export class GenerateCommand implements Command {
 
       await this.getData(url);
       const offerGenerator = new OfferGenerator(this.rawData);
-      const offer = offerGenerator.generate();
+      const offerArr = [];
+      for (let i = 0; i < offerAmount; i++) {
+        const offer = offerGenerator.generate();
+        offerArr.push(offer);
+      }
+
       console.log({ offerAmount, outputPath });
-      console.log({ offer });
+      const fileWriter = new TSVFileWriter(outputPath);
+      fileWriter.write(offerArr);
     } catch (error: unknown) {
       generateErrorMessage(error, 'Failed to generate mock TSV file');
     }

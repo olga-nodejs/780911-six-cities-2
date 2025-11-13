@@ -23,6 +23,7 @@ export class TSVFileReader implements FileReader {
     if (!this.rawData) {
       throw new Error('File was not read');
     }
+    console.log({ data: this.rawData });
     return this.rawData
       .split('\n')
       .filter((item) => item.length)
@@ -31,20 +32,19 @@ export class TSVFileReader implements FileReader {
         return [
           'title',
           'description',
-          'publication_date',
+          'publicationDate',
           'city',
-          'preview_image',
-          'property_photos',
-          'premium_flag',
+          'previewImage',
+          'propertyPhotos',
           'rating',
-          'property_type',
-          'number_of_rooms',
-          'number_of_guests',
-          'rental_cost',
+          'propertyType',
+          'roomsNumber',
+          'guestsNumber',
+          'rentalCost',
           'features',
           'author',
-          'number_of_comments',
           'coordinates',
+          'premium_flag',
         ].reduce((acc, key, i) => {
           acc[key] = values[i];
           return acc;

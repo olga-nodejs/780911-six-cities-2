@@ -21,7 +21,8 @@ export class ImportCommand implements Command {
 
       const reader = new TSVFileReader(filePath);
       reader.read();
-      console.log(chalk.green(reader.toOffersArray()));
+      const offers = reader.toOffersArray();
+      offers.forEach((offer) => console.log(offer));
     } catch (error: unknown) {
       generateErrorMessage(error, 'Failed to import file');
       console.error(chalk.red('Failed to import file'));
