@@ -2,8 +2,8 @@ import path from 'node:path';
 import chalk from 'chalk';
 
 import { Command } from './command.interface.js';
-import { TSVFileReader } from '../../lib/TSVFileReader/TSVFileReader.js';
-import { generateErrorMessage } from '../../helpers/generateErrorMessage.js';
+import { TSVFileReader } from '../../lib/TSVFileReader/index.js';
+import { generateErrorMessage } from '../../helpers/index.js';
 
 export class ImportCommand implements Command {
   public getName(): string {
