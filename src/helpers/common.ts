@@ -35,3 +35,27 @@ export const getDaysAgo = (daysAgo: number): Date => {
 
 export const isNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
+
+export const createOffer = (line: string) => {
+  const values = line.split('\t');
+  return [
+    'title',
+    'description',
+    'publicationDate',
+    'city',
+    'previewImage',
+    'propertyPhotos',
+    'rating',
+    'propertyType',
+    'roomsNumber',
+    'guestsNumber',
+    'rentalCost',
+    'features',
+    'author',
+    'coordinates',
+    'premium_flag',
+  ].reduce((acc, key, i) => {
+    acc[key] = values[i];
+    return acc;
+  }, {} as Record<string, string>);
+};
