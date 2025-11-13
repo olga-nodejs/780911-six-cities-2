@@ -11,3 +11,5 @@ coverage
 *.log
 .prettierrc.json
 *.local
+
+test.tsv
