@@ -37,7 +37,7 @@ export const isNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
 
 export const createOffer = (line: string) => {
-  const values = line.split('\t');
+  const values = line.trimEnd().split('\t');
   return [
     'title',
     'description',
@@ -58,4 +58,35 @@ export const createOffer = (line: string) => {
     acc[key] = values[i];
     return acc;
   }, {} as Record<string, string>);
+};
+
+export function isPlainObject(
+  value: unknown
+): value is Record<string, unknown> {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    !Array.isArray(value) &&
+    !(value instanceof Date)
+  );
+}
+
+export const valueToTSVString = (value: unknown) => {
+  if (Array.isArray(value)) {
+    return value.join();
+  }
+
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+
+  if (isPlainObject(value)) {
+    return Object.values(value).join();
+  }
+
+  if (isNumber(value) || typeof value === 'boolean') {
+    return value.toString();
+  }
+
+  return value as string;
 };

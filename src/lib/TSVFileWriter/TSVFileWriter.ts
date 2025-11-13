@@ -1,6 +1,6 @@
 import { createWriteStream, WriteStream } from 'node:fs';
 import { FileWriter } from './FileWriter.interface.js';
-import { isNumber } from '../../helpers/common.js';
+import { valueToTSVString } from '../../helpers/common.js';
 
 /**
  * Class responsible for writing an array of objects to a TSV (tab-separated values) file.
@@ -25,37 +25,10 @@ export class TSVFileWriter implements FileWriter {
       console.error('Error writing file:', err);
     });
 
-    console.log({ data });
     data.forEach((item) => {
       const values = Object.values(item);
-      const row = values
-        .map((value) => {
-          console.log({ value });
-          if (Array.isArray(value)) {
-            return value.join();
-          }
-
-          if (value instanceof Date) {
-            return value.toISOString();
-          }
-
-          if (
-            typeof value === 'object' &&
-            !Array.isArray(value) &&
-            value !== null
-          ) {
-            return Object.values(value).join();
-          }
-
-          if (isNumber(value) || typeof value === 'boolean') {
-            return value.toString();
-          }
-          console.log({ value });
-          return value;
-        })
-        .join('\t');
+      const row = values.map((value) => valueToTSVString(value)).join('\t');
       this.stream.write(`${row}\n`);
-      console.log({ row });
     });
 
     this.stream.end(() => {
