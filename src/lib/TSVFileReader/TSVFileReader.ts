@@ -4,7 +4,6 @@ import { FileReader } from './FileReader.interface.js';
 
 export class TSVFileReader implements FileReader {
   private rawData: string = '';
-  //  private rowsData: Array<Array<string>>;
 
   constructor(private readonly path: string) {}
 
