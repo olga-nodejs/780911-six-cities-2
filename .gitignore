@@ -10,3 +10,4 @@
 coverage
 *.log
 .prettierrc.json
+*.local
