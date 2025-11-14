@@ -1,0 +1,173 @@
+{
+  "api": {
+    "descriptions": [
+      "A cozy apartment located in the heart with stunning views of the Eiffel Tower. Perfect for couples and solo travelers.",
+      "Modern loft apartment with high ceilings and plenty of light. Great for remote work or a city break.",
+      "Stay in a beautiful 3-story townhouse close to the iconic Grand Place. Ideal for families and groups.",
+      "Enjoy your stay in a scenic apartment overlooking canals. Walkable distance to cafes and museums.",
+      "Comfortable and modern hotel room near the city center. Includes breakfast and daily cleaning service.",
+      "Elegant hotel suite featuring spacious interiors and top amenities. Perfect for business trips or luxury getaways.",
+      "Affordable private room in a shared flat near city attractions. Includes workspace and washer access.",
+      "Spacious family home with private garden and modern kitchen. Close to public transport and schools."
+    ],
+    "titles": [
+      "Charming Studio near central railway station",
+      "Spacious Loft in historic center",
+      "Elegant Townhouse near exebition center",
+      "Apartment in heart of the city",
+      "Modern Hotel Room",
+      "Luxury Suite in Center",
+      "Bright Room in Shared Flat",
+      "Family Home with Garden"
+    ],
+    "cities": [
+      "Paris",
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
+    ],
+    "preview_images": [
+      "/images/paris-studio.jpg",
+      "/images/cologne-loft.jpg",
+      "/images/brussels-townhouse.jpg",
+      "/images/amsterdam-canal.jpg",
+      "/images/hamburg-hotel.jpg",
+      "/images/dusseldorf-suite.jpg",
+      "/images/brussels-room.jpg",
+      "/images/hamburg-house.jpg"
+    ],
+    "property_photos": [
+      [
+        "/images/paris-studio-1.jpg",
+        "/images/paris-studio-2.jpg",
+        "/images/paris-studio-3.jpg"
+      ],
+      ["/images/cologne-loft-1.jpg", "/images/cologne-loft-2.jpg"],
+      [
+        "/images/brussels-townhouse-1.jpg",
+        "/images/brussels-townhouse-2.jpg",
+        "/images/brussels-townhouse-3.jpg"
+      ],
+      ["/images/amsterdam-canal-1.jpg", "/images/amsterdam-canal-2.jpg"],
+      ["/images/hamburg-hotel-1.jpg", "/images/hamburg-hotel-2.jpg"],
+      [
+        "/images/dusseldorf-suite-1.jpg",
+        "/images/dusseldorf-suite-2.jpg",
+        "/images/dusseldorf-suite-3.jpg"
+      ],
+      ["/images/brussels-room-1.jpg"],
+      [
+        "/images/hamburg-house-1.jpg",
+        "/images/hamburg-house-2.jpg",
+        "/images/hamburg-house-3.jpg"
+      ]
+    ],
+    "property_types": ["apartment", "house", "hotel", "room"],
+    "features": [
+      "Breakfast",
+      "Air conditioning",
+      "Laptop",
+      "friendly workspace",
+      "Baby seat",
+      "Washer",
+      "Towels",
+      "Fridge"
+    ],
+    "authors": [
+      {
+        "name": "Sophie Martin",
+        "email": "sophie.martin@example.com",
+        "image": "/avatars/sophie.jpg",
+        "password": "securepassword123"
+      },
+      {
+        "name": "Lukas Weber",
+        "email": "lukas.weber@example.com",
+        "image": "/avatars/lukas.jpg",
+        "password": "password456"
+      },
+      {
+        "name": "Marie Dupont",
+        "email": "marie.dupont@example.com",
+        "image": "/avatars/marie.jpg",
+        "password": "securepass321"
+      },
+      {
+        "name": "Jan de Vries",
+        "email": "jan.devries@example.com",
+        "image": "/avatars/jan.jpg",
+        "password": "amsterdam123"
+      },
+      {
+        "name": "Katrin Müller",
+        "email": "katrin.mueller@example.com",
+        "image": "/avatars/katrin.jpg",
+        "password": "hotelpass789"
+      },
+      {
+        "name": "Sebastian Koch",
+        "email": "sebastian.koch@example.com",
+        "image": "/avatars/sebastian.jpg",
+        "password": "luxsuite999"
+      },
+      {
+        "name": "Thomas Laurent",
+        "email": "thomas.laurent@example.com",
+        "image": "/avatars/thomas.jpg",
+        "password": "flatroom123"
+      },
+      {
+        "name": "Anna Schmidt",
+        "email": "anna.schmidt@example.com",
+        "image": "/avatars/anna.jpg",
+        "password": "familyhome456"
+      }
+    ],
+    "coordinates": {
+      "Paris": [
+        [48.85661, 2.351499],
+        [48.8601, 2.3335],
+        [48.8534, 2.3488],
+        [48.8649, 2.3522],
+        [48.8493, 2.3701]
+      ],
+      "Cologne": [
+        [50.938361, 6.959974],
+        [50.9408, 6.9572],
+        [50.9365, 6.9679],
+        [50.9432, 6.9497],
+        [50.9341, 6.9724]
+      ],
+      "Brussels": [
+        [50.846557, 4.351697],
+        [50.8492, 4.3563],
+        [50.8439, 4.3478],
+        [50.8504, 4.3589],
+        [50.8417, 4.3541]
+      ],
+      "Amsterdam": [
+        [52.370216, 4.895168],
+        [52.3728, 4.9011],
+        [52.3667, 4.8894],
+        [52.3742, 4.9125],
+        [52.3685, 4.8832]
+      ],
+      "Hamburg": [
+        [53.550341, 10.000654],
+        [53.5539, 9.9947],
+        [53.5481, 10.0062],
+        [53.5567, 9.9889],
+        [53.5432, 10.0115]
+      ],
+      "Dusseldorf": [
+        [51.225402, 6.776314],
+        [51.2279, 6.7812],
+        [51.2221, 6.7718],
+        [51.2293, 6.7857],
+        [51.2198, 6.7674]
+      ]
+    }
+  }
+}
