@@ -42,8 +42,8 @@ export class PinoLogger implements Logger {
     });
   }
 
-  warn(mergingObject: object, message: string, ...args: unknown[]): void {
-    this.logger.warn(mergingObject, message, ...args);
+  warn(message: string, ...args: unknown[]): void {
+    this.logger.warn(message, ...args);
   }
 
   info(message: string, ...args: unknown[]): void {
@@ -54,7 +54,7 @@ export class PinoLogger implements Logger {
     this.logger.error(message, error, ...args);
   }
 
-  debug(mergingObject: object, message: string, ...args: unknown[]): void {
-    this.logger.debug(mergingObject, message, ...args);
+  debug(message: string, ...args: unknown[]): void {
+    this.logger.debug(message, ...args);
   }
 }
