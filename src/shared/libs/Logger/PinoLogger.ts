@@ -4,15 +4,14 @@ import {
   type Logger as PinoInstance,
   TransportTargetOptions,
 } from 'pino';
-import dotenv from 'dotenv';
+
 import { Logger } from './Logger.interface.js';
 import { getCurrentDirectory } from '../../helpers/common.js';
-
-dotenv.config();
+import { NodeEnv } from '../../types/nodeEnv.js';
 
 export class PinoLogger implements Logger {
   private readonly logger: PinoInstance;
-  constructor() {
+  constructor(nodeEnv: NodeEnv) {
     const transportFile = path.join(
       getCurrentDirectory(import.meta.url),
       '../../../../',
@@ -30,7 +29,7 @@ export class PinoLogger implements Logger {
       },
     ];
 
-    if (process.env.NODE_ENV === 'production') {
+    if (nodeEnv) {
       targets.push({
         target: 'pino/file',
         options: { destination: transportFile },
