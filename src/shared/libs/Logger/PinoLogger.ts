@@ -23,7 +23,7 @@ export class PinoLogger implements Logger {
         target: 'pino-pretty',
         options: {
           colorize: true,
-          translateTime: 'SYS:dd-mm-yyyy hh:mm:ss TT',
+          translateTime: 'SYS:dd-mm-yyyy HH:MM:ss.l',
         },
         level: 'info',
       },
