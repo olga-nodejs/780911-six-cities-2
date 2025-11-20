@@ -1,14 +1,17 @@
+import 'reflect-metadata';
 import path from 'node:path';
 import {
   pino,
   type Logger as PinoInstance,
   TransportTargetOptions,
 } from 'pino';
+import { injectable } from 'inversify';
 
 import { Logger } from './Logger.interface.js';
 import { getCurrentDirectory } from '../../helpers/common.js';
 import { NodeEnv } from '../../types/nodeEnv.js';
 
+@injectable()
 export class PinoLogger implements Logger {
   private readonly logger: PinoInstance;
   constructor(nodeEnv: NodeEnv) {
@@ -42,6 +45,8 @@ export class PinoLogger implements Logger {
         targets,
       },
     });
+
+    this.logger.info('Logger created');
   }
 
   warn(message: string, ...args: unknown[]): void {
