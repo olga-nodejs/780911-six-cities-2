@@ -1,4 +1,4 @@
-import { Offer } from '../../types/offer.js';
+import { Offer } from '../../types/index.js';
 
 export interface OfferGenerator {
   generate(): Offer;

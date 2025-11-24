@@ -3,7 +3,7 @@ import axios from 'axios';
 import { generateErrorMessage } from '../../shared/helpers/index.js';
 import { OfferGenerator } from '../../shared/libs/OfferGenerator/index.js';
 import { Command } from './command.interface.js';
-import { MockServerData } from '../../shared/types/mockServerData.js';
+import { MockServerData } from '../../shared/types/index.js';
 import { TSVFileWriter } from '../../shared/libs/TSVFileWriter/index.js';
 
 export class GenerateCommand implements Command {

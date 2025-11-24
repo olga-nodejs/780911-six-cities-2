@@ -1,12 +1,12 @@
 import { OfferGenerator as OfferGeneratorInterface } from './OfferGenerator.interface.js';
-import { Offer } from '../../types/offer.js';
+import { Offer } from '../../types/index.js';
 import {
   getDaysAgo,
   getRandomItem,
   generateRandomValue,
   getRandomItems,
 } from '../../helpers/common.js';
-import { MockServerData } from '../../types/mockServerData.js';
+import { MockServerData } from '../../types/index.js';
 
 const enum WeekDay {
   First = 1,

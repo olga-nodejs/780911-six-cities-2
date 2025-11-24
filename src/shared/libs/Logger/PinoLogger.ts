@@ -9,7 +9,7 @@ import { injectable } from 'inversify';
 
 import { Logger } from './Logger.interface.js';
 import { getCurrentDirectory } from '../../helpers/common.js';
-import { NodeEnv } from '../../types/nodeEnv.js';
+import { NodeEnv } from '../../types/index.js';
 
 @injectable()
 export class PinoLogger implements Logger {

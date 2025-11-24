@@ -5,11 +5,11 @@ import dotenv from 'dotenv';
 import { Logger, PinoLogger } from './shared/libs/Logger/index.js';
 import { RestApplication } from './rest/index.js';
 
-import { Component } from './shared/types/component.enum.js';
+import { Component } from './shared/types/index.js';
 import { Config } from './shared/libs/config/config.interface.js';
 import { RestSchema } from './shared/libs/config/rest.schema.js';
 import { RestConfig } from './shared/libs/config/rest.config.js';
-import { NodeEnv } from './shared/types/nodeEnv.js';
+import { NodeEnv } from './shared/types/index.js';
 
 dotenv.config();
 async function bootstrap() {

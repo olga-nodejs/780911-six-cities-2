@@ -3,7 +3,7 @@ import { inject, injectable } from 'inversify';
 import { Config } from './config.interface.js';
 import { Logger } from '../Logger/index.js';
 import { configRestSchema, RestSchema } from './rest.schema.js';
-import { Component } from '../../types/component.enum.js';
+import { Component } from '../../types/index.js';
 
 @injectable()
 export class RestConfig implements Config<RestSchema> {

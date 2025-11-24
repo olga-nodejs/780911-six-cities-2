@@ -1,7 +1,7 @@
 import { RestApplicationInterface } from './rest.interface.js';
 import { type Logger } from '../shared/libs/Logger/index.js';
 import { inject, injectable } from 'inversify';
-import { Component } from '../shared/types/component.enum.js';
+import { Component } from '../shared/types/index.js';
 import { Config } from '../shared/libs/config/config.interface.js';
 import { RestSchema } from '../shared/libs/config/rest.schema.js';
 
