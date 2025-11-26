@@ -32,5 +32,6 @@ export class RestApplication implements RestApplicationInterface {
     this.logger.info('Application initialization started');
     this.logger.info('DB initialization started');
     await this.initDB();
+    this.logger.info('DB initialization completed');
   }
 }
