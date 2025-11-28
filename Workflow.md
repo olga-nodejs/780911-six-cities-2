@@ -103,12 +103,12 @@ npm run ts ./src/main.cli.ts -- <команда> [аргументы]
 
 Доступные команды
 
-| Command                                                               | Functionality                                  | Command example                                                                                      |
-| --------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| --help                                                                | Выводит справочную информацию по CLI.          | npm run ts ./src/main.cli.ts -- --help                                                               |
-| --version                                                             | Выводит номер версии утилиты.                  | npm run ts ./src/main.cli.ts -- --version                                                            |
-| --import <filepath> <dblogin> <dbpassword> <dbhost> <dbPort> <dbName> | Импортирует данные из TSV-файла в базу данных. | npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test localhost 27017 six-cities |
-| --generate <n> <filepath> <url>                                       | Генерирует mock TSV-файл.                      | npm run ts ./src/main.cli.ts -- --generate 100 ./mocks/generated-data.tsv http://localhost:3000      |
+| Command                                                               | Functionality                                  | Command example                                                                                              |
+| --------------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| --help                                                                | Выводит справочную информацию по CLI.          | npm run ts ./src/main.cli.ts -- --help                                                                       |
+| --version                                                             | Выводит номер версии утилиты.                  | npm run ts ./src/main.cli.ts -- --version                                                                    |
+| --import <filepath> <dblogin> <dbpassword> <dbhost> <dbPort> <dbName> | Импортирует данные из TSV-файла в базу данных. | npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test localhost 27017 six-cities salt123 |
+| --generate <n> <filepath> <url>                                       | Генерирует mock TSV-файл.                      | npm run ts ./src/main.cli.ts -- --generate 100 ./mocks/generated-data.tsv http://localhost:3000              |
 
 ### Импорт данных **--import**
 
@@ -123,6 +123,7 @@ npm run ts ./src/main.cli.ts -- <команда> [аргументы]
 | dbhost| хост (например, localhost)|
 | dbPort| порт базы данных|
 | dbName| имя базы данных|
+| dbName| salt|
 
 ### Генерация данных **--generate**
 
