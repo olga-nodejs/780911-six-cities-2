@@ -1,7 +1,8 @@
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import chalk from 'chalk';
 import * as crypto from 'node:crypto';
+import chalk from 'chalk';
+import { Logger } from '../libs/Logger/index.js';
 
 export const generateErrorMessage = (error: unknown, message: string) => {
   console.error(chalk.red(message));
@@ -48,6 +49,7 @@ export const createOffer = (line: string) => {
     'city',
     'previewImage',
     'propertyPhotos',
+    'premium_flag',
     'rating',
     'propertyType',
     'roomsNumber',
@@ -56,7 +58,6 @@ export const createOffer = (line: string) => {
     'features',
     'userId',
     'coordinates',
-    'premium_flag',
   ].reduce((acc, key, i) => {
     acc[key] = values[i];
     return acc;
@@ -110,4 +111,21 @@ export const getMongoURI = (
 export const createSHA256 = (line: string, salt: string): string => {
   const shaHasher = crypto.createHmac('sha256', salt);
   return shaHasher.update(line).digest('hex');
+};
+
+export const requireArgs = (logger: Logger, args: Record<string, unknown>) => {
+  const missing = Object.entries(args)
+    .filter(
+      ([_, value]) => value === undefined || value === null || value === ''
+    )
+    .map(([key]) => key);
+
+  if (missing.length > 0) {
+    logger.error(
+      `Missing required arguments: ${missing.join(', ')}`,
+      new Error(`Missing required arguments: ${missing.join(', ')}`)
+    );
+
+    throw new Error(`Missing required argument ${missing.join()}`);
+  }
 };
