@@ -94,7 +94,6 @@ export const createMockOffer = (line: string): MockOffer => {
     coordinates: coordinates.split(',').map(Number) as [number, number],
   };
 
-  console.log({ offer });
   return offer;
 };
 
