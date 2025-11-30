@@ -38,6 +38,7 @@
     "npm": ">=8"
   },
   "dependencies": {
+    "@typegoose/typegoose": "^11.5.0",
     "axios": "^1.13.2",
     "chalk": "^5.6.2",
     "convict": "^6.2.4",
@@ -45,6 +46,7 @@
     "dotenv": "^17.2.3",
     "inversify": "^7.10.4",
     "json-server": "^0.17.3",
+    "mongoose": "^7.5.3",
     "pino": "^8.15.1",
     "reflect-metadata": "^0.2.2"
   }

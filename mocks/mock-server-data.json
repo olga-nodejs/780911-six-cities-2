@@ -68,14 +68,13 @@
     "features": [
       "Breakfast",
       "Air conditioning",
-      "Laptop",
-      "friendly workspace",
+      "Laptop friendly workspace",
       "Baby seat",
       "Washer",
       "Towels",
       "Fridge"
     ],
-    "authors": [
+    "users": [
       {
         "name": "Sophie Martin",
         "email": "sophie.martin@example.com",

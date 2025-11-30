@@ -1,6 +1,17 @@
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import * as crypto from 'node:crypto';
 import chalk from 'chalk';
+import { Logger } from '../libs/Logger/index.js';
+
+import {
+  City,
+  MockOffer,
+  User,
+  PropertyType,
+  PropertyFeature,
+  MockUser,
+} from '../types/index.js';
 
 export const generateErrorMessage = (error: unknown, message: string) => {
   console.error(chalk.red(message));
@@ -38,28 +49,52 @@ export const getDaysAgo = (daysAgo: number): Date => {
 export const isNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
 
-export const createOffer = (line: string) => {
-  const values = line.trimEnd().split('\t');
-  return [
-    'title',
-    'description',
-    'publicationDate',
-    'city',
-    'previewImage',
-    'propertyPhotos',
-    'rating',
-    'propertyType',
-    'roomsNumber',
-    'guestsNumber',
-    'rentalCost',
-    'features',
-    'author',
-    'coordinates',
-    'premium_flag',
-  ].reduce((acc, key, i) => {
-    acc[key] = values[i];
+const createMockUser = (arr: Array<string>): User => {
+  const keys = ['name', 'email', 'image', 'password'] as const;
+  return keys.reduce((acc, key, index) => {
+    acc[key] = arr[index];
     return acc;
-  }, {} as Record<string, string>);
+  }, {} as Record<(typeof keys)[number], string>);
+};
+export const createMockOffer = (line: string): MockOffer => {
+  const values = line.trimEnd().split('\t');
+  const [
+    title,
+    description,
+    publicationDate,
+    city,
+    previewImage,
+    propertyPhotos,
+    premiumFlag,
+    rating,
+    propertyType,
+    roomsNumber,
+    guestsNumber,
+    rentalCost,
+    features,
+    user,
+    coordinates,
+  ] = values;
+
+  const offer = {
+    title,
+    description,
+    publicationDate: new Date(publicationDate),
+    city: city as City,
+    previewImage,
+    propertyPhotos: propertyPhotos.split(','),
+    premiumFlag: premiumFlag === 'true',
+    rating: Number(rating),
+    propertyType: propertyType as PropertyType,
+    roomsNumber: Number(roomsNumber),
+    guestsNumber: Number(guestsNumber),
+    rentalCost: Number(rentalCost),
+    features: features.split(',') as PropertyFeature[],
+    user: createMockUser(user.split(',')) as MockUser,
+    coordinates: coordinates.split(',').map(Number) as [number, number],
+  };
+
+  return offer;
 };
 
 export function isPlainObject(
@@ -95,3 +130,35 @@ export const valueToTSVString = (value: unknown) => {
 
 export const getCurrentDirectory = (path: URL | string) =>
   dirname(fileURLToPath(path));
+
+export const getMongoURI = (
+  login: string,
+  password: string,
+  host: string,
+  port: string,
+  dbName: string
+) =>
+  `mongodb://${login}:${password}@${host}:${port}/${dbName}?authSource=admin`;
+// mongodb://admin:mypassword@example.com:27017/?authSource=admin
+
+export const createSHA256 = (line: string, salt: string): string => {
+  const shaHasher = crypto.createHmac('sha256', salt);
+  return shaHasher.update(line).digest('hex');
+};
+
+export const requireArgs = (logger: Logger, args: Record<string, unknown>) => {
+  const missing = Object.entries(args)
+    .filter(
+      ([_, value]) => value === undefined || value === null || value === ''
+    )
+    .map(([key]) => key);
+
+  if (missing.length > 0) {
+    logger.error(
+      `Missing required arguments: ${missing.join(', ')}`,
+      new Error(`Missing required arguments: ${missing.join(', ')}`)
+    );
+
+    throw new Error(`Missing required argument ${missing.join()}`);
+  }
+};

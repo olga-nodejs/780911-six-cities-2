@@ -1,9 +1,9 @@
-import { City } from './city.js';
-import { PropertyType } from './propertyType.js';
-import { User } from './user.js';
-import { PropertyFeature } from './propertyFeature.js';
+import { City } from './city.enum.js';
+import { PropertyType } from './propertyType.enum.js';
+import { PropertyFeature } from './propertyFeature.enum.js';
+import { MockUser } from './user.js';
 
-export type Offer = {
+type BaseOffer = {
   title: string;
   description: string;
   publicationDate: Date;
@@ -18,6 +18,12 @@ export type Offer = {
   guestsNumber: number;
   rentalCost: number;
   features: Array<PropertyFeature>;
-  author: User;
   coordinates: [number, number];
+};
+
+export type MockOffer = BaseOffer & {
+  user: MockUser;
+};
+export type Offer = BaseOffer & {
+  userId: string;
 };

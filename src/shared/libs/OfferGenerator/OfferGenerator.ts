@@ -1,12 +1,12 @@
 import { OfferGenerator as OfferGeneratorInterface } from './OfferGenerator.interface.js';
-import { Offer } from '../../types/offer.js';
+import { MockOffer } from '../../types/index.js';
 import {
   getDaysAgo,
   getRandomItem,
   generateRandomValue,
   getRandomItems,
 } from '../../helpers/common.js';
-import { MockServerData } from '../../types/mockServerData.js';
+import { MockServerData } from '../../types/index.js';
 
 const enum WeekDay {
   First = 1,
@@ -42,8 +42,9 @@ const enum RentalCost {
 export class OfferGenerator implements OfferGeneratorInterface {
   constructor(private readonly mockData: MockServerData) {}
 
-  generate(): Offer {
+  generate(): MockOffer {
     const city = getRandomItem(this.mockData.cities);
+
     return {
       title: getRandomItem(this.mockData.titles),
       description: getRandomItem(this.mockData.descriptions),
@@ -53,15 +54,15 @@ export class OfferGenerator implements OfferGeneratorInterface {
       city,
       previewImage: getRandomItem(this.mockData.preview_images),
       propertyPhotos: getRandomItem(this.mockData.property_photos),
+      premiumFlag: getRandomItem([true, false]),
       rating: generateRandomValue(Rating.Min, Rating.Max),
       propertyType: getRandomItem(this.mockData.property_types),
       roomsNumber: generateRandomValue(Rooms.Min, Rooms.Max),
       guestsNumber: generateRandomValue(Guests.Min, Guests.Max),
       rentalCost: generateRandomValue(RentalCost.Min, RentalCost.Max),
       features: getRandomItems(this.mockData.features),
-      author: getRandomItem(this.mockData.authors),
+      user: getRandomItem(this.mockData.users),
       coordinates: getRandomItem(this.mockData.coordinates[city]),
-      premiumFlag: getRandomItem([true, false]),
     };
   }
 }

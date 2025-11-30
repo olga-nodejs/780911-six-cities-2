@@ -9,12 +9,12 @@ import { injectable } from 'inversify';
 
 import { Logger } from './Logger.interface.js';
 import { getCurrentDirectory } from '../../helpers/common.js';
-import { NodeEnv } from '../../types/nodeEnv.js';
+import { NodeEnv } from '../../types/index.js';
 
 @injectable()
 export class PinoLogger implements Logger {
   private readonly logger: PinoInstance;
-  constructor(nodeEnv: NodeEnv) {
+  constructor(nodeEnv: NodeEnv = 'developement') {
     const transportFile = path.join(
       getCurrentDirectory(import.meta.url),
       '../../../../',
@@ -32,7 +32,7 @@ export class PinoLogger implements Logger {
       },
     ];
 
-    if (nodeEnv) {
+    if (nodeEnv === 'production') {
       targets.push({
         target: 'pino/file',
         options: { destination: transportFile },

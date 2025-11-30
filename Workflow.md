@@ -91,3 +91,45 @@ mock api server доступен по ссылке http://localhost:4000/offers
 ### Остальное
 
 Все остальные файлы в проекте являются служебными. Пожалуйста, не удаляйте и не изменяйте их самовольно. Только если того требует задание или наставник.
+
+## CLI интерфейс
+
+Проект содержит встроенный CLI-инструмент для импорта данных, генерации mock-файлов и вывода служебной информации.  
+CLI запускается через сценарий:
+
+```bash
+npm run ts ./src/main.cli.ts -- <команда> [аргументы]
+```
+
+Доступные команды
+
+| Command                                                               | Functionality                                  | Command example                                                                                              |
+| --------------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| --help                                                                | Выводит справочную информацию по CLI.          | npm run ts ./src/main.cli.ts -- --help                                                                       |
+| --version                                                             | Выводит номер версии утилиты.                  | npm run ts ./src/main.cli.ts -- --version                                                                    |
+| --import <filepath> <dblogin> <dbpassword> <dbhost> <dbPort> <dbName> | Импортирует данные из TSV-файла в базу данных. | npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test localhost 27017 six-cities salt123 |
+| --generate <n> <filepath> <url>                                       | Генерирует mock TSV-файл.                      | npm run ts ./src/main.cli.ts -- --generate 100 ./mocks/generated-data.tsv http://localhost:3000              |
+
+### Импорт данных **--import**
+
+Импортирует данные из TSV-файла в базу данных.
+
+Параметры:
+|argument | argument description |
+|-------|---------|
+|filepath| путь к TSV файлу|
+| dblogin| логин для подключения к БД|
+| dbpassword| пароль|
+| dbhost| хост (например, localhost)|
+| dbPort| порт базы данных|
+| dbName| имя базы данных|
+| dbName| salt|
+
+### Генерация данных **--generate**
+
+Параметры:
+|argument | argument description |
+|-------|---------|
+| n | количество записей |
+| filepath | путь, куда сохранить сгенерированный файл |
+| url | url для загрузки данных (например, API или источник моков) |
