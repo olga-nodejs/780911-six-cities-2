@@ -26,8 +26,13 @@ export class DefaultOfferService implements OfferService {
     return res;
   }
 
-  public async find() {
-    return this.offerModel.find().populate('userId').exec();
+  public async find(limit = 60) {
+    return this.offerModel
+      .find()
+      .sort({ publicationDate: -1 })
+      .limit(limit)
+      .populate('userId')
+      .exec();
   }
 
   public async findById(offerId: string) {
