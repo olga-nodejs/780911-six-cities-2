@@ -9,6 +9,7 @@ import { OfferEntity } from './offer.entity.js';
 import { CreateOfferDTO } from './dto/create-offer.dto.js';
 import { OfferService } from './offer-service.interface.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
+import { CommentEntity } from '../comment/comment.entity.js';
 
 //TODO: update imports in index
 @injectable()
@@ -16,7 +17,9 @@ export class DefaultOfferService implements OfferService {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.OfferModel)
-    private readonly offerModel: types.ModelType<OfferEntity>
+    private readonly offerModel: types.ModelType<OfferEntity>,
+    @inject(Component.CommentModel)
+    private readonly commentModel: types.ModelType<CommentEntity>
   ) {}
 
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
@@ -49,5 +52,17 @@ export class DefaultOfferService implements OfferService {
 
   public async deleteById(offerId: string) {
     return this.offerModel.findByIdAndDelete(offerId).exec();
+  }
+
+  public async findComments(offerId: string) {
+    const offer = await this.offerModel.findById(offerId).exec();
+
+    if (!offer) {
+      throw new Error(`Offer with id ${offerId} not found`);
+    }
+    return this.commentModel
+      .find({ _id: { $in: offer.comments } })
+      .populate('userId') //TODO: how to get user data? Currently it gives only id
+      .exec();
   }
 }

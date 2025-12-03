@@ -3,8 +3,10 @@ import {
   getModelForClass,
   prop,
   modelOptions,
+  Ref,
 } from '@typegoose/typegoose';
 import { Comment } from '../../types/index.js';
+import { UserEntity } from '../user/index.js';
 
 @modelOptions({
   schemaOptions: {
@@ -22,12 +24,19 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public rating!: number;
 
+  @prop({
+    ref: UserEntity,
+    required: true,
+  })
+  public userId!: Ref<UserEntity>;
+
   constructor(commentData: Comment) {
     super();
-    const { text, publicationDate, rating } = commentData;
+    const { text, publicationDate, rating, userId } = commentData;
     this.text = text;
     this.publicationDate = publicationDate;
     this.rating = rating;
+    this.userId = userId as unknown as Ref<UserEntity>;
   }
 }
 
