@@ -35,7 +35,7 @@ export class DefaultOfferService implements OfferService {
   public async find(limit = DEFAULT_OFFER_COUNT) {
     return this.offerModel
       .find()
-      .sort({ publicationDate: -1 })
+      .sort({ publicationDate: SortType.Down })
       .limit(limit)
       .populate('userId')
       .exec();
@@ -74,18 +74,6 @@ export class DefaultOfferService implements OfferService {
       .sort({ createdAt: SortType.Down })
       .limit(limit)
       .populate(['userId'])
-      .exec();
-  }
-
-  public async incCommentCount(
-    offerId: string
-  ): Promise<DocumentType<OfferEntity> | null> {
-    return this.offerModel
-      .findByIdAndUpdate(offerId, {
-        $inc: {
-          commentCount: 1,
-        },
-      })
       .exec();
   }
 }
