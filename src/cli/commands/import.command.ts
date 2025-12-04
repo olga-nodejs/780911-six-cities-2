@@ -22,6 +22,9 @@ import {
   DefaultUserService,
   UserModel,
 } from '../../shared/modules/user/index.js';
+// import { CommentService } from '../../shared/modules/comment/comment-service.interface.js';
+// import { DefaultCommentService } from '../../shared/modules/comment/default-comment.service.js';
+// import { CommentModel } from '../../shared/modules/comment/comment.entity.js';
 
 dotenv.config();
 
@@ -31,6 +34,7 @@ export class ImportCommand implements Command {
   private salt!: string;
   private userService: UserService;
   private jobs: Promise<unknown>[] = [];
+  // private commentService: CommentService;
 
   private async createOffer(dto: CreateOfferDTO) {
     const newOffer = await this.offerService.create(dto);
@@ -49,7 +53,16 @@ export class ImportCommand implements Command {
     this.onImportedLine = this.onImportedLine.bind(this);
     this.onCompleteImport = this.onCompleteImport.bind(this);
     this.userService = new DefaultUserService(this.logger, UserModel);
-    this.offerService = new DefaultOfferService(this.logger, OfferModel);
+    this.offerService = new DefaultOfferService(
+      this.logger,
+      OfferModel
+      // CommentModel
+    );
+    // this.commentService = new DefaultCommentService(
+    //   this.logger,
+    //   CommentModel,
+    //   OfferModel
+    // );
   }
 
   public getName(): string {

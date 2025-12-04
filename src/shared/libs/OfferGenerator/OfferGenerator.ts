@@ -33,6 +33,8 @@ const enum RentalCost {
   Max = 100000,
 }
 
+const INITIAL_COMMENT_COUNT = 0;
+
 /**
  * Class responsible for generating mock `Offer` objects
  * using the provided mock data.
@@ -63,6 +65,7 @@ export class OfferGenerator implements OfferGeneratorInterface {
       features: getRandomItems(this.mockData.features),
       user: getRandomItem(this.mockData.users),
       coordinates: getRandomItem(this.mockData.coordinates[city]),
+      commentCount: INITIAL_COMMENT_COUNT,
     };
   }
 }
