@@ -1,5 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
+import { Types } from 'mongoose';
 
 import { Logger } from '../../libs/Logger/index.js';
 
@@ -18,25 +19,32 @@ export class DefaultCommentService implements CommentService {
     @inject(Component.OfferModel)
     private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
-  // TODO: is not yet clear how to keep connection offer <=> comments.
-  // so comment count is WIP
   // TODO: comment creation is done by logged users only
 
-  public async incCommentCount(offerId: string): Promise<void> {
-    await this.offerModel
-      .findByIdAndUpdate(offerId, {
-        $inc: {
-          commentCount: 1,
-        },
-      })
+  public async updateCommentCount(offerId: string): Promise<void> {
+    const commentCount = await this.commentModel
+      .aggregate([
+        { $match: { offerId: new Types.ObjectId(offerId) } },
+        { $count: 'commentCount' },
+      ])
       .exec();
+
+    await this.offerModel.findByIdAndUpdate(offerId, {
+      $set: { commentCount },
+    });
   }
 
   private async updateOfferRating(offerId: string) {
-    const comments = await this.commentModel.find({ offerId });
-    const sum = comments.reduce((acc, c) => acc + c.rating, 0);
-    const avg = comments.length > 0 ? sum / comments.length : 0;
-    const roundedAvg = Math.round(avg * 10) / 10;
+    const aggrRating = await this.commentModel
+      .aggregate([
+        { $match: { offerId: new Types.ObjectId(offerId) } },
+        { $group: { _id: null, rating: { $avg: '$rating' } } },
+      ])
+      .exec();
+
+    const rating = aggrRating[0]?.rating ?? 0;
+
+    const roundedAvg = Math.round(rating * 10) / 10;
     const updatedOffer = await this.offerModel.findByIdAndUpdate(
       offerId,
       {
@@ -45,7 +53,7 @@ export class DefaultCommentService implements CommentService {
       { new: true }
     );
     console.log({ updatedOffer });
-    return updatedOffer?.rating ?? 0;
+    return updatedOffer?.rating;
   }
 
   public async create(
@@ -53,11 +61,8 @@ export class DefaultCommentService implements CommentService {
   ): Promise<DocumentType<CommentEntity>> {
     const newComment = await this.commentModel.create(dto);
 
-    await this.offerModel.findByIdAndUpdate(dto.offerId, {
-      $push: { comments: newComment._id },
-    });
     await this.updateOfferRating(dto.offerId);
-    await this.incCommentCount(dto.offerId);
+    await this.updateCommentCount(dto.offerId);
     await this.offerModel;
 
     this.logger.info(

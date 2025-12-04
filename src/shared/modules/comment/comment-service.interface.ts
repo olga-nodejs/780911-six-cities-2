@@ -4,6 +4,4 @@ import { CommentEntity } from './comment.entity.js';
 
 export interface CommentService {
   create(dto: CreateCommentDTO): Promise<DocumentType<CommentEntity>>;
-
-  // incCommentCount(offerId: string): Promise<void>;
 }
