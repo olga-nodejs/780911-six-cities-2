@@ -70,4 +70,12 @@ export class DefaultCommentService implements CommentService {
     );
     return newComment;
   }
+
+  public async deleteByOfferId(offerId: string): Promise<number> {
+    const comments = await this.commentModel.deleteMany({ offerId }).exec();
+    this.logger.info(
+      `Were deleted: ${comments.deletedCount} to an offer ${offerId}`
+    );
+    return comments.deletedCount;
+  }
 }
