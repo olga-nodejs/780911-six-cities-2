@@ -71,6 +71,10 @@ export class OfferController extends BaseController {
     const offers = await this.offerService.find({ city, limit });
 
     const responseData = fillDTO(OfferRdo, offers);
+    console.log(offers[0]);
+    console.log('----------');
+    console.log({ responseData });
+    console.log('----------');
     this.ok(res, responseData);
   }
 
