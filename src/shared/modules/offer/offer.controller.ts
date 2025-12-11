@@ -64,21 +64,21 @@ export class OfferController extends BaseController {
     });
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
-    const limit = Number(_req.query.limit) || OfferCount.Default;
-    const city = _req.query.city as City;
+  public async index({ query }: Request, res: Response): Promise<void> {
+    const limit = Number(query.limit) || OfferCount.Default;
+    const city = query.city as City;
     const offers = await this.offerService.find({ city, limit });
     this.ok(res, offers);
   }
 
-  public async create(_req: Request, res: Response): Promise<void> {
-    const offer = await this.offerService.create(_req.body as CreateOfferDTO);
+  public async create({ body }: Request, res: Response): Promise<void> {
+    const offer = await this.offerService.create(body as CreateOfferDTO);
     this.created(res, offer);
   }
 
-  public async getPremium(_req: Request, res: Response): Promise<void> {
-    const city = _req.query.city as City;
-    const limit = Number(_req.query.limit) || OfferCount.Default;
+  public async getPremium({ query }: Request, res: Response): Promise<void> {
+    const city = query.city as City;
+    const limit = Number(query.limit) || OfferCount.Default;
     const offers = await this.offerService.findPremium({ city, limit });
     this.ok(res, offers);
   }

@@ -44,7 +44,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop()
   public previewImage!: string;
 
-  @prop()
+  @prop({ type: () => [String], required: true })
   public propertyPhotos!: Array<string>;
 
   @prop({ required: true })
@@ -81,7 +81,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   })
   public userId!: Ref<UserEntity>;
 
-  @prop({ required: true })
+  @prop({ type: () => [Number], required: true })
   public coordinates!: [number, number];
 
   @prop({ required: true })
