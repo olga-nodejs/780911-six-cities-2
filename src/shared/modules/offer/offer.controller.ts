@@ -12,7 +12,7 @@ import {
   UpdateOfferDTO,
   OfferRdo,
 } from '../offer/index.js';
-import { CommentService } from '../comment/index.js';
+import { CommentRdo, CommentService } from '../comment/index.js';
 import { HttpMethod } from '../../libs/rest/types/index.js';
 import { fillDTO } from '../../helpers/common.js';
 
@@ -20,6 +20,7 @@ import { fillDTO } from '../../helpers/common.js';
 // TODO: check that at the end I call something like this.ok(res, offers);
 // TODO: add RDO to everything that returns offer/offers/comments
 // TODO: add limit + pagination to offers
+// TODO: Add comment to a specific offer
 
 @injectable()
 export class OfferController extends BaseController {
@@ -71,10 +72,6 @@ export class OfferController extends BaseController {
     const offers = await this.offerService.find({ city, limit });
 
     const responseData = fillDTO(OfferRdo, offers);
-    console.log(offers[0]);
-    console.log('----------');
-    console.log({ responseData });
-    console.log('----------');
     this.ok(res, responseData);
   }
 
@@ -88,7 +85,8 @@ export class OfferController extends BaseController {
     const city = query.city as City;
     const limit = Number(query.limit) || OfferCount.Default;
     const offers = await this.offerService.findPremium({ city, limit });
-    this.ok(res, offers);
+    const responseData = fillDTO(OfferRdo, offers);
+    this.ok(res, responseData);
   }
 
   public async show(
@@ -97,15 +95,17 @@ export class OfferController extends BaseController {
   ): Promise<void> {
     const { offerId } = params;
     const offer = await this.offerService.findById(offerId);
-    console.log({ offer });
+
     const responseData = fillDTO(OfferRdo, offer);
-    console.log({ responseData });
+
     this.ok(res, responseData);
   }
 
   public async getComments({ params }: Request<ParamOfferId>, res: Response) {
     const comments = await this.offerService.findComments(params.offerId);
-    this.ok(res, comments);
+    const responseData = fillDTO(CommentRdo, comments);
+    console.log({ comments, responseData });
+    this.ok(res, responseData);
   }
 
   public async update(
