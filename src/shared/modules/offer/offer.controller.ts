@@ -1,7 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 
-import { BaseController } from '../../../rest/index.js';
 import { City, Component } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
 import {
@@ -17,7 +16,7 @@ import {
   CommentService,
   CreateCommentDTO,
 } from '../comment/index.js';
-import { HttpMethod } from '../../libs/rest/types/index.js';
+import { HttpMethod, BaseController } from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
 
 // TODO: add pagination to offers

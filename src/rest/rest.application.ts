@@ -3,11 +3,10 @@ import { RestApplicationInterface } from './rest.interface.js';
 import { type Logger } from '../shared/libs/Logger/index.js';
 import { inject, injectable } from 'inversify';
 import { Component } from '../shared/types/index.js';
-import { Config } from '../shared/libs/config/config.interface.js';
-import { RestSchema } from '../shared/libs/config/rest.schema.js';
+import { RestSchema, Config } from '../shared/libs/config/index.js';
 import { getMongoURI } from '../shared/helpers/common.js';
 import { DBClient } from '../shared/libs/db-client/db-client.interface.js';
-import { Controller } from '../shared/libs/rest/controller/controller.interface.js';
+import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
 
 @injectable()
 export class RestApplication implements RestApplicationInterface {
@@ -17,7 +16,9 @@ export class RestApplication implements RestApplicationInterface {
     @inject(Component.Config) private readonly config: Config<RestSchema>,
     @inject(Component.DBClient) private readonly db: DBClient,
     @inject(Component.OfferController)
-    private readonly offerController: Controller
+    private readonly offerController: Controller,
+    @inject(Component.ExceptionFilter)
+    private readonly appExceptionFilter: ExceptionFilter
   ) {
     this.server = express();
   }
@@ -48,11 +49,17 @@ export class RestApplication implements RestApplicationInterface {
     this.server.use(express.json());
   }
 
+  private async initExceptionFilter() {
+    this.server.use(
+      this.appExceptionFilter.catch.bind(this.appExceptionFilter)
+    );
+  }
+
   async init() {
     this.logger.info(`PORT: ${this.config.get('PORT')}`);
-    this.logger.info('Application initialization started');
+    this.logger.info('⚙️ Application initialization started');
 
-    this.logger.info('DB initialization started');
+    this.logger.info('🗄️ DB initialization started');
     await this.initDB();
     this.logger.info('DB initialization completed');
 
@@ -63,6 +70,10 @@ export class RestApplication implements RestApplicationInterface {
     this.logger.info('Controller initialization started');
     await this.initControllers();
     this.logger.info('Controller initialization completed');
+
+    this.logger.info('Init exception filter');
+    await this.initExceptionFilter();
+    this.logger.info('Exception filter initialization completed');
 
     this.logger.info('Server initialization started');
     await this.initServer();
