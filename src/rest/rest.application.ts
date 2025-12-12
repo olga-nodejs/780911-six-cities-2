@@ -17,6 +17,8 @@ export class RestApplication implements RestApplicationInterface {
     @inject(Component.DBClient) private readonly db: DBClient,
     @inject(Component.OfferController)
     private readonly offerController: Controller,
+    @inject(Component.UserController)
+    private readonly userController: Controller,
     @inject(Component.ExceptionFilter)
     private readonly appExceptionFilter: ExceptionFilter
   ) {
@@ -43,6 +45,7 @@ export class RestApplication implements RestApplicationInterface {
 
   private async initControllers() {
     this.server.use('/offers', this.offerController.router);
+    this.server.use('/users', this.userController.router);
   }
 
   private async initMiddleware() {
