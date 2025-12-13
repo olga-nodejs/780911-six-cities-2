@@ -19,7 +19,7 @@ type BaseOffer = {
   rentalCost: number;
   features: Array<PropertyFeature>;
   coordinates: [number, number];
-  commentCount: number;
+  commentsCount: number;
 };
 
 export type MockOffer = BaseOffer & {

@@ -21,16 +21,18 @@ export class DefaultCommentService implements CommentService {
   ) {}
   // TODO: comment creation is done by logged users only
 
-  public async updateCommentCount(offerId: string): Promise<void> {
-    const commentCount = await this.commentModel
+  public async updateCommentsCount(offerId: string): Promise<void> {
+    const result = await this.commentModel
       .aggregate([
         { $match: { offerId: new Types.ObjectId(offerId) } },
-        { $count: 'commentCount' },
+        { $count: 'commentsCount' },
       ])
       .exec();
 
+    const commentsCount = result[0]?.commentsCount ?? 0;
+    console.log({ commentsCount, result });
     await this.offerModel.findByIdAndUpdate(offerId, {
-      $set: { commentCount },
+      $set: { commentsCount },
     });
   }
 
@@ -52,7 +54,7 @@ export class DefaultCommentService implements CommentService {
       },
       { new: true }
     );
-    console.log({ updatedOffer });
+
     return updatedOffer?.rating;
   }
 
@@ -62,12 +64,20 @@ export class DefaultCommentService implements CommentService {
     const newComment = await this.commentModel.create(dto);
 
     await this.updateOfferRating(dto.offerId);
-    await this.updateCommentCount(dto.offerId);
+    await this.updateCommentsCount(dto.offerId);
     await this.offerModel;
 
     this.logger.info(
       `New comment created: ${newComment._id} to an offer ${dto.offerId}`
     );
     return newComment;
+  }
+
+  public async deleteByOfferId(offerId: string): Promise<number> {
+    const comments = await this.commentModel.deleteMany({ offerId }).exec();
+    this.logger.info(
+      `Were deleted: ${comments.deletedCount} to an offer ${offerId}`
+    );
+    return comments.deletedCount;
   }
 }

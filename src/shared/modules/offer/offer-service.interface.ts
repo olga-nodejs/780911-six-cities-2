@@ -7,19 +7,31 @@ import { City } from '../../types/index.js';
 
 export interface OfferService {
   create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>>;
-  find(limit?: number): Promise<Array<DocumentType<OfferEntity> | null>>;
+  find({
+    city,
+    limit,
+  }: {
+    city?: City;
+    limit?: number;
+  }): Promise<Array<DocumentType<OfferEntity> | null>>;
   findById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
-  updateById(
-    offerId: string,
-    dto: UpdateOfferDTO
-  ): Promise<DocumentType<OfferEntity> | null>;
+  updateById({
+    offerId,
+    dto,
+  }: {
+    offerId: string;
+    dto: UpdateOfferDTO;
+  }): Promise<DocumentType<OfferEntity> | null>;
   deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   findComments(
     offerId: string
   ): Promise<Array<DocumentType<CommentEntity> | null>>;
-  findPremium(
-    city: City,
-    limit?: number
-  ): Promise<Array<DocumentType<OfferEntity> | null>>;
+  findPremium({
+    city,
+    limit,
+  }: {
+    city: City;
+    limit?: number;
+  }): Promise<Array<DocumentType<OfferEntity> | null>>;
 }
 // TODO: add find comments feature

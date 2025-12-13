@@ -10,13 +10,9 @@ import {
   OfferService,
   CreateOfferDTO,
   OfferEntity,
+  OfferCount,
 } from './index.js';
 import { CommentEntity } from '../comment/index.js';
-
-const enum OfferCount {
-  Default = 60,
-  Premium = 3,
-}
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -37,10 +33,20 @@ export class DefaultOfferService implements OfferService {
   }
 
   // add pagination, read about differnt types of pagiantions and pagination optimisation
-  public async find(limit = OfferCount.Default) {
+  public async find({
+    city,
+    limit = OfferCount.Default,
+  }: {
+    city: City;
+    limit?: number;
+  }) {
+    const query: Partial<Record<'city', City>> = {};
+    if (city) {
+      query.city = city;
+    }
     return this.offerModel
-      .find()
-      .sort({ publicationDate: SortType.Down })
+      .find(query)
+      .sort({ publicationDate: SortType.Down, _id: 1 })
       .limit(limit)
       .populate('userId')
       .exec();
@@ -50,7 +56,13 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.findById(offerId).exec();
   }
 
-  public async updateById(offerId: string, dto: UpdateOfferDTO) {
+  public async updateById({
+    offerId,
+    dto,
+  }: {
+    offerId: string;
+    dto: UpdateOfferDTO;
+  }) {
     return this.offerModel
       .findByIdAndUpdate(offerId, dto, { new: true })
       .populate('userId')
@@ -61,10 +73,16 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.findByIdAndDelete(offerId).exec();
   }
 
-  public async findPremium(city: City, limit = OfferCount.Premium) {
+  public async findPremium({
+    city,
+    limit = OfferCount.Premium,
+  }: {
+    city: City;
+    limit: number;
+  }) {
     return this.offerModel
       .find({ city, premiumFlag: true })
-      .sort({ createdAt: SortType.Down })
+      .sort({ createdAt: SortType.Down, _id: 1 })
       .limit(limit)
       .populate(['userId'])
       .exec();

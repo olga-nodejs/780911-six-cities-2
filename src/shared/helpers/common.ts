@@ -2,6 +2,8 @@ import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as crypto from 'node:crypto';
 import chalk from 'chalk';
+import { ClassConstructor, plainToInstance } from 'class-transformer';
+
 import { Logger } from '../libs/Logger/index.js';
 
 import {
@@ -74,7 +76,7 @@ export const createMockOffer = (line: string): MockOffer => {
     features,
     user,
     coordinates,
-    commentCount,
+    commentsCount,
   ] = values;
 
   const offer = {
@@ -93,7 +95,7 @@ export const createMockOffer = (line: string): MockOffer => {
     features: features.split(',') as PropertyFeature[],
     user: createMockUser(user.split(',')) as MockUser,
     coordinates: coordinates.split(',').map(Number) as [number, number],
-    commentCount: Number(commentCount),
+    commentsCount: Number(commentsCount),
   };
 
   return offer;
@@ -164,3 +166,15 @@ export const requireArgs = (logger: Logger, args: Record<string, unknown>) => {
     throw new Error(`Missing required argument ${missing.join()}`);
   }
 };
+
+export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
+  return plainToInstance(someDto, plainObject, {
+    excludeExtraneousValues: true,
+  });
+}
+
+export function createErrorObject(message: string) {
+  return {
+    error: message,
+  };
+}

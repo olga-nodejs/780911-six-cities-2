@@ -65,7 +65,7 @@ export class OfferGenerator implements OfferGeneratorInterface {
       features: getRandomItems(this.mockData.features),
       user: getRandomItem(this.mockData.users),
       coordinates: getRandomItem(this.mockData.coordinates[city]),
-      commentCount: INITIAL_COMMENT_COUNT,
+      commentsCount: INITIAL_COMMENT_COUNT,
     };
   }
 }
