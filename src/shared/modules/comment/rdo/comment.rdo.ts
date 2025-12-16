@@ -10,6 +10,9 @@ export class CommentRdo {
   public text!: string;
 
   @Expose()
+  public rating!: string;
+
+  @Expose()
   public publicationDate!: Date;
 }
 

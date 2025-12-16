@@ -34,15 +34,15 @@ export class UserController extends BaseController {
     this.logger.info('Register routes for userController…');
 
     this.addRoute({
-      path: '/',
-      method: HttpMethod.Post,
-      handler: this.create,
-    });
-
-    this.addRoute({
       path: '/login',
       method: HttpMethod.Post,
       handler: this.login,
+    });
+
+    this.addRoute({
+      path: '/registrate',
+      method: HttpMethod.Post,
+      handler: this.create,
     });
   }
 
