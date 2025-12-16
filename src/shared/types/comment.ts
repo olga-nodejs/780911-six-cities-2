@@ -14,7 +14,3 @@ export type MockComment = BaseComment & {
 export type Comment = BaseComment & {
   userId: string;
 };
-
-//TODO: there is base type and 2 inhereted types with difference regards ref types.
-// How to handle it more correct way?
-// Should I use only 1 type?

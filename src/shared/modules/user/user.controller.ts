@@ -19,7 +19,6 @@ import { CreateUserRequest } from './create-user-request.js';
 import { LoginUserRequest } from './login-user-request.js';
 
 //TODO: users should be unique by email
-// TODO: add Тип пользователя. Обязательное. Возможные варианты: обычный, pro.
 // TODO: default image for user. How to do
 // TODO: login
 @injectable()

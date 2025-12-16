@@ -34,4 +34,3 @@ export interface OfferService {
     limit?: number;
   }): Promise<Array<DocumentType<OfferEntity> | null>>;
 }
-// TODO: add find comments feature
