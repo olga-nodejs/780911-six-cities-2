@@ -50,7 +50,7 @@ export class UserController extends BaseController {
     res: Response
   ): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);
-
+    // move this to middleware
     if (existsUser) {
       throw new HttpError(
         StatusCodes.CONFLICT,
