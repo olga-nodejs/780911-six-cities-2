@@ -16,7 +16,11 @@ import {
   CommentService,
   CreateCommentRequest,
 } from '../comment/index.js';
-import { HttpMethod, BaseController } from '../../libs/rest/index.js';
+import {
+  HttpMethod,
+  BaseController,
+  ValidateObjectIdMiddleware,
+} from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
 
 // TODO: add pagination to offers
@@ -50,30 +54,35 @@ export class OfferController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.show,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
 
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Patch,
       handler: this.update,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
 
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
 
     this.addRoute({
       path: '/:offerId/comments',
       method: HttpMethod.Get,
       handler: this.getComments,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
 
     this.addRoute({
       path: '/:offerId/comments',
       method: HttpMethod.Post,
       handler: this.addComment,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
   }
 
