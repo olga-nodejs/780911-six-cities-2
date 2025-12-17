@@ -10,6 +10,7 @@ import {
   UpdateOfferDTO,
   OfferRdo,
   CreateOfferRequest,
+  CreateOfferDTO,
 } from '../offer/index.js';
 import {
   CommentRdo,
@@ -20,6 +21,7 @@ import {
   HttpMethod,
   BaseController,
   ValidateObjectIdMiddleware,
+  ValidateDtoMiddleware,
 } from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
 
@@ -43,6 +45,7 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDTO)],
     });
     // GET /offers/premium?city=Paris&limit=10
     this.addRoute({
@@ -50,6 +53,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Get,
       handler: this.getPremium,
     });
+
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
@@ -61,7 +65,10 @@ export class OfferController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Patch,
       handler: this.update,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateOfferDTO),
+      ],
     });
 
     this.addRoute({
