@@ -14,7 +14,6 @@ import {
 import {
   CommentRdo,
   CommentService,
-  CreateCommentDTO,
   CreateCommentRequest,
 } from '../comment/index.js';
 import { HttpMethod, BaseController } from '../../libs/rest/index.js';
