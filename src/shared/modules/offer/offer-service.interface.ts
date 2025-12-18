@@ -6,6 +6,7 @@ import { CommentEntity } from '../comment/comment.entity.js';
 import { City } from '../../types/index.js';
 
 export interface OfferService {
+  exists(documentId: string): Promise<boolean>;
   create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>>;
   find({
     city,
