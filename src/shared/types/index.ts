@@ -8,3 +8,5 @@ export * from './propertyType.enum.js';
 export * from './user.js';
 export * from './comment.js';
 export * from './sort-type.enum.js';
+export * from './userType.enum.js';
+export * from './document-exists.interface.js';

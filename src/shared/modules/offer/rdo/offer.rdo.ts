@@ -1,5 +1,7 @@
 import { Expose, Transform } from 'class-transformer';
 import { ObjectId } from 'mongoose';
+import { UserRdo } from '../../user/index.js';
+
 /* eslint-disable indent */
 export class OfferRdo {
   @Expose()
@@ -54,16 +56,13 @@ export class OfferRdo {
 
   @Expose()
   @Transform(({ obj }) => {
-    const u = obj.userId;
+    const { _id, name, image, userType } = obj.userId;
     return {
-      _id: u?._id?.toString(),
-      name: u?.name ?? '',
-      image: u?.image ?? '',
+      _id: _id?.toString(),
+      name: name,
+      image: image,
+      userType: userType,
     };
   })
-  public user!: {
-    _id: string;
-    name: string;
-    image: string;
-  };
+  public user!: UserRdo;
 }

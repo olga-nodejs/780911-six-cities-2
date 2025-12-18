@@ -12,6 +12,9 @@ export class UserRdo {
 
   @Expose()
   public image!: string;
+
+  @Expose()
+  public userType!: string;
 }
 
 /* eslint-disable indent */

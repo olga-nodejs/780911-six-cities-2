@@ -4,19 +4,27 @@ import { Request, Response } from 'express';
 import { City, Component } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
 import {
-  CreateOfferDTO,
   OfferService,
   OfferCount,
   ParamOfferId,
   UpdateOfferDTO,
   OfferRdo,
+  CreateOfferRequest,
+  CreateOfferDTO,
 } from '../offer/index.js';
 import {
   CommentRdo,
   CommentService,
   CreateCommentDTO,
+  CreateCommentRequest,
 } from '../comment/index.js';
-import { HttpMethod, BaseController } from '../../libs/rest/index.js';
+import {
+  HttpMethod,
+  BaseController,
+  ValidateObjectIdMiddleware,
+  ValidateDtoMiddleware,
+  DocumentExistsMiddleware,
+} from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
 
 // TODO: add pagination to offers
@@ -39,6 +47,7 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateOfferDTO)],
     });
     // GET /offers/premium?city=Paris&limit=10
     this.addRoute({
@@ -46,28 +55,57 @@ export class OfferController extends BaseController {
       method: HttpMethod.Get,
       handler: this.getPremium,
     });
+
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.show,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
+    });
+
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Patch,
+      handler: this.update,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new ValidateDtoMiddleware(UpdateOfferDTO),
+      ],
     });
 
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
 
     this.addRoute({
       path: '/:offerId/comments',
       method: HttpMethod.Get,
       handler: this.getComments,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
 
     this.addRoute({
       path: '/:offerId/comments',
       method: HttpMethod.Post,
-      handler: this.addComments,
+      handler: this.addComment,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+        new ValidateDtoMiddleware(CreateCommentDTO),
+      ],
     });
   }
 
@@ -80,8 +118,11 @@ export class OfferController extends BaseController {
     this.ok(res, responseData);
   }
 
-  public async create({ body }: Request, res: Response): Promise<void> {
-    const offer = await this.offerService.create(body as CreateOfferDTO);
+  public async create(
+    { body }: CreateOfferRequest,
+    res: Response
+  ): Promise<void> {
+    const offer = await this.offerService.create(body);
     const responseData = fillDTO(OfferRdo, offer);
     this.created(res, responseData);
   }
@@ -116,8 +157,11 @@ export class OfferController extends BaseController {
     this.ok(res, responseData);
   }
 
-  public async addComments({ body }: Request, res: Response): Promise<void> {
-    const comment = await this.commentService.create(body as CreateCommentDTO);
+  public async addComment(
+    { body }: CreateCommentRequest,
+    res: Response
+  ): Promise<void> {
+    const comment = await this.commentService.create(body);
     const responseData = fillDTO(CommentRdo, comment);
     this.created(res, responseData);
   }

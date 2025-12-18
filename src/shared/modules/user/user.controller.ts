@@ -5,6 +5,7 @@ import {
   BaseController,
   HttpError,
   HttpMethod,
+  ValidateDtoMiddleware,
 } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
@@ -19,7 +20,6 @@ import { CreateUserRequest } from './create-user-request.js';
 import { LoginUserRequest } from './login-user-request.js';
 
 //TODO: users should be unique by email
-// TODO: add Тип пользователя. Обязательное. Возможные варианты: обычный, pro.
 // TODO: default image for user. How to do
 // TODO: login
 @injectable()
@@ -34,15 +34,16 @@ export class UserController extends BaseController {
     this.logger.info('Register routes for userController…');
 
     this.addRoute({
-      path: '/',
-      method: HttpMethod.Post,
-      handler: this.create,
-    });
-
-    this.addRoute({
       path: '/login',
       method: HttpMethod.Post,
       handler: this.login,
+    });
+
+    this.addRoute({
+      path: '/registrate',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateUserDTO)],
     });
   }
 
@@ -51,7 +52,7 @@ export class UserController extends BaseController {
     res: Response
   ): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);
-
+    // move this to middleware
     if (existsUser) {
       throw new HttpError(
         StatusCodes.CONFLICT,

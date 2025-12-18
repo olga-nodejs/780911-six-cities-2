@@ -3,7 +3,12 @@ import { DocumentType, types } from '@typegoose/typegoose';
 
 import { Logger } from '../../libs/Logger/index.js';
 
-import { City, Component, SortType } from '../../types/index.js';
+import {
+  City,
+  Component,
+  SortType,
+  DocumentExists,
+} from '../../types/index.js';
 
 import {
   UpdateOfferDTO,
@@ -15,7 +20,7 @@ import {
 import { CommentEntity } from '../comment/index.js';
 
 @injectable()
-export class DefaultOfferService implements OfferService {
+export class DefaultOfferService implements OfferService, DocumentExists {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.OfferModel)
@@ -23,6 +28,13 @@ export class DefaultOfferService implements OfferService {
     @inject(Component.CommentModel)
     private readonly commentModel: types.ModelType<CommentEntity>
   ) {}
+
+  public async exists(documentId: string): Promise<boolean> {
+    const count = await this.offerModel
+      .countDocuments({ _id: documentId })
+      .exec();
+    return count > 0;
+  }
 
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
     const offer = new OfferEntity(dto);

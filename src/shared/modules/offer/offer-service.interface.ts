@@ -6,6 +6,7 @@ import { CommentEntity } from '../comment/comment.entity.js';
 import { City } from '../../types/index.js';
 
 export interface OfferService {
+  exists(documentId: string): Promise<boolean>;
   create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>>;
   find({
     city,
@@ -34,4 +35,3 @@ export interface OfferService {
     limit?: number;
   }): Promise<Array<DocumentType<OfferEntity> | null>>;
 }
-// TODO: add find comments feature

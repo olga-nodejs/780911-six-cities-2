@@ -9,10 +9,10 @@ import { Logger } from '../libs/Logger/index.js';
 import {
   City,
   MockOffer,
-  User,
   PropertyType,
   PropertyFeature,
   MockUser,
+  UserType,
 } from '../types/index.js';
 
 export const generateErrorMessage = (error: unknown, message: string) => {
@@ -51,13 +51,19 @@ export const getDaysAgo = (daysAgo: number): Date => {
 export const isNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
 
-const createMockUser = (arr: Array<string>): User => {
-  const keys = ['name', 'email', 'image', 'password'] as const;
+const createMockUser = (arr: Array<string>): MockUser => {
+  const keys = ['name', 'email', 'image', 'password', 'userType'] as const;
+
   return keys.reduce((acc, key, index) => {
-    acc[key] = arr[index];
+    if (key === 'userType') {
+      acc.userType = arr[index] as UserType;
+    } else {
+      acc[key] = arr[index];
+    }
     return acc;
-  }, {} as Record<(typeof keys)[number], string>);
+  }, {} as MockUser);
 };
+
 export const createMockOffer = (line: string): MockOffer => {
   const values = line.trimEnd().split('\t');
   const [

@@ -79,31 +79,36 @@
         "name": "Sophie Martin",
         "email": "sophie.martin@example.com",
         "image": "/avatars/sophie.jpg",
-        "password": "securepassword123"
+        "password": "securepassword123",
+        "userType": "pro"
       },
       {
         "name": "Lukas Weber",
         "email": "lukas.weber@example.com",
         "image": "/avatars/lukas.jpg",
-        "password": "password456"
+        "password": "password456",
+        "userType": "starter"
       },
       {
         "name": "Marie Dupont",
         "email": "marie.dupont@example.com",
         "image": "/avatars/marie.jpg",
-        "password": "securepass321"
+        "password": "securepass321",
+        "userType": "pro"
       },
       {
         "name": "Jan de Vries",
         "email": "jan.devries@example.com",
         "image": "/avatars/jan.jpg",
-        "password": "amsterdam123"
+        "password": "amsterdam123",
+        "userType": "starter"
       },
       {
         "name": "Katrin Müller",
         "email": "katrin.mueller@example.com",
         "image": "/avatars/katrin.jpg",
-        "password": "hotelpass789"
+        "password": "hotelpass789",
+        "userType": "pro"
       },
       {
         "name": "Sebastian Koch",

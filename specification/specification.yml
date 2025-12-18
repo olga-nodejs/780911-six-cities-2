@@ -21,7 +21,17 @@ paths:
       tags:
         - offers
       summary: Получение списка предложений по аренде
-      description: ППолучение списка предложений по аренде
+      description: Получение списка предложений по аренде
+      parameters:
+        - in: query
+          name: city
+          schema:
+            $ref: '#/components/schemas/city'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            example: 10
 
       responses:
         '200':
@@ -57,12 +67,40 @@ paths:
         '500':
           description: Internal server error.
 
-  /offers/{offerId}/:
+  /offers/premium:
+    get:
+      tags:
+        - offers
+      summary: Получение списка премиальных предложений по аренде
+      parameters:
+        - in: query
+          name: city
+          required: true
+          schema:
+            $ref: '#/components/schemas/city'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            example: 10
+
+      responses:
+        '200':
+          description: Получение Получение списка премиальных предложений по аренде. Объект предложения.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offer'
+
+  /offers/{offerId}:
+    parameters:
+      - $ref: '#/components/parameters/offerId'
     get:
       tags:
         - offers
       summary: Получение детальной информация по предложению
-
       description: Получение детальной информация по предложению, все поля offer
       responses:
         '200':
@@ -75,7 +113,73 @@ paths:
         '404':
           description: Данного предложения не существует.
 
-  /users/register:
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения
+      responses:
+        '204':
+          description: Удалено
+
+    patch:
+      tags:
+        - offers
+      summary: Обновление предложения
+
+      requestBody:
+        description: Информация для обновления предложения.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateOffer'
+        required: true
+
+      responses:
+        '200':
+          description: Предложение обновлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+  /offers/{offerId}/comments:
+    parameters:
+      - $ref: '#/components/parameters/offerId'
+    get:
+      tags:
+        - comments
+      summary: Получить комментарии к предложению
+      responses:
+        '200':
+          description: Список комментариев
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+
+    post:
+      tags:
+        - comments
+      summary: Создать комментарий к предложению
+      requestBody:
+        description: Информация для создания нового комментария.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+        required: true
+
+      responses:
+        '201':
+          description: Комментарий создан. Объект комментария.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+  /users/registrate:
     post:
       tags:
         - users
@@ -115,6 +219,8 @@ paths:
       description: Возвращает информацию по авторизованному пользователю
 
   /users/{userId}/avatar:
+    parameters:
+      - $ref: '#/components/parameters/userId'
     post:
       tags:
         - users
@@ -124,15 +230,15 @@ paths:
 
 components:
   schemas:
-    City:
+    city:
       type: string
       enum: [Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf]
 
-    PropertyType:
+    propertyType:
       type: string
       enum: [apartment, house, room, hotel]
 
-    PropertyFeature:
+    propertyFeature:
       type: string
       enum:
         [
@@ -176,7 +282,7 @@ components:
           format: date-time
 
         city:
-          $ref: '#/components/schemas/City'
+          $ref: '#/components/schemas/city'
 
         previewImage:
           type: string
@@ -191,7 +297,7 @@ components:
           type: boolean
 
         propertyType:
-          $ref: '#/components/schemas/PropertyType'
+          $ref: '#/components/schemas/propertyType'
 
         roomsNumber:
           type: integer
@@ -204,7 +310,59 @@ components:
         features:
           type: array
           items:
-            $ref: '#/components/schemas/PropertyFeature'
+            $ref: '#/components/schemas/propertyFeature'
+        coordinates:
+          type: array
+          minItems: 2
+          maxItems: 2
+          items:
+            type: number
+
+    updateOffer:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: Charming Studio near central railway station
+
+        description:
+          type: string
+          example: A cozy apartment located in the heart with stunning views of the Eiffel Tower. Perfect for couples and solo travelers
+        publicationDate:
+          type: string
+          format: date-time
+
+        city:
+          $ref: '#/components/schemas/city'
+
+        previewImage:
+          type: string
+          example: /images/paris-studio.jpg
+
+        propertyPhotos:
+          type: array
+          items:
+            type: string
+
+        premiumFlag:
+          type: boolean
+
+        propertyType:
+          $ref: '#/components/schemas/propertyType'
+
+        roomsNumber:
+          type: integer
+
+        guestsNumber:
+          type: integer
+
+        rentalCost:
+          type: number
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/propertyFeature'
         coordinates:
           type: array
           minItems: 2
@@ -231,7 +389,7 @@ components:
           format: date-time
 
         city:
-          $ref: '#/components/schemas/City'
+          $ref: '#/components/schemas/city'
 
         previewImage:
           type: string
@@ -246,7 +404,7 @@ components:
           type: boolean
 
         propertyType:
-          $ref: '#/components/schemas/PropertyType'
+          $ref: '#/components/schemas/propertyType'
 
         roomsNumber:
           type: integer
@@ -259,7 +417,7 @@ components:
         features:
           type: array
           items:
-            $ref: '#/components/schemas/PropertyFeature'
+            $ref: '#/components/schemas/propertyFeature'
         coordinates:
           type: array
           minItems: 2
@@ -267,8 +425,16 @@ components:
           items:
             type: number
 
+    userType:
+      type: string
+      enum: [pro, starter]
+
     createUser:
       type: object
+      required:
+        - email
+        - name
+        - password
 
       properties:
         email:
@@ -283,6 +449,9 @@ components:
           type: string
           example: 123456
 
+        userType:
+          $ref: '#/components/schemas/userType'
+
     user:
       type: object
 
@@ -294,3 +463,60 @@ components:
         email:
           type: string
           example: keks@htmlacademy.ru
+
+        userType:
+          $ref: '#/components/schemas/userType'
+
+    comment:
+      type: object
+      properties:
+        text:
+          type: string
+          example: 'looks nice'
+
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+
+    createComment:
+      type: object
+      required:
+        - userId
+        - offerId
+        - text
+        - rating
+
+      properties:
+        userId:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        offerId:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        text:
+          type: string
+          example: 'looks nice'
+
+        rating:
+          type: number
+          example: 4
+
+  parameters:
+    offerId:
+      name: offerId
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 6329c3d6a04ab1061c6425ea
+
+    userId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 6329c3d6a04ab1061c6425ea
