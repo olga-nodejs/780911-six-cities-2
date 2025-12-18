@@ -4,6 +4,7 @@ export * from './user-service.interface.js';
 export * from './default-user.service.js';
 export * from './dto/create-user.dto.js';
 export * from './dto/login-user.dto.js';
+export * from './dto/user-validation.messages.js';
 export * from './rdo/user.rdo.js';
 export * from './create-user-request.js';
 export * from './user.controller.js';
