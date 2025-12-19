@@ -7,6 +7,7 @@ import { RestSchema, Config } from '../shared/libs/config/index.js';
 import { getMongoURI } from '../shared/helpers/common.js';
 import { DBClient } from '../shared/libs/db-client/db-client.interface.js';
 import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
+import mongoose from 'mongoose';
 
 @injectable()
 export class RestApplication implements RestApplicationInterface {
@@ -34,6 +35,7 @@ export class RestApplication implements RestApplicationInterface {
       this.config.get('DB_NAME')
     );
 
+    mongoose.set('autoIndex', true);
     return this.db.connect(mongoUri);
   }
 

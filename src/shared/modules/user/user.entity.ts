@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import {
   prop,
   getModelForClass,
@@ -8,7 +9,6 @@ import {
 import { User, UserType } from '../../types/index.js';
 import { createSHA256 } from '../../helpers/common.js';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface UserEntity extends defaultClasses.Base {}
 
 @modelOptions({
@@ -16,14 +16,16 @@ export interface UserEntity extends defaultClasses.Base {}
     collection: 'users',
     timestamps: true,
   },
+  options: {
+    allowMixed: 0,
+  },
 })
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class UserEntity extends defaultClasses.TimeStamps implements User {
-  @prop({ required: true })
-  public name: string;
-
   @prop({ required: true, unique: true })
   public email: string;
+
+  @prop({ required: true })
+  public name: string;
 
   @prop({ required: false, default: '' })
   public image: string;
@@ -44,8 +46,6 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     this.name = userData.name;
     this.image = userData.image ?? '';
     this.userType = userData.userType ?? 'starter';
-
-    // this.password = userData.password;
   }
 
   public setPassword(password: string, salt: string) {
