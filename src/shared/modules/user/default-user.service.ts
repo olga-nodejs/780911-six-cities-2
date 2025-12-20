@@ -63,7 +63,7 @@ export class DefaultUserService implements UserService, DocumentExists {
   public async updateAvatar(userId: string, avatarPath: string) {
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
-      { avatarPath },
+      { image: avatarPath },
       { new: true }
     );
 
