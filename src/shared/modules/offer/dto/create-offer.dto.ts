@@ -39,10 +39,9 @@ export class CreateOfferDTO {
   })
   public city!: City;
 
-  // TODO: check after adding multer
-
+  @IsString({ message: OfferValidationMessage.previewImage.invalid })
   public previewImage!: string;
-  // TODO: check after adding multer
+
   @IsArray()
   @ArrayMinSize(6, {
     message: OfferValidationMessage.propertyPhotos.invalidlength,
@@ -50,9 +49,11 @@ export class CreateOfferDTO {
   @ArrayMaxSize(6, {
     message: OfferValidationMessage.propertyPhotos.invalidlength,
   })
+  @IsString({ each: true, message: OfferValidationMessage.propertyPhotos.type })
   public propertyPhotos!: Array<string>;
 
   @IsBoolean({ message: OfferValidationMessage.premiumFlag.type })
+  @Type(() => Boolean)
   public premiumFlag!: boolean;
 
   // favorite_flag!: '';

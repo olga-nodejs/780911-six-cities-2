@@ -21,10 +21,11 @@ export const OfferValidationMessage = {
     )}`,
   },
   previewImage: {
-    extension: 'Preview image format should be either *.jpg or *.png',
+    invalid: 'Preview image is required',
   },
   propertyPhotos: {
     invalidlength: 'Should contain 6 images',
+    type: 'Should be a path to an image',
   },
   premiumFlag: {
     type: 'Premium flag value must be boolean',

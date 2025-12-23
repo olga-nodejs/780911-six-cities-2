@@ -28,3 +28,11 @@ export type MockOffer = BaseOffer & {
 export type Offer = BaseOffer & {
   userId: string;
 };
+
+export const OfferFileFields: {
+  previewImage: keyof BaseOffer;
+  propertyPhotos: keyof BaseOffer;
+} = {
+  previewImage: 'previewImage',
+  propertyPhotos: 'propertyPhotos',
+} as const;
