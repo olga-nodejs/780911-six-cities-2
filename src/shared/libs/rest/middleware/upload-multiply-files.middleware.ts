@@ -7,8 +7,20 @@ import { Middleware } from './middleware.interface.js';
 export class UploadMultipleFilesMiddleware implements Middleware {
   constructor(
     private uploadDirectory: string,
-    private filesArr: readonly { name: string; maxCount?: number }[] // private fieldName: string, // private maxCount: number
+    private filesArr: readonly { name: string; maxCount?: number }[]
   ) {}
+
+  private fileFilter(
+    _req: Request,
+    file: Express.Multer.File,
+    cb: multer.FileFilterCallback
+  ) {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+      return cb(null, true);
+    } else {
+      return cb(new Error('Invalid file type, only PNG and JPG are allowed'));
+    }
+  }
 
   public async execute(
     req: Request,
@@ -23,7 +35,11 @@ export class UploadMultipleFilesMiddleware implements Middleware {
       },
     });
 
-    const upload = multer({ storage }).fields(this.filesArr);
+    const upload = multer({
+      storage,
+      fileFilter: this.fileFilter.bind(this),
+    }).fields(this.filesArr);
+
     upload(req, res, (err) => {
       if (err) {
         return next(err);

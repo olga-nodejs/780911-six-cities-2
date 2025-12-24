@@ -39,6 +39,9 @@ export class DefaultOfferService implements OfferService, DocumentExists {
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
     const offer = new OfferEntity(dto);
 
+    console.log({ dto });
+    console.log({ offer });
+
     const res = await this.offerModel.create(offer);
     this.logger.info(`New offer ${dto.title} created `);
     return res;
@@ -75,8 +78,41 @@ export class DefaultOfferService implements OfferService, DocumentExists {
     offerId: string;
     dto: UpdateOfferDTO;
   }) {
+    const {
+      title,
+      description,
+      publicationDate,
+      city,
+      previewImage,
+      propertyPhotos,
+      premiumFlag,
+      propertyType,
+      roomsNumber,
+      guestsNumber,
+      rentalCost,
+      features,
+      coordinates,
+    } = dto;
     return this.offerModel
-      .findByIdAndUpdate(offerId, dto, { new: true })
+      .findByIdAndUpdate(
+        offerId,
+        {
+          title,
+          description,
+          publicationDate,
+          city,
+          previewImage,
+          propertyPhotos,
+          premiumFlag,
+          propertyType,
+          roomsNumber,
+          guestsNumber,
+          rentalCost,
+          features,
+          coordinates,
+        },
+        { new: true }
+      )
       .populate('userId')
       .exec();
   }

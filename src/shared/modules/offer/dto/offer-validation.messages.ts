@@ -20,13 +20,6 @@ export const OfferValidationMessage = {
       ', '
     )}`,
   },
-  previewImage: {
-    invalid: 'Preview image is required',
-  },
-  propertyPhotos: {
-    invalidlength: 'Should contain 6 images',
-    type: 'Should be a path to an image',
-  },
   premiumFlag: {
     type: 'Premium flag value must be boolean',
   },

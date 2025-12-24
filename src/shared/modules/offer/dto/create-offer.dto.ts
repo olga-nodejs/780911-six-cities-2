@@ -39,17 +39,8 @@ export class CreateOfferDTO {
   })
   public city!: City;
 
-  @IsString({ message: OfferValidationMessage.previewImage.invalid })
   public previewImage!: string;
 
-  @IsArray()
-  @ArrayMinSize(6, {
-    message: OfferValidationMessage.propertyPhotos.invalidlength,
-  })
-  @ArrayMaxSize(6, {
-    message: OfferValidationMessage.propertyPhotos.invalidlength,
-  })
-  @IsString({ each: true, message: OfferValidationMessage.propertyPhotos.type })
   public propertyPhotos!: Array<string>;
 
   @IsBoolean({ message: OfferValidationMessage.premiumFlag.type })

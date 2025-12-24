@@ -36,3 +36,8 @@ export const OfferFileFields: {
   previewImage: 'previewImage',
   propertyPhotos: 'propertyPhotos',
 } as const;
+
+export type OfferFiles = {
+  previewImage?: Express.Multer.File[];
+  propertyPhotos?: Express.Multer.File[];
+};

@@ -24,17 +24,14 @@ import {
   ValidateObjectIdMiddleware,
   ValidateDtoMiddleware,
   DocumentExistsMiddleware,
-  // UploadFileMiddleware,
-  TransformFilesToBodyMiddleware,
   UploadMultipleFilesMiddleware,
-  ForbiddenFieldsMiddleware,
+  ValidateImagesMiddleware,
 } from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { RestSchema } from '../../libs/config/rest.schema.js';
 import { Config } from '../../libs/config/config.interface.js';
 
 // TODO: add pagination to offers
-// TODO: can't update rating
 @injectable()
 export class OfferController extends BaseController {
   constructor(
@@ -63,10 +60,18 @@ export class OfferController extends BaseController {
             { name: OfferFileFields.propertyPhotos, maxCount: 6 },
           ]
         ),
-        new TransformFilesToBodyMiddleware(
-          ['previewImage'],
-          ['propertyPhotos']
-        ),
+        new ValidateImagesMiddleware([
+          {
+            name: OfferFileFields.previewImage,
+            maxCount: 1,
+            isRequired: true,
+          },
+          {
+            name: OfferFileFields.propertyPhotos,
+            maxCount: 6,
+            isRequired: true,
+          },
+        ]),
         new ValidateDtoMiddleware(CreateOfferDTO),
       ],
     });
@@ -92,7 +97,6 @@ export class OfferController extends BaseController {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
-        new ForbiddenFieldsMiddleware(['rating', 'userId']),
         new UploadMultipleFilesMiddleware(
           this.configService.get('UPLOAD_DIRECTORY'),
           [
@@ -100,6 +104,18 @@ export class OfferController extends BaseController {
             { name: OfferFileFields.propertyPhotos, maxCount: 6 },
           ]
         ),
+        new ValidateImagesMiddleware([
+          {
+            name: OfferFileFields.previewImage,
+            maxCount: 1,
+            isRequired: false,
+          },
+          {
+            name: OfferFileFields.propertyPhotos,
+            maxCount: 6,
+            isRequired: false,
+          },
+        ]),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateOfferDTO),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
@@ -147,13 +163,16 @@ export class OfferController extends BaseController {
     this.ok(res, responseData);
   }
 
-  public async create(
-    { body, files }: CreateOfferRequest,
-    res: Response
-  ): Promise<void> {
-    console.log({ files });
-    // take from the files pathes and pass them to
-    const offer = await this.offerService.create(body);
+  public async create(req: CreateOfferRequest, res: Response): Promise<void> {
+    const { body } = req;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+    const offerData = {
+      ...body,
+      propertyPhotos: files?.propertyPhotos?.map((f) => f.path) ?? [],
+      previewImage: files?.previewImage?.[0]?.path,
+    };
+    const offer = await this.offerService.create(offerData);
     const responseData = fillDTO(OfferRdo, offer);
     this.created(res, responseData);
   }

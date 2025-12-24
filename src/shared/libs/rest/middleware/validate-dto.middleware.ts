@@ -13,7 +13,6 @@ export class ValidateDtoMiddleware implements Middleware {
     next: NextFunction
   ): Promise<void> {
     try {
-      console.log({ body });
       const dtoInstance = plainToInstance(this.dto, body);
       const errors: Array<ValidationError> = await validate(dtoInstance);
 
