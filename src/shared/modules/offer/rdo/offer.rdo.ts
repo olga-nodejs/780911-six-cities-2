@@ -56,13 +56,18 @@ export class OfferRdo {
 
   @Expose()
   @Transform(({ obj }) => {
+    if (!obj.userId) {
+      return null;
+    }
+
     const { _id, name, image, userType } = obj.userId;
+
     return {
       _id: _id?.toString(),
-      name: name,
-      image: image,
-      userType: userType,
+      name,
+      image,
+      userType,
     };
   })
-  public user!: UserRdo;
+  public user!: UserRdo | null;
 }

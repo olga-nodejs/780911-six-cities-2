@@ -28,3 +28,32 @@ export type MockOffer = BaseOffer & {
 export type Offer = BaseOffer & {
   userId: string;
 };
+
+export const OfferFileFields: {
+  previewImage: keyof BaseOffer;
+  propertyPhotos: keyof BaseOffer;
+} = {
+  previewImage: 'previewImage',
+  propertyPhotos: 'propertyPhotos',
+} as const;
+
+export type OfferFiles = {
+  previewImage?: Express.Multer.File[];
+  propertyPhotos?: Express.Multer.File[];
+};
+
+export const ALLOWED_UPDATE_FIELDS = [
+  'title',
+  'description',
+  'publicationDate',
+  'city',
+  'previewImage',
+  'propertyPhotos',
+  'premiumFlag',
+  'propertyType',
+  'roomsNumber',
+  'guestsNumber',
+  'rentalCost',
+  'features',
+  'coordinates',
+] as const;

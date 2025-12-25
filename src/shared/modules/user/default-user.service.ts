@@ -1,13 +1,14 @@
 import { injectable, inject } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
+import { MongoServerError } from 'mongodb';
 import { CreateUserDTO } from './dto/create-user.dto.js';
 import { UserService } from './user-service.interface.js';
 import { UserEntity } from './user.entity.js';
-import { Component } from '../../types/component.enum.js';
+import { Component, DocumentExists } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
 
 @injectable()
-export class DefaultUserService implements UserService {
+export class DefaultUserService implements UserService, DocumentExists {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.UserModel)
@@ -22,10 +23,23 @@ export class DefaultUserService implements UserService {
 
     user.setPassword(dto.password, salt);
 
-    const res = await this.userModel.create(user);
+    try {
+      const res = await this.userModel.create(user);
 
-    this.logger.info(`New user created ${user.email}`);
-    return res;
+      this.logger.info(`New user created ${user.email}`);
+      return res;
+    } catch (error) {
+      if (error instanceof MongoServerError && error.code === 11000) {
+        throw new Error(`User with email ${dto.email} already exists`);
+      }
+
+      throw error;
+    }
+  }
+
+  public async exists(email: string): Promise<boolean> {
+    const user = await this.userModel.findOne({ email }).exec();
+    return !!user;
   }
 
   public async findByEmail(
@@ -44,5 +58,19 @@ export class DefaultUserService implements UserService {
     }
 
     return this.create(dto, salt);
+  }
+
+  public async updateAvatar(userId: string, avatarPath: string) {
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      { image: avatarPath },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+
+    return updatedUser;
   }
 }

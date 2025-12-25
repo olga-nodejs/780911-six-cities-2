@@ -9,4 +9,8 @@ export interface UserService {
     dto: CreateUserDTO,
     salt: string
   ): Promise<DocumentType<UserEntity>>;
+  updateAvatar(
+    documentId: string,
+    filePath: string
+  ): Promise<{ image: string }>;
 }

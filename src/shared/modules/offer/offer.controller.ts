@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 
-import { City, Component } from '../../types/index.js';
+import { City, Component, OfferFileFields } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
 import {
   OfferService,
@@ -24,16 +24,21 @@ import {
   ValidateObjectIdMiddleware,
   ValidateDtoMiddleware,
   DocumentExistsMiddleware,
+  UploadMultipleFilesMiddleware,
+  ValidateImagesMiddleware,
 } from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
+import { RestSchema } from '../../libs/config/rest.schema.js';
+import { Config } from '../../libs/config/config.interface.js';
 
 // TODO: add pagination to offers
-
 @injectable()
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
+    @inject(Component.Config)
+    private readonly configService: Config<RestSchema>,
     @inject(Component.CommentService)
     private readonly commentService: CommentService
   ) {
@@ -47,7 +52,28 @@ export class OfferController extends BaseController {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateOfferDTO)],
+      middlewares: [
+        new UploadMultipleFilesMiddleware(
+          this.configService.get('UPLOAD_DIRECTORY'),
+          [
+            { name: OfferFileFields.previewImage, maxCount: 1 },
+            { name: OfferFileFields.propertyPhotos, maxCount: 6 },
+          ]
+        ),
+        new ValidateImagesMiddleware([
+          {
+            name: OfferFileFields.previewImage,
+            maxCount: 1,
+            isRequired: true,
+          },
+          {
+            name: OfferFileFields.propertyPhotos,
+            maxCount: 6,
+            isRequired: true,
+          },
+        ]),
+        new ValidateDtoMiddleware(CreateOfferDTO),
+      ],
     });
     // GET /offers/premium?city=Paris&limit=10
     this.addRoute({
@@ -71,9 +97,28 @@ export class OfferController extends BaseController {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
+        new UploadMultipleFilesMiddleware(
+          this.configService.get('UPLOAD_DIRECTORY'),
+          [
+            { name: OfferFileFields.previewImage, maxCount: 1 },
+            { name: OfferFileFields.propertyPhotos, maxCount: 6 },
+          ]
+        ),
+        new ValidateImagesMiddleware([
+          {
+            name: OfferFileFields.previewImage,
+            maxCount: 1,
+            isRequired: false,
+          },
+          {
+            name: OfferFileFields.propertyPhotos,
+            maxCount: 6,
+            isRequired: false,
+          },
+        ]),
         new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
         new ValidateDtoMiddleware(UpdateOfferDTO),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
 
@@ -103,8 +148,8 @@ export class OfferController extends BaseController {
       handler: this.addComment,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
         new ValidateDtoMiddleware(CreateCommentDTO),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
   }
@@ -118,11 +163,16 @@ export class OfferController extends BaseController {
     this.ok(res, responseData);
   }
 
-  public async create(
-    { body }: CreateOfferRequest,
-    res: Response
-  ): Promise<void> {
-    const offer = await this.offerService.create(body);
+  public async create(req: CreateOfferRequest, res: Response): Promise<void> {
+    const { body } = req;
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+
+    const offerData = {
+      ...body,
+      propertyPhotos: files?.propertyPhotos?.map((f) => f.path) ?? [],
+      previewImage: files?.previewImage?.[0]?.path,
+    };
+    const offer = await this.offerService.create(offerData);
     const responseData = fillDTO(OfferRdo, offer);
     this.created(res, responseData);
   }
@@ -167,11 +217,34 @@ export class OfferController extends BaseController {
   }
 
   public async update(
-    { params, body }: Request<ParamOfferId, unknown, UpdateOfferDTO>,
+    req: Request<ParamOfferId, unknown, UpdateOfferDTO>,
     res: Response
   ): Promise<void> {
+    const { params, body } = req;
     const { offerId } = params;
-    const offer = await this.offerService.updateById({ offerId, dto: body });
+    const files = req.files as
+      | {
+          previewImage?: Express.Multer.File[];
+          propertyPhotos?: Express.Multer.File[];
+        }
+      | undefined;
+
+    const updateDto: Partial<UpdateOfferDTO> = {
+      ...body,
+    };
+
+    if (files?.previewImage?.length) {
+      updateDto.previewImage = files.previewImage[0].path;
+    }
+
+    if (files?.propertyPhotos?.length) {
+      updateDto.propertyPhotos = files.propertyPhotos.map((f) => f.path);
+    }
+
+    const offer = await this.offerService.updateById({
+      offerId,
+      dto: updateDto,
+    });
     const responseData = fillDTO(OfferRdo, offer);
 
     this.ok(res, responseData);

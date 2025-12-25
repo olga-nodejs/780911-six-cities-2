@@ -35,6 +35,7 @@ export class MongoDbClient implements DBClient {
         this.mongoose = await Mongoose.connect(uri);
         this.isConnected = true;
         this.logger.info('Database connection established.');
+
         return;
       } catch (error) {
         attempt++;

@@ -2,16 +2,15 @@ import { UserType } from '../../../types/index.js';
 
 export const UserValidationMessage = {
   name: {
-    minLength: 'Minimum name length must be 1',
-    maxLength: 'Maximum name length must be 15',
+    length: 'Name must contain a minimum of 1 and a maximum of 15 characters',
     invalidFormat: 'Name must be string type',
   },
   email: {
     invalidFormat: 'Invalid email address',
   },
   password: {
-    minLength: 'Minimum password length must be 6',
-    maxLength: 'Maximum password length must be 12',
+    length:
+      'Password must contain a minimum of 6 and a maximum of 12 characters',
     invalidFormat: 'password must be string type',
   },
   userType: {

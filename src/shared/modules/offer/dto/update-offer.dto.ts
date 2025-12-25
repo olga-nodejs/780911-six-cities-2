@@ -1,6 +1,4 @@
 import {
-  MaxLength,
-  MinLength,
   IsDateString,
   IsEnum,
   IsBoolean,
@@ -8,11 +6,12 @@ import {
   Min,
   Max,
   IsNumber,
-  IsMongoId,
+  // IsMongoId,
   IsArray,
   ArrayMinSize,
   ArrayMaxSize,
   IsOptional,
+  Length,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { City, PropertyType, PropertyFeature } from '../../../types/index.js';
@@ -20,16 +19,12 @@ import { OfferValidationMessage } from './offer-validation.messages.js';
 
 export class UpdateOfferDTO {
   @IsOptional()
-  @MinLength(10, { message: OfferValidationMessage.title.minLength })
-  @MaxLength(100, { message: OfferValidationMessage.title.maxLength })
+  @Length(10, 100, { message: OfferValidationMessage.title.length })
   public title?: string;
 
   @IsOptional()
-  @MinLength(20, {
-    message: OfferValidationMessage.description.minLength,
-  })
-  @MaxLength(1024, {
-    message: OfferValidationMessage.description.maxLength,
+  @Length(20, 1024, {
+    message: OfferValidationMessage.description.length,
   })
   public description?: string;
 
@@ -46,33 +41,25 @@ export class UpdateOfferDTO {
   @IsOptional()
   public city?: City;
 
-  @IsOptional()
   public previewImage?: string;
 
-  @IsOptional()
-  @IsArray()
-  @ArrayMinSize(6, {
-    message: OfferValidationMessage.propertyPhotos.invalidlength,
-  })
-  @ArrayMaxSize(6, {
-    message: OfferValidationMessage.propertyPhotos.invalidlength,
-  })
   public propertyPhotos?: Array<string>;
 
   @IsOptional()
+  @Type(() => Boolean)
   @IsBoolean({ message: OfferValidationMessage.premiumFlag.type })
   public premiumFlag?: boolean;
 
   // favorite_flag?: '';
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber(
-    { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 1 },
-    { message: OfferValidationMessage.rating.invalidFormat }
-  )
-  @Min(1, { message: OfferValidationMessage.rating.minValue })
-  @Max(5, { message: OfferValidationMessage.rating.maxValue })
-  public rating?: number;
+  // @IsOptional()
+  // @Type(() => Number)
+  // @IsNumber(
+  //   { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 1 },
+  //   { message: OfferValidationMessage.rating.invalidFormat }
+  // )
+  // @Min(1, { message: OfferValidationMessage.rating.minValue })
+  // @Max(5, { message: OfferValidationMessage.rating.maxValue })
+  // public rating?: number;
 
   @IsOptional()
   @IsEnum(PropertyType, {
@@ -118,9 +105,8 @@ export class UpdateOfferDTO {
   })
   public features?: Array<PropertyFeature>;
 
-  @IsMongoId({ message: OfferValidationMessage.userId.invalidId })
-  @IsOptional()
-  public userId?: string;
+  // @IsMongoId({ message: OfferValidationMessage.userId.invalidId })
+  // public userId!: string;
 
   @IsOptional()
   @Transform(({ value }) => (Array.isArray(value) ? value.map(Number) : value))

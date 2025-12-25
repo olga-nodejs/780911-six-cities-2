@@ -1,6 +1,4 @@
 import {
-  MaxLength,
-  MinLength,
   IsDateString,
   IsEnum,
   IsBoolean,
@@ -13,6 +11,7 @@ import {
   ArrayMinSize,
   ArrayMaxSize,
   IsString,
+  Length,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { City, PropertyType, PropertyFeature } from '../../../types/index.js';
@@ -20,16 +19,12 @@ import { OfferValidationMessage } from './offer-validation.messages.js';
 
 export class CreateOfferDTO {
   @IsString({ message: OfferValidationMessage.title.invalidFormat })
-  @MinLength(10, { message: OfferValidationMessage.title.minLength })
-  @MaxLength(100, { message: OfferValidationMessage.title.maxLength })
+  @Length(10, 100, { message: OfferValidationMessage.title.length })
   public title!: string;
 
   @IsString({ message: OfferValidationMessage.description.invalidFormat })
-  @MinLength(20, {
-    message: OfferValidationMessage.description.minLength,
-  })
-  @MaxLength(1024, {
-    message: OfferValidationMessage.description.maxLength,
+  @Length(20, 1024, {
+    message: OfferValidationMessage.description.length,
   })
   public description!: string;
 
@@ -44,20 +39,12 @@ export class CreateOfferDTO {
   })
   public city!: City;
 
-  // TODO: check after adding multer
-
   public previewImage!: string;
-  // TODO: check after adding multer
-  @IsArray()
-  @ArrayMinSize(6, {
-    message: OfferValidationMessage.propertyPhotos.invalidlength,
-  })
-  @ArrayMaxSize(6, {
-    message: OfferValidationMessage.propertyPhotos.invalidlength,
-  })
+
   public propertyPhotos!: Array<string>;
 
   @IsBoolean({ message: OfferValidationMessage.premiumFlag.type })
+  @Type(() => Boolean)
   public premiumFlag!: boolean;
 
   // favorite_flag!: '';

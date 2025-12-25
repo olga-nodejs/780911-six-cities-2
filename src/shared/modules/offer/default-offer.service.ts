@@ -8,6 +8,7 @@ import {
   Component,
   SortType,
   DocumentExists,
+  ALLOWED_UPDATE_FIELDS,
 } from '../../types/index.js';
 
 import {
@@ -39,6 +40,9 @@ export class DefaultOfferService implements OfferService, DocumentExists {
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
     const offer = new OfferEntity(dto);
 
+    console.log({ dto });
+    console.log({ offer });
+
     const res = await this.offerModel.create(offer);
     this.logger.info(`New offer ${dto.title} created `);
     return res;
@@ -65,7 +69,7 @@ export class DefaultOfferService implements OfferService, DocumentExists {
   }
 
   public async findById(offerId: string) {
-    return this.offerModel.findById(offerId).exec();
+    return this.offerModel.findById(offerId).populate('userId').exec();
   }
 
   public async updateById({
@@ -75,8 +79,23 @@ export class DefaultOfferService implements OfferService, DocumentExists {
     offerId: string;
     dto: UpdateOfferDTO;
   }) {
+    type AllowedUpdateField = (typeof ALLOWED_UPDATE_FIELDS)[number];
+
+    const updateData = Object.fromEntries(
+      Object.entries(dto).filter(
+        ([key, value]) =>
+          value !== undefined &&
+          ALLOWED_UPDATE_FIELDS.includes(key as AllowedUpdateField)
+      )
+    );
     return this.offerModel
-      .findByIdAndUpdate(offerId, dto, { new: true })
+      .findByIdAndUpdate(
+        offerId,
+        {
+          $set: updateData,
+        },
+        { new: true }
+      )
       .populate('userId')
       .exec();
   }

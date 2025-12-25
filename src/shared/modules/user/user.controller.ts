@@ -1,11 +1,13 @@
 import { inject, injectable } from 'inversify';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import {
   BaseController,
   HttpError,
   HttpMethod,
+  UploadFileMiddleware,
   ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
@@ -18,9 +20,8 @@ import { RestSchema } from '../../libs/config/rest.schema.js';
 import { CreateUserRequest } from './create-user-request.js';
 
 import { LoginUserRequest } from './login-user-request.js';
+import { LoginUserDto } from './dto/login-user.dto.js';
 
-//TODO: users should be unique by email
-// TODO: default image for user. How to do
 // TODO: login
 @injectable()
 export class UserController extends BaseController {
@@ -37,32 +38,48 @@ export class UserController extends BaseController {
       path: '/login',
       method: HttpMethod.Post,
       handler: this.login,
+      middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
     });
 
     this.addRoute({
       path: '/registrate',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateUserDTO)],
+      middlewares: [
+        new UploadFileMiddleware(
+          this.configService.get('UPLOAD_DIRECTORY'),
+          'image'
+        ),
+        new ValidateDtoMiddleware(CreateUserDTO),
+      ],
+    });
+
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(
+          this.configService.get('UPLOAD_DIRECTORY'),
+          'avatar'
+        ),
+      ],
     });
   }
 
   public async create(
-    { body }: CreateUserRequest,
+    { body, file }: CreateUserRequest,
     res: Response
   ): Promise<void> {
-    const existsUser = await this.userService.findByEmail(body.email);
-    // move this to middleware
-    if (existsUser) {
-      throw new HttpError(
-        StatusCodes.CONFLICT,
-        `User with email «${body.email}» exists.`,
-        'UserController'
-      );
-    }
-
+    const userData = {
+      ...body,
+      image: file?.path
+        ? file.path
+        : this.configService.get('DEFAULT_USER_IMAGE'),
+    };
     const user = await this.userService.create(
-      body as CreateUserDTO,
+      userData as CreateUserDTO,
       this.configService.get('SALT')
     );
     const responseData = fillDTO(UserRdo, user);
@@ -88,5 +105,20 @@ export class UserController extends BaseController {
       'Not implemented',
       'UserController'
     );
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    if (!req.file) {
+      throw new HttpError(StatusCodes.BAD_REQUEST, 'No file uploaded');
+    }
+
+    const updatedUser = await this.userService.updateAvatar(
+      req.params.userId,
+      req.file.path
+    );
+
+    this.created(res, {
+      image: updatedUser.image,
+    });
   }
 }
