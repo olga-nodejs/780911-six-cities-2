@@ -14,7 +14,7 @@ export class AuthExceptionFilter implements ExceptionFilter {
 
   public catch(
     error: Error | HttpError,
-    req: Request,
+    _req: Request,
     res: Response,
     next: NextFunction
   ): void {
