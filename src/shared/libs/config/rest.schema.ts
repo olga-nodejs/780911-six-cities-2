@@ -17,6 +17,7 @@ export type RestSchema = {
   DB_NAME: string;
   UPLOAD_DIRECTORY: string;
   DEFAULT_USER_IMAGE: string;
+  JWT_SECRET: string;
 };
 
 export const configRestSchema = convict<RestSchema>({
@@ -97,5 +98,11 @@ export const configRestSchema = convict<RestSchema>({
     format: String,
     env: 'DEFAULT_USER_IMAGE',
     default: 'upload/test.png',
+  },
+  JWT_SECRET: {
+    doc: 'Secret for sign JWT',
+    format: String,
+    env: 'JWT_SECRET',
+    default: null,
   },
 });
