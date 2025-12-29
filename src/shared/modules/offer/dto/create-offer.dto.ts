@@ -6,7 +6,6 @@ import {
   Min,
   Max,
   IsNumber,
-  // IsMongoId,
   IsArray,
   ArrayMinSize,
   ArrayMaxSize,
@@ -119,7 +118,3 @@ export class CreateOfferDTO {
   @IsInt({ message: OfferValidationMessage.commentsCount.invalidFormat })
   public commentsCount!: number;
 }
-
-// export type CreateOfferServiceDto = CreateOfferDTO & {
-//   userId: string;
-// };

@@ -21,7 +21,7 @@ import {
   HttpMethod,
   BaseController,
   ValidateObjectIdMiddleware,
-  ValidateDtoMiddleware,
+  ValidateDTOMiddleware,
   DocumentExistsMiddleware,
   UploadMultipleFilesMiddleware,
   ValidateImagesMiddleware,
@@ -30,7 +30,7 @@ import { fillDTO } from '../../helpers/common.js';
 import { RestSchema } from '../../libs/config/rest.schema.js';
 import { Config } from '../../libs/config/config.interface.js';
 
-function buildOfferUpdateDto(
+function buildOfferUpdateDTO(
   body: UpdateOfferDTO,
   files?: {
     previewImage?: Express.Multer.File[];
@@ -91,7 +91,7 @@ export class OfferController extends BaseController {
             isRequired: true,
           },
         ]),
-        new ValidateDtoMiddleware(CreateOfferDTO),
+        new ValidateDTOMiddleware(CreateOfferDTO),
       ],
     });
     // GET /offers/premium?city=Paris&limit=10
@@ -136,7 +136,7 @@ export class OfferController extends BaseController {
           },
         ]),
         new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDtoMiddleware(UpdateOfferDTO),
+        new ValidateDTOMiddleware(UpdateOfferDTO),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
@@ -167,7 +167,7 @@ export class OfferController extends BaseController {
       handler: this.addComment,
       middlewares: [
         new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDtoMiddleware(CreateCommentDTO),
+        new ValidateDTOMiddleware(CreateCommentDTO),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
@@ -262,12 +262,12 @@ export class OfferController extends BaseController {
         }
       | undefined;
 
-    const updateDto = buildOfferUpdateDto(body, files);
+    const updateDTO = buildOfferUpdateDTO(body, files);
 
     const offer = await this.offerService.updateById({
       offerId,
       userId,
-      dto: updateDto,
+      dto: updateDTO,
     });
     const responseData = fillDTO(OfferRdo, offer);
 

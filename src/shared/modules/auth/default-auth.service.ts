@@ -11,7 +11,7 @@ import {
 } from './index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
-import { LoginUserDto, UserEntity, UserService } from '../user/index.js';
+import { LoginUserDTO, UserEntity, UserService } from '../user/index.js';
 import { Config, RestSchema } from '../../libs/config/index.js';
 
 @injectable()
@@ -40,7 +40,7 @@ export class DefaultAuthService implements AuthService {
       .sign(secretKey);
   }
 
-  public async authenticate(dto: LoginUserDto): Promise<UserEntity> {
+  public async authenticate(dto: LoginUserDTO): Promise<UserEntity> {
     const user = await this.userService.findByEmail(dto.email);
 
     if (!user) {

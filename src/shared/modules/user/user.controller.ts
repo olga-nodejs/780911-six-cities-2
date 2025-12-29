@@ -6,7 +6,7 @@ import {
   HttpError,
   HttpMethod,
   UploadFileMiddleware,
-  ValidateDtoMiddleware,
+  ValidateDTOMiddleware,
   ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
 
@@ -15,7 +15,7 @@ import { Config, RestSchema } from '../../libs/config/index.js';
 import {
   UserService,
   LoginUserRequest,
-  LoginUserDto,
+  LoginUserDTO,
   CreateUserRequest,
   UserRdo,
   CreateUserDTO,
@@ -43,7 +43,7 @@ export class UserController extends BaseController {
       path: '/login',
       method: HttpMethod.Post,
       handler: this.login,
-      middlewares: [new ValidateDtoMiddleware(LoginUserDto)],
+      middlewares: [new ValidateDTOMiddleware(LoginUserDTO)],
     });
 
     this.addRoute({
@@ -55,7 +55,7 @@ export class UserController extends BaseController {
           this.configService.get('UPLOAD_DIRECTORY'),
           'image'
         ),
-        new ValidateDtoMiddleware(CreateUserDTO),
+        new ValidateDTOMiddleware(CreateUserDTO),
       ],
     });
 

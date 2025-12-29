@@ -15,7 +15,6 @@ import {
   UpdateOfferDTO,
   OfferService,
   CreateOfferDTO,
-  // CreateOfferServiceDto,
   OfferEntity,
   OfferCount,
 } from './index.js';
