@@ -9,18 +9,21 @@ import {
   ValidateDtoMiddleware,
   ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
-import { Component } from '../../types/index.js';
-import { Logger } from '../../libs/Logger/index.js';
-import { UserService } from './user-service.interface.js';
-import { CreateUserDTO } from './dto/create-user.dto.js';
-import { fillDTO } from '../../helpers/common.js';
-import { UserRdo } from './rdo/user.rdo.js';
-import { Config } from '../../libs/config/config.interface.js';
-import { RestSchema } from '../../libs/config/rest.schema.js';
-import { CreateUserRequest } from './create-user-request.js';
 
-import { LoginUserRequest } from './login-user-request.js';
-import { LoginUserDto } from './dto/login-user.dto.js';
+import { Logger } from '../../libs/Logger/index.js';
+import { Config, RestSchema } from '../../libs/config/index.js';
+import {
+  UserService,
+  LoginUserRequest,
+  LoginUserDto,
+  CreateUserRequest,
+  UserRdo,
+  CreateUserDTO,
+  LoggedUserRdo,
+} from './index.js';
+import { Component } from '../../types/index.js';
+import { fillDTO } from '../../helpers/common.js';
+import { AuthService } from '../auth/index.js';
 
 // TODO: login
 @injectable()
@@ -28,7 +31,9 @@ export class UserController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.UserService) private readonly userService: UserService,
-    @inject(Component.Config) private readonly configService: Config<RestSchema>
+    @inject(Component.Config)
+    private readonly configService: Config<RestSchema>,
+    @inject(Component.AuthService) private readonly authService: AuthService
   ) {
     super(logger);
 
@@ -86,25 +91,14 @@ export class UserController extends BaseController {
     this.created(res, responseData);
   }
 
-  public async login(
-    { body }: LoginUserRequest,
-    _res: Response
-  ): Promise<void> {
-    const existsUser = await this.userService.findByEmail(body.email);
+  public async login({ body }: LoginUserRequest, res: Response): Promise<void> {
+    const user = await this.authService.authenticate(body);
 
-    if (!existsUser) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found.`,
-        'UserController'
-      );
-    }
+    const token = await this.authService.issueToken(user);
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController'
-    );
+    const responseData = fillDTO(LoggedUserRdo, { id: user.id, token });
+
+    this.ok(res, responseData);
   }
 
   public async uploadAvatar(req: Request, res: Response) {
