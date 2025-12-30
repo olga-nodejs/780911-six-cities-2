@@ -5,7 +5,6 @@ import {
   Min,
   Max,
   IsNumber,
-  IsMongoId,
   IsString,
   IsInt,
 } from 'class-validator';
@@ -34,9 +33,8 @@ export class CreateCommentDTO {
   )
   public publicationDate!: Date;
 
-  @IsMongoId({ message: CommentValidationMessage.userId.invalidId })
   public userId!: string;
 
-  @IsMongoId({ message: CommentValidationMessage.offerId.invalidId })
   public offerId!: string;
 }
+//TODO: is that ok, that I removed ids from DTO

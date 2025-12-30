@@ -18,12 +18,20 @@ export interface OfferService {
   findById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   updateById({
     offerId,
+    userId,
     dto,
   }: {
     offerId: string;
+    userId: string;
     dto: UpdateOfferDTO;
   }): Promise<DocumentType<OfferEntity> | null>;
-  deleteById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
+  deleteById({
+    offerId,
+    userId,
+  }: {
+    offerId: string;
+    userId: string;
+  }): Promise<DocumentType<OfferEntity> | null>;
   findComments(
     offerId: string
   ): Promise<Array<DocumentType<CommentEntity> | null>>;

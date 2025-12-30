@@ -13,4 +13,22 @@ export interface UserService {
     documentId: string,
     filePath: string
   ): Promise<{ image: string }>;
+
+  addFavorite({
+    offerId,
+    userId,
+  }: {
+    offerId: string;
+    userId: string;
+  }): Promise<DocumentType<UserEntity>>;
+
+  deleteFavorite({
+    offerId,
+    userId,
+  }: {
+    offerId: string;
+    userId: string;
+  }): Promise<DocumentType<UserEntity>>;
+
+  removeFavoriteFromMany(offerId: string): Promise<void>;
 }

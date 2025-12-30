@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
+import { Request, Response, NextFunction } from 'express';
 
 import { ExceptionFilter } from './exception-filter.interface.js';
 import { Logger } from '../../Logger/index.js';
 import { Component } from '../../../types/index.js';
-import { Request, Response, NextFunction } from 'express';
 import { HttpError } from '../errors/http-error.js';
 import { createErrorObject } from '../../../helpers/common.js';
 

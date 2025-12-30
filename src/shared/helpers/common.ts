@@ -173,8 +173,8 @@ export const requireArgs = (logger: Logger, args: Record<string, unknown>) => {
   }
 };
 
-export function fillDTO<T, V>(someDto: ClassConstructor<T>, plainObject: V) {
-  return plainToInstance(someDto, plainObject, {
+export function fillDTO<T, V>(someDTO: ClassConstructor<T>, plainObject: V) {
+  return plainToInstance(someDTO, plainObject, {
     excludeExtraneousValues: true,
   });
 }

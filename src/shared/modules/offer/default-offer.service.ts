@@ -40,9 +40,6 @@ export class DefaultOfferService implements OfferService, DocumentExists {
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
     const offer = new OfferEntity(dto);
 
-    console.log({ dto });
-    console.log({ offer });
-
     const res = await this.offerModel.create(offer);
     this.logger.info(`New offer ${dto.title} created `);
     return res;
@@ -74,9 +71,11 @@ export class DefaultOfferService implements OfferService, DocumentExists {
 
   public async updateById({
     offerId,
+    userId,
     dto,
   }: {
     offerId: string;
+    userId: string;
     dto: UpdateOfferDTO;
   }) {
     type AllowedUpdateField = (typeof ALLOWED_UPDATE_FIELDS)[number];
@@ -88,9 +87,12 @@ export class DefaultOfferService implements OfferService, DocumentExists {
           ALLOWED_UPDATE_FIELDS.includes(key as AllowedUpdateField)
       )
     );
-    return this.offerModel
-      .findByIdAndUpdate(
-        offerId,
+    const updatedOffer = await this.offerModel
+      .findOneAndUpdate(
+        {
+          _id: offerId,
+          userId: userId,
+        },
         {
           $set: updateData,
         },
@@ -98,10 +100,33 @@ export class DefaultOfferService implements OfferService, DocumentExists {
       )
       .populate('userId')
       .exec();
+
+    if (!updatedOffer) {
+      throw new Error('Forbidden to modify the offer or the offer not found');
+    }
+
+    return updatedOffer;
   }
 
-  public async deleteById(offerId: string) {
-    return this.offerModel.findByIdAndDelete(offerId).exec();
+  public async deleteById({
+    offerId,
+    userId,
+  }: {
+    offerId: string;
+    userId: string;
+  }) {
+    const deletedOffer = await this.offerModel
+      .findOneAndDelete({
+        _id: offerId,
+        userId: userId,
+      })
+      .exec();
+
+    if (!deletedOffer) {
+      throw new Error('Forbidden to delete the offer or the offer not found');
+    }
+
+    return deletedOffer;
   }
 
   public async findPremium({

@@ -4,7 +4,7 @@ type BaseComment = {
   text: string;
   publicationDate: Date;
   rating: number;
-  offerId: string; // Should it be ref to Offer id?
+  offerId: string;
 };
 
 export type MockComment = BaseComment & {

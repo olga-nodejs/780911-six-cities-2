@@ -58,17 +58,29 @@ export class DefaultCommentService implements CommentService {
     return updatedOffer?.rating;
   }
 
-  public async create(
-    dto: CreateCommentDTO
-  ): Promise<DocumentType<CommentEntity>> {
-    const newComment = await this.commentModel.create(dto);
+  public async create({
+    offerId,
+    userId,
+    dto,
+  }: {
+    offerId: string;
+    userId: string;
+    dto: CreateCommentDTO;
+  }): Promise<DocumentType<CommentEntity>> {
+    const commentData = {
+      ...dto,
+      offerId,
+      userId,
+    };
+    console.log({ commentData });
+    const newComment = await this.commentModel.create(commentData);
 
-    await this.updateOfferRating(dto.offerId);
-    await this.updateCommentsCount(dto.offerId);
+    await this.updateOfferRating(offerId);
+    await this.updateCommentsCount(offerId);
     await this.offerModel;
 
     this.logger.info(
-      `New comment created: ${newComment._id} to an offer ${dto.offerId}`
+      `New comment created: ${newComment._id} to an offer ${offerId}`
     );
     return newComment;
   }

@@ -1,13 +1,18 @@
 import express, { Express } from 'express';
+import mongoose from 'mongoose';
+import { inject, injectable } from 'inversify';
 import { RestApplicationInterface } from './rest.interface.js';
 import { type Logger } from '../shared/libs/Logger/index.js';
-import { inject, injectable } from 'inversify';
 import { Component } from '../shared/types/index.js';
 import { RestSchema, Config } from '../shared/libs/config/index.js';
 import { getMongoURI } from '../shared/helpers/common.js';
-import { DBClient } from '../shared/libs/db-client/db-client.interface.js';
-import { Controller, ExceptionFilter } from '../shared/libs/rest/index.js';
-import mongoose from 'mongoose';
+import { DBClient } from '../shared/libs/db-client/index.js';
+import {
+  Controller,
+  ExceptionFilter,
+  ParseTokenMiddleware,
+} from '../shared/libs/rest/index.js';
+import { AuthExceptionFilter } from '../shared/modules/auth/index.js';
 
 @injectable()
 export class RestApplication implements RestApplicationInterface {
@@ -21,7 +26,9 @@ export class RestApplication implements RestApplicationInterface {
     @inject(Component.UserController)
     private readonly userController: Controller,
     @inject(Component.ExceptionFilter)
-    private readonly appExceptionFilter: ExceptionFilter
+    private readonly appExceptionFilter: ExceptionFilter,
+    @inject(Component.AuthExceptionFilter)
+    private readonly authExceptionFilter: AuthExceptionFilter
   ) {
     this.server = express();
   }
@@ -51,14 +58,24 @@ export class RestApplication implements RestApplicationInterface {
   }
 
   private async initMiddleware() {
+    const authenticateMiddleware = new ParseTokenMiddleware(
+      this.config.get('JWT_SECRET')
+    );
+
     this.server.use(express.json());
     this.server.use(
       '/upload',
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
+    this.server.use(
+      authenticateMiddleware.execute.bind(authenticateMiddleware)
+    );
   }
 
-  private async initExceptionFilter() {
+  private async initExceptionFilters() {
+    this.server.use(
+      this.authExceptionFilter.catch.bind(this.authExceptionFilter)
+    );
     this.server.use(
       this.appExceptionFilter.catch.bind(this.appExceptionFilter)
     );
@@ -81,7 +98,7 @@ export class RestApplication implements RestApplicationInterface {
     this.logger.info('Controller initialization completed');
 
     this.logger.info('Init exception filter');
-    await this.initExceptionFilter();
+    await this.initExceptionFilters();
     this.logger.info('Exception filter initialization completed');
 
     this.logger.info('Server initialization started');

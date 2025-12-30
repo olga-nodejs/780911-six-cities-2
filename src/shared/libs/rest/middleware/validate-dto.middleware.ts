@@ -4,7 +4,7 @@ import { validate, ValidationError } from 'class-validator';
 import { StatusCodes } from 'http-status-codes';
 import { Middleware } from './middleware.interface.js';
 
-export class ValidateDtoMiddleware implements Middleware {
+export class ValidateDTOMiddleware implements Middleware {
   constructor(private dto: ClassConstructor<object>) {}
 
   public async execute(
@@ -42,7 +42,7 @@ export class ValidateDtoMiddleware implements Middleware {
     }
   }
 }
-// export class ValidateDtoMiddleware implements Middleware {
+// export class ValidateDTOMiddleware implements Middleware {
 //   constructor(private dto: ClassConstructor<object>) {}
 
 //   public async execute(

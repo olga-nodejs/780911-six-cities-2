@@ -16,20 +16,40 @@ import {
   CommentRdo,
   CommentService,
   CreateCommentDTO,
-  CreateCommentRequest,
 } from '../comment/index.js';
 import {
   HttpMethod,
   BaseController,
   ValidateObjectIdMiddleware,
-  ValidateDtoMiddleware,
+  ValidateDTOMiddleware,
   DocumentExistsMiddleware,
   UploadMultipleFilesMiddleware,
   ValidateImagesMiddleware,
+  PrivateRouteMiddleware,
 } from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
-import { RestSchema } from '../../libs/config/rest.schema.js';
-import { Config } from '../../libs/config/config.interface.js';
+import { RestSchema, Config } from '../../libs/config/index.js';
+import { UserService } from '../user/index.js';
+
+function buildOfferUpdateDTO(
+  body: UpdateOfferDTO,
+  files?: {
+    previewImage?: Express.Multer.File[];
+    propertyPhotos?: Express.Multer.File[];
+  }
+): Partial<UpdateOfferDTO> {
+  const dto: Partial<UpdateOfferDTO> = { ...body };
+
+  if (files?.previewImage?.length) {
+    dto.previewImage = files.previewImage[0].path;
+  }
+
+  if (files?.propertyPhotos?.length) {
+    dto.propertyPhotos = files.propertyPhotos.map((f) => f.path);
+  }
+
+  return dto;
+}
 
 // TODO: add pagination to offers
 @injectable()
@@ -40,7 +60,8 @@ export class OfferController extends BaseController {
     @inject(Component.Config)
     private readonly configService: Config<RestSchema>,
     @inject(Component.CommentService)
-    private readonly commentService: CommentService
+    private readonly commentService: CommentService,
+    @inject(Component.UserService) private readonly userService: UserService
   ) {
     super(logger);
 
@@ -53,6 +74,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new UploadMultipleFilesMiddleware(
           this.configService.get('UPLOAD_DIRECTORY'),
           [
@@ -72,7 +94,7 @@ export class OfferController extends BaseController {
             isRequired: true,
           },
         ]),
-        new ValidateDtoMiddleware(CreateOfferDTO),
+        new ValidateDTOMiddleware(CreateOfferDTO),
       ],
     });
     // GET /offers/premium?city=Paris&limit=10
@@ -97,6 +119,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new UploadMultipleFilesMiddleware(
           this.configService.get('UPLOAD_DIRECTORY'),
           [
@@ -117,7 +140,7 @@ export class OfferController extends BaseController {
           },
         ]),
         new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDtoMiddleware(UpdateOfferDTO),
+        new ValidateDTOMiddleware(UpdateOfferDTO),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
@@ -127,6 +150,7 @@ export class OfferController extends BaseController {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
@@ -147,8 +171,31 @@ export class OfferController extends BaseController {
       method: HttpMethod.Post,
       handler: this.addComment,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
-        new ValidateDtoMiddleware(CreateCommentDTO),
+        new ValidateDTOMiddleware(CreateCommentDTO),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
+    });
+
+    this.addRoute({
+      path: '/:offerId/favorites',
+      method: HttpMethod.Post,
+      handler: this.addFavorite,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
+    });
+
+    this.addRoute({
+      path: '/:offerId/favorites',
+      method: HttpMethod.Delete,
+      handler: this.deleteFavorite,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
@@ -164,14 +211,16 @@ export class OfferController extends BaseController {
   }
 
   public async create(req: CreateOfferRequest, res: Response): Promise<void> {
-    const { body } = req;
+    const { body, tokenPayload } = req;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
     const offerData = {
       ...body,
+      userId: tokenPayload.id,
       propertyPhotos: files?.propertyPhotos?.map((f) => f.path) ?? [],
       previewImage: files?.previewImage?.[0]?.path,
     };
+
     const offer = await this.offerService.create(offerData);
     const responseData = fillDTO(OfferRdo, offer);
     this.created(res, responseData);
@@ -203,15 +252,24 @@ export class OfferController extends BaseController {
   ): Promise<void> {
     const comments = await this.offerService.findComments(params.offerId);
     const responseData = fillDTO(CommentRdo, comments);
-    console.log({ comments, responseData });
+
     this.ok(res, responseData);
   }
 
   public async addComment(
-    { body }: CreateCommentRequest,
+    {
+      body,
+      tokenPayload,
+      params,
+    }: Request<ParamOfferId, unknown, CreateCommentDTO>,
     res: Response
   ): Promise<void> {
-    const comment = await this.commentService.create(body);
+    const { id: userId } = tokenPayload;
+    const comment = await this.commentService.create({
+      dto: body,
+      userId,
+      offerId: params.offerId,
+    });
     const responseData = fillDTO(CommentRdo, comment);
     this.created(res, responseData);
   }
@@ -220,8 +278,11 @@ export class OfferController extends BaseController {
     req: Request<ParamOfferId, unknown, UpdateOfferDTO>,
     res: Response
   ): Promise<void> {
-    const { params, body } = req;
+    const { params, body, tokenPayload } = req;
+
     const { offerId } = params;
+    const { id: userId } = tokenPayload;
+
     const files = req.files as
       | {
           previewImage?: Express.Multer.File[];
@@ -229,21 +290,12 @@ export class OfferController extends BaseController {
         }
       | undefined;
 
-    const updateDto: Partial<UpdateOfferDTO> = {
-      ...body,
-    };
-
-    if (files?.previewImage?.length) {
-      updateDto.previewImage = files.previewImage[0].path;
-    }
-
-    if (files?.propertyPhotos?.length) {
-      updateDto.propertyPhotos = files.propertyPhotos.map((f) => f.path);
-    }
+    const updateDTO = buildOfferUpdateDTO(body, files);
 
     const offer = await this.offerService.updateById({
       offerId,
-      dto: updateDto,
+      userId,
+      dto: updateDTO,
     });
     const responseData = fillDTO(OfferRdo, offer);
 
@@ -251,14 +303,46 @@ export class OfferController extends BaseController {
   }
 
   public async delete(
-    { params }: Request<ParamOfferId>,
+    { params, tokenPayload }: Request<ParamOfferId>,
     res: Response
   ): Promise<void> {
     const { offerId } = params;
-    const offer = await this.offerService.deleteById(offerId);
+    const { id: userId } = tokenPayload;
+    const offer = await this.offerService.deleteById({ offerId, userId });
 
     await this.commentService.deleteByOfferId(offerId);
+    await this.userService.removeFavoriteFromMany(offerId);
     const responseData = fillDTO(OfferRdo, offer);
+
+    this.noContent(res, responseData);
+  }
+
+  public async addFavorite(
+    { params, tokenPayload }: Request<ParamOfferId>,
+    res: Response
+  ): Promise<void> {
+    const { offerId } = params;
+    const { id: userId } = tokenPayload;
+
+    const responseData = await this.userService.addFavorite({
+      userId,
+      offerId,
+    });
+
+    this.created(res, responseData);
+  }
+
+  public async deleteFavorite(
+    { params, tokenPayload }: Request<ParamOfferId>,
+    res: Response
+  ): Promise<void> {
+    const { offerId } = params;
+    const { id: userId } = tokenPayload;
+
+    const responseData = await this.userService.deleteFavorite({
+      userId,
+      offerId,
+    });
 
     this.noContent(res, responseData);
   }
