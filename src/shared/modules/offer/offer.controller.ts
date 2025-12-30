@@ -29,6 +29,7 @@ import {
 } from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { RestSchema, Config } from '../../libs/config/index.js';
+import { UserService } from '../user/index.js';
 
 function buildOfferUpdateDTO(
   body: UpdateOfferDTO,
@@ -59,7 +60,8 @@ export class OfferController extends BaseController {
     @inject(Component.Config)
     private readonly configService: Config<RestSchema>,
     @inject(Component.CommentService)
-    private readonly commentService: CommentService
+    private readonly commentService: CommentService,
+    @inject(Component.UserService) private readonly userService: UserService
   ) {
     super(logger);
 
@@ -175,6 +177,28 @@ export class OfferController extends BaseController {
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
+
+    this.addRoute({
+      path: '/:offerId/favorites',
+      method: HttpMethod.Post,
+      handler: this.addFavorite,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
+    });
+
+    this.addRoute({
+      path: '/:offerId/favorites',
+      method: HttpMethod.Delete,
+      handler: this.deleteFavorite,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
+    });
   }
 
   public async index({ query }: Request, res: Response): Promise<void> {
@@ -287,7 +311,38 @@ export class OfferController extends BaseController {
     const offer = await this.offerService.deleteById({ offerId, userId });
 
     await this.commentService.deleteByOfferId(offerId);
+    await this.userService.removeFavoriteFromMany(offerId);
     const responseData = fillDTO(OfferRdo, offer);
+
+    this.noContent(res, responseData);
+  }
+
+  public async addFavorite(
+    { params, tokenPayload }: Request<ParamOfferId>,
+    res: Response
+  ): Promise<void> {
+    const { offerId } = params;
+    const { id: userId } = tokenPayload;
+
+    const responseData = await this.userService.addFavorite({
+      userId,
+      offerId,
+    });
+
+    this.created(res, responseData);
+  }
+
+  public async deleteFavorite(
+    { params, tokenPayload }: Request<ParamOfferId>,
+    res: Response
+  ): Promise<void> {
+    const { offerId } = params;
+    const { id: userId } = tokenPayload;
+
+    const responseData = await this.userService.deleteFavorite({
+      userId,
+      offerId,
+    });
 
     this.noContent(res, responseData);
   }

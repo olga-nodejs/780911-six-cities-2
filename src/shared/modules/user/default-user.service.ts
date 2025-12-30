@@ -73,4 +73,53 @@ export class DefaultUserService implements UserService, DocumentExists {
 
     return updatedUser;
   }
+
+  public async addFavorite({
+    offerId,
+    userId,
+  }: {
+    offerId: string;
+    userId: string;
+  }): Promise<DocumentType<UserEntity>> {
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      { $addToSet: { favorites: offerId } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+
+    return updatedUser;
+  }
+
+  public async deleteFavorite({
+    offerId,
+    userId,
+  }: {
+    offerId: string;
+    userId: string;
+  }): Promise<DocumentType<UserEntity>> {
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { favorites: offerId },
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+
+    return updatedUser;
+  }
+
+  public async removeFavoriteFromMany(offerId: string): Promise<void> {
+    await this.userModel.updateMany(
+      { favorites: offerId },
+      { $pull: { favorites: offerId } }
+    );
+  }
 }

@@ -5,6 +5,7 @@ export type User = {
   email: string;
   image: string;
   userType: UserType;
+  favorites: Array<string>;
 };
 
 export type MockUser = User & {

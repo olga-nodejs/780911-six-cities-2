@@ -23,4 +23,6 @@ export class CreateUserDTO {
     message: UserValidationMessage.userType.invalid,
   })
   public userType!: UserType;
+
+  public favorites!: Array<string>;
 }
