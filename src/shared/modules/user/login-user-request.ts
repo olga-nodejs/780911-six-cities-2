@@ -7,5 +7,3 @@ export type LoginUserRequest = Request<
   RequestBody,
   LoginUserDTO
 >;
-
-//TODO: move this file to types folder in user folder

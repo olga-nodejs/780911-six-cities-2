@@ -41,17 +41,16 @@ function buildOfferUpdateDTO(
   const dto: Partial<UpdateOfferDTO> = { ...body };
 
   if (files?.previewImage?.length) {
-    dto.previewImage = files.previewImage[0].path;
+    dto.previewImage = files.previewImage[0].filename;
   }
 
   if (files?.propertyPhotos?.length) {
-    dto.propertyPhotos = files.propertyPhotos.map((f) => f.path);
+    dto.propertyPhotos = files.propertyPhotos.map((f) => f.filename);
   }
 
   return dto;
 }
 
-// TODO: add pagination to offers
 @injectable()
 export class OfferController extends BaseController {
   constructor(
@@ -217,8 +216,8 @@ export class OfferController extends BaseController {
     const offerData = {
       ...body,
       userId: tokenPayload.id,
-      propertyPhotos: files?.propertyPhotos?.map((f) => f.path) ?? [],
-      previewImage: files?.previewImage?.[0]?.path,
+      propertyPhotos: files?.propertyPhotos?.map((f) => f.filename) ?? [],
+      previewImage: files?.previewImage?.[0]?.filename,
     };
 
     const offer = await this.offerService.create(offerData);

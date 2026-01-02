@@ -110,5 +110,3 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 }
 
 export const OfferModel = getModelForClass(OfferEntity);
-
-//TODO: look for onion layers architecure service repository and controller

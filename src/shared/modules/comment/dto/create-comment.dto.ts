@@ -37,4 +37,3 @@ export class CreateCommentDTO {
 
   public offerId!: string;
 }
-//TODO: is that ok, that I removed ids from DTO

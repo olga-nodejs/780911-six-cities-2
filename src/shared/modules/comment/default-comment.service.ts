@@ -19,7 +19,6 @@ export class DefaultCommentService implements CommentService {
     @inject(Component.OfferModel)
     private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
-  // TODO: comment creation is done by logged users only
 
   public async updateCommentsCount(offerId: string): Promise<void> {
     const result = await this.commentModel
