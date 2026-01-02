@@ -5,10 +5,13 @@ import { OfferGenerator } from '../../shared/libs/OfferGenerator/index.js';
 import { Command } from './command.interface.js';
 import { MockServerData } from '../../shared/types/index.js';
 import { TSVFileWriter } from '../../shared/libs/TSVFileWriter/index.js';
+import { configRestSchema } from '../../shared/libs/config/index.js';
 
 export class GenerateCommand implements Command {
   private rawData = {} as MockServerData;
-  private static readonly MOCK_API_URL = 'http://localhost:4000/api';
+  private static readonly MOCK_API_URL = `http://${configRestSchema.get(
+    'HOST'
+  )}:${configRestSchema.get('PORT')}/api`;
 
   public getName() {
     return '--generate';

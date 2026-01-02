@@ -11,7 +11,7 @@ export class UserRdo {
   public name!: string;
 
   @Expose()
-  public image!: string;
+  public avatar!: string;
 
   @Expose()
   public userType!: string;

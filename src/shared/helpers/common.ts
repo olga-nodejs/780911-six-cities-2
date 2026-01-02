@@ -58,18 +58,27 @@ export function isNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
-const createMockUser = (arr: Array<string>): MockUser => {
-  const keys = ['name', 'email', 'image', 'password', 'userType'] as const;
+export function generateRandomEmail(
+  adjectives: Array<string>,
+  nouns: Array<string>,
+  domains: Array<string>
+) {
+  return `${getRandomItem(adjectives)}.${getRandomItem(nouns)}@${getRandomItem(
+    domains
+  )}`;
+}
+export function createMockUser(values: string[]): MockUser {
+  const [name, email, password, userType, avatar] = values;
 
-  return keys.reduce((acc, key, index) => {
-    if (key === 'userType') {
-      acc.userType = arr[index] as UserType;
-    } else {
-      acc[key] = arr[index];
-    }
-    return acc;
-  }, {} as MockUser);
-};
+  return {
+    name,
+    email,
+    password,
+    userType: userType as UserType,
+    avatar,
+    favorites: [],
+  };
+}
 
 export function createMockOffer(line: string): MockOffer {
   const values = line.trimEnd().split('\t');

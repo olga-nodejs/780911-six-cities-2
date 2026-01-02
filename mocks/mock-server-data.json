@@ -74,58 +74,93 @@
       "Fridge",
       "Laptop friendly workspace"
     ],
+    "userData": {
+      "names": [
+        "Sophie Martin",
+        "Lukas Weber",
+        "Marie Dupont",
+        "Jan de Vries",
+        "Katrin Müller",
+        "Sebastian Koch",
+        "Thomas Laurent",
+        "Anna Schmidt"
+      ],
+      "adjectives": [
+        "yellow",
+        "pessimistic",
+        "silent",
+        "brave",
+        "curious",
+        "lazy",
+        "electric",
+        "gentle"
+      ],
+      "nouns": [
+        "dream",
+        "hippo",
+        "fox",
+        "cloud",
+        "river",
+        "owl",
+        "mountain",
+        "coffee"
+      ],
+      "domains": ["gmail.com", "yahoo.com", "outlook.com", "proton.me"],
+      "passwords": ["qwerty123", "password123"],
+      "userTypes": ["pro", "starter"]
+    },
     "users": [
       {
         "name": "Sophie Martin",
         "email": "sophie.martin@example.com",
-        "image": "/avatars/sophie.jpg",
+        "avatar": "sophie.jpg",
         "password": "securepassword123",
         "userType": "pro"
       },
       {
         "name": "Lukas Weber",
         "email": "lukas.weber@example.com",
-        "image": "/avatars/lukas.jpg",
+        "avatar": "lukas.jpg",
         "password": "password456",
         "userType": "starter"
       },
       {
         "name": "Marie Dupont",
         "email": "marie.dupont@example.com",
-        "image": "/avatars/marie.jpg",
+        "avatar": "marie.jpg",
         "password": "securepass321",
         "userType": "pro"
       },
       {
         "name": "Jan de Vries",
         "email": "jan.devries@example.com",
-        "image": "/avatars/jan.jpg",
+        "avatar": "jan.jpg",
         "password": "amsterdam123",
         "userType": "starter"
       },
       {
         "name": "Katrin Müller",
         "email": "katrin.mueller@example.com",
-        "image": "/avatars/katrin.jpg",
+        "avatar": "katrin.jpg",
         "password": "hotelpass789",
         "userType": "pro"
       },
       {
         "name": "Sebastian Koch",
         "email": "sebastian.koch@example.com",
-        "image": "/avatars/sebastian.jpg",
+        "avatar": "sebastian.jpg",
         "password": "luxsuite999"
       },
       {
         "name": "Thomas Laurent",
         "email": "thomas.laurent@example.com",
-        "image": "/avatars/thomas.jpg",
+        "avatar": "thomas.jpg",
         "password": "flatroom123"
       },
       {
         "name": "Anna Schmidt",
         "email": "anna.schmidt@example.com",
-        "image": "/avatars/anna.jpg",
+        "avatar": "anna.jpg",
         "password": "familyhome456"
       }
     ],

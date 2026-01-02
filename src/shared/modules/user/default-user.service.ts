@@ -30,7 +30,7 @@ export class DefaultUserService implements UserService, DocumentExists {
       return res;
     } catch (error) {
       if (error instanceof MongoServerError && error.code === 11000) {
-        throw new Error(`User with email ${dto.email} already exists`);
+        throw new Error(`User with email ${user.email} already exists`);
       }
 
       throw error;
@@ -63,7 +63,7 @@ export class DefaultUserService implements UserService, DocumentExists {
   public async updateAvatar(userId: string, avatarPath: string) {
     const updatedUser = await this.userModel.findByIdAndUpdate(
       userId,
-      { image: avatarPath },
+      { avatar: avatarPath },
       { new: true }
     );
 

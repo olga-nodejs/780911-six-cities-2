@@ -61,7 +61,7 @@ export class UserController extends BaseController {
       middlewares: [
         new UploadFileMiddleware(
           this.configService.get('UPLOAD_DIRECTORY'),
-          'image'
+          'avatar'
         ),
         new ValidateDTOMiddleware(CreateUserDTO),
       ],
@@ -123,7 +123,7 @@ export class UserController extends BaseController {
     );
 
     this.created(res, {
-      image: updatedUser.image,
+      avatar: updatedUser.avatar,
     });
   }
 

@@ -8,7 +8,7 @@ import {
 
 import { User, UserType } from '../../types/index.js';
 import { createSHA256 } from '../../helpers/common.js';
-import { DEFAULT_USER_IMAGE } from './user.constant.js';
+import { DEFAULT_USER_AVATAR } from './user.constant.js';
 
 export interface UserEntity extends defaultClasses.Base {}
 
@@ -29,7 +29,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
   public name: string;
 
   @prop({ required: false })
-  public image: string;
+  public avatar: string;
 
   @prop({
     type: () => String,
@@ -51,7 +51,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
     this.email = userData.email;
     this.name = userData.name;
-    this.image = userData.image ?? DEFAULT_USER_IMAGE;
+    this.avatar = userData.avatar ?? DEFAULT_USER_AVATAR;
     this.userType = userData.userType ?? 'starter';
     this.favorites = [];
   }
