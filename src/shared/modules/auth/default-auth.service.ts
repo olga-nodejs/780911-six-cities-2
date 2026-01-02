@@ -34,9 +34,9 @@ export class DefaultAuthService implements AuthService {
     this.logger.info(`Create token for ${user.email}`);
 
     return new SignJWT(tokenPayload)
-      .setProtectedHeader({ alg: JWT_ALGORITHM })
+      .setProtectedHeader({ alg: JWT_ALGORITHM.HS256 })
       .setIssuedAt()
-      .setExpirationTime(JWT_EXPIRED)
+      .setExpirationTime(JWT_EXPIRED.twoDays)
       .sign(secretKey);
   }
 
