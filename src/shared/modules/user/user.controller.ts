@@ -26,6 +26,7 @@ import {
 import { Component } from '../../types/index.js';
 import { fillDTO } from '../../helpers/common.js';
 import { AuthService } from '../auth/index.js';
+import { PathTransformerInterface } from '../../libs/rest/transform/index.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -34,9 +35,10 @@ export class UserController extends BaseController {
     @inject(Component.UserService) private readonly userService: UserService,
     @inject(Component.Config)
     private readonly configService: Config<RestSchema>,
-    @inject(Component.AuthService) private readonly authService: AuthService
+    @inject(Component.AuthService) private readonly authService: AuthService,
+    @inject(Component.PathTransformer) pathTranformer: PathTransformerInterface
   ) {
-    super(logger);
+    super(logger, pathTranformer);
 
     this.logger.info('Register routes for userController…');
 

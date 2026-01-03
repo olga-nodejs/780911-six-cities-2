@@ -7,3 +7,4 @@ export * from './exception-filter/http.exception-filter.js';
 export * from './types/index.js';
 export * from './errors/index.js';
 export * from './middleware/index.js';
+export * from './transform/path-transformer.js';

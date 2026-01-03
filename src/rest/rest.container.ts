@@ -13,6 +13,10 @@ import {
   ValidationExceptionFilter,
 } from '../shared/libs/rest/index.js';
 import { HttpErrorExceptionFilter } from '../shared/libs/rest/exception-filter/http.exception-filter.js';
+import {
+  PathTransformer,
+  PathTransformerInterface,
+} from '../shared/libs/rest/transform/index.js';
 
 dotenv.config();
 
@@ -49,6 +53,11 @@ export const createRestApplicationContainer = () => {
   restApplicationContainer
     .bind<ExceptionFilter>(Component.ValidationExceptionFilter)
     .to(ValidationExceptionFilter)
+    .inSingletonScope();
+
+  restApplicationContainer
+    .bind<PathTransformerInterface>(Component.PathTransformer)
+    .to(PathTransformer)
     .inSingletonScope();
 
   return restApplicationContainer;

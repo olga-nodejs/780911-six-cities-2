@@ -134,6 +134,10 @@ export function isPlainObject(
   );
 }
 
+export function isObject(value: unknown): value is Record<string, object> {
+  return typeof value === 'object' && value !== null;
+}
+
 export function valueToTSVString(value: unknown) {
   if (Array.isArray(value)) {
     return value.join();

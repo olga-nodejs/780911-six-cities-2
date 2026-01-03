@@ -30,6 +30,7 @@ import {
 import { fillDTO } from '../../helpers/common.js';
 import { RestSchema, Config } from '../../libs/config/index.js';
 import { UserService } from '../user/index.js';
+import { PathTransformerInterface } from '../../libs/rest/transform/index.js';
 
 function buildOfferUpdateDTO(
   body: UpdateOfferDTO,
@@ -60,9 +61,10 @@ export class OfferController extends BaseController {
     private readonly configService: Config<RestSchema>,
     @inject(Component.CommentService)
     private readonly commentService: CommentService,
-    @inject(Component.UserService) private readonly userService: UserService
+    @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.PathTransformer) pathTranformer: PathTransformerInterface
   ) {
-    super(logger);
+    super(logger, pathTranformer);
 
     this.logger.info('Register routes for OfferController…');
     // GET /offers?limit=5
@@ -206,6 +208,7 @@ export class OfferController extends BaseController {
     const offers = await this.offerService.find({ city, limit });
 
     const responseData = fillDTO(OfferRdo, offers);
+    console.log('OFFERS GET ALL');
     this.ok(res, responseData);
   }
 
