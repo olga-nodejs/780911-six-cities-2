@@ -22,7 +22,7 @@ export interface UserEntity extends defaultClasses.Base {}
   },
 })
 export class UserEntity extends defaultClasses.TimeStamps implements User {
-  @prop({ required: true, unique: true })
+  @prop({ required: true, unique: true, lowercase: true })
   public email: string;
 
   @prop({ required: true })
