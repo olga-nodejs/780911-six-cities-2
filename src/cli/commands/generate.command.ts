@@ -11,7 +11,7 @@ export class GenerateCommand implements Command {
   private rawData = {} as MockServerData;
   private static readonly MOCK_API_URL = `http://${configRestSchema.get(
     'HOST'
-  )}:${configRestSchema.get('PORT')}/api`;
+  )}:${configRestSchema.get('MOCK_API_PORT')}/api`;
 
   public getName() {
     return '--generate';
@@ -29,7 +29,6 @@ export class GenerateCommand implements Command {
   }
 
   private async write(offerAmount: number, outputPath: string) {
-    console.log({ rawData: this.rawData });
     const offerGenerator = new OfferGenerator(this.rawData);
     const offerArr = [];
     for (let i = 0; i < offerAmount; i++) {
