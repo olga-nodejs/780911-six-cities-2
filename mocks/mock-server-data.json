@@ -29,39 +29,39 @@
       "Dusseldorf"
     ],
     "preview_images": [
-      "/images/paris-studio.jpg",
-      "/images/cologne-loft.jpg",
-      "/images/brussels-townhouse.jpg",
-      "/images/amsterdam-canal.jpg",
-      "/images/hamburg-hotel.jpg",
-      "/images/dusseldorf-suite.jpg",
-      "/images/brussels-room.jpg",
-      "/images/hamburg-house.jpg"
+      "images/paris-studio.jpg",
+      "images/cologne-loft.jpg",
+      "images/brussels-townhouse.jpg",
+      "images/amsterdam-canal.jpg",
+      "images/hamburg-hotel.jpg",
+      "images/dusseldorf-suite.jpg",
+      "images/brussels-room.jpg",
+      "images/hamburg-house.jpg"
     ],
     "property_photos": [
       [
-        "/images/paris-studio-1.jpg",
-        "/images/paris-studio-2.jpg",
-        "/images/paris-studio-3.jpg"
+        "images/paris-studio-1.jpg",
+        "images/paris-studio-2.jpg",
+        "images/paris-studio-3.jpg"
       ],
-      ["/images/cologne-loft-1.jpg", "/images/cologne-loft-2.jpg"],
+      ["images/cologne-loft-1.jpg", "images/cologne-loft-2.jpg"],
       [
-        "/images/brussels-townhouse-1.jpg",
-        "/images/brussels-townhouse-2.jpg",
-        "/images/brussels-townhouse-3.jpg"
+        "images/brussels-townhouse-1.jpg",
+        "images/brussels-townhouse-2.jpg",
+        "images/brussels-townhouse-3.jpg"
       ],
-      ["/images/amsterdam-canal-1.jpg", "/images/amsterdam-canal-2.jpg"],
-      ["/images/hamburg-hotel-1.jpg", "/images/hamburg-hotel-2.jpg"],
+      ["images/amsterdam-canal-1.jpg", "images/amsterdam-canal-2.jpg"],
+      ["images/hamburg-hotel-1.jpg", "images/hamburg-hotel-2.jpg"],
       [
-        "/images/dusseldorf-suite-1.jpg",
-        "/images/dusseldorf-suite-2.jpg",
-        "/images/dusseldorf-suite-3.jpg"
+        "images/dusseldorf-suite-1.jpg",
+        "images/dusseldorf-suite-2.jpg",
+        "images/dusseldorf-suite-3.jpg"
       ],
-      ["/images/brussels-room-1.jpg"],
+      ["images/brussels-room-1.jpg"],
       [
-        "/images/hamburg-house-1.jpg",
-        "/images/hamburg-house-2.jpg",
-        "/images/hamburg-house-3.jpg"
+        "images/hamburg-house-1.jpg",
+        "images/hamburg-house-2.jpg",
+        "images/hamburg-house-3.jpg"
       ]
     ],
     "property_types": ["apartment", "house", "hotel", "room"],
