@@ -11,7 +11,6 @@ type BaseOffer = {
   previewImage: string;
   propertyPhotos: Array<string>;
   premiumFlag: boolean;
-  // favorite_flag: '';
   rating: number;
   propertyType: PropertyType;
   roomsNumber: number;
