@@ -43,18 +43,10 @@ export class PathTransformer implements PathTransformerInterface {
   }
 
   private hasDefaultImage(value: string) {
-    console.log({
-      value,
-      hasDefaultImage: DEFAULT_STATIC_IMAGES.includes(value),
-    });
     return DEFAULT_STATIC_IMAGES.includes(value);
   }
 
   private rootPath(value: string) {
-    console.log({
-      value,
-      rootPath: this.hasDefaultImage(value) ? this.staticPath : this.uploadPath,
-    });
     return this.hasDefaultImage(value) ? this.staticPath : this.uploadPath;
   }
 

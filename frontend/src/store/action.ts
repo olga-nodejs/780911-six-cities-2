@@ -201,7 +201,6 @@ export const registerUser = createAsyncThunk<
 
   const formData = new FormData();
 
-  console.log('CLIENT: registerUser', rest);
   Object.entries(rest).forEach(([key, value]) => {
     formData.append(key, String(value));
   });
@@ -210,7 +209,6 @@ export const registerUser = createAsyncThunk<
     formData.append('avatar', avatar);
   }
 
-  console.log({ formData });
   const { data } = await api.post<{ id: string }>(ApiRoute.Register, formData);
 
   history.push(AppRoute.Login);

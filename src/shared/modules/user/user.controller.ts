@@ -47,7 +47,11 @@ export class UserController extends BaseController {
       path: '/login',
       method: HttpMethod.Post,
       handler: this.login,
-      middlewares: [new ValidateDTOMiddleware(LoginUserDTO)],
+      middlewares: [
+        new LoggerMiddleware(),
+        new ValidateDTOMiddleware(LoginUserDTO),
+        new LoggerMiddleware(),
+      ],
     });
 
     this.addRoute({
@@ -66,7 +70,6 @@ export class UserController extends BaseController {
           this.configService.get('UPLOAD_DIRECTORY'),
           'avatar'
         ),
-        new LoggerMiddleware(),
         new ValidateDTOMiddleware(CreateUserDTO),
       ],
     });
@@ -90,10 +93,9 @@ export class UserController extends BaseController {
     { body, file }: CreateUserRequest,
     res: Response
   ): Promise<void> {
-    console.log({ file });
     const userData = {
       ...body,
-      image: file?.filename,
+      avatar: file?.filename,
     };
     const user = await this.userService.create(
       userData as CreateUserDTO,
