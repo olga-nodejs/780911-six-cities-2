@@ -73,7 +73,6 @@ export class PathTransformer implements PathTransformerInterface {
 
           if (Array.isArray(value)) {
             if (this.isStaticProperty(key)) {
-              console.log({ key }, this.rootPath(key));
               current[key] = value.map(
                 (item) =>
                   `${getFullServerPath(
