@@ -64,7 +64,11 @@ export class PathTransformer implements PathTransformerInterface {
         if (Object.hasOwn(current, key)) {
           const value = current[key];
 
-          if (this.isStaticProperty(key) && typeof value === 'string') {
+          if (
+            this.isStaticProperty(key) &&
+            typeof value === 'string' &&
+            this.hasDefaultImage(value)
+          ) {
             current[key] = `${getFullServerPath(
               this.serverHost,
               this.serverPort
