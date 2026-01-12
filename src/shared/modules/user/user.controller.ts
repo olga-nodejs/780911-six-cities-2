@@ -10,6 +10,7 @@ import {
   ValidateObjectIdMiddleware,
   PrivateRouteMiddleware,
   AuthorizationErrorMessage,
+  ValidateImagesMiddleware,
 } from '../../libs/rest/index.js';
 
 import { Logger } from '../../libs/Logger/index.js';
@@ -75,7 +76,7 @@ export class UserController extends BaseController {
     });
 
     this.addRoute({
-      path: '/:userId/avatar',
+      path: 'users/:userId/avatar',
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
@@ -85,6 +86,9 @@ export class UserController extends BaseController {
           this.configService.get('UPLOAD_DIRECTORY'),
           'avatar'
         ),
+        new ValidateImagesMiddleware([
+          { name: 'avatar', maxCount: 1, isRequired: true },
+        ]),
       ],
     });
   }
