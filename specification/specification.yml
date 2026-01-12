@@ -177,7 +177,44 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/comment'
+
+  /offers/{offerId}/favorites:
+    parameters:
+      - $ref: '#/components/parameters/offerId'
+    post:
+      tags:
+        - offers
+      summary: Добавить объявление в избранное
+      description: Добавляет объявление пользователя в список избранного.
+      responses:
+        '201':
+          description: Объявление добавлено в избранное
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Невальдный ID у объявления
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Объявление с указанным ID не найдено
+
+    delete:
+      tags:
+        - offers
+      summary: Удалить объявление из избранного
+      description: Удаляет объявление пользователя из списка избранного.
+      responses:
+        '204':
+          description: Объявление удалено из избранного
+        '400':
+          description: Невальдный ID у объявления
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Объявление с указанным ID не найдено
 
   /register:
     post:
