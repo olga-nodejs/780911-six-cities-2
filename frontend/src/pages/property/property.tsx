@@ -87,7 +87,6 @@ const Property = (): JSX.Element | null => {
     })
   );
   locations.push({ id, ...location });
-
   const handleDeleteClick = () => {
     dispatch(deleteOffer(id));
   };
@@ -190,9 +189,7 @@ const Property = (): JSX.Element | null => {
                     />
                   </div>
                   <span className="property__user-name">{host.name}</span>
-                  {isPro && (
-                    <span className="property__user-status">Pro</span>
-                  )}
+                  {isPro && <span className="property__user-status">Pro</span>}
                 </div>
                 <div className="property__description">
                   <p className="property__text">{description}</p>
@@ -215,9 +212,7 @@ const Property = (): JSX.Element | null => {
         </section>
         <div className="container">
           <section className="near-places places">
-            <h2 className="near-places__title">
-              Premium offers
-            </h2>
+            <h2 className="near-places__title">Premium offers</h2>
             <div className="near-places__list places__list">
               {premiumOffers.map((premiumOffer) => (
                 <Card

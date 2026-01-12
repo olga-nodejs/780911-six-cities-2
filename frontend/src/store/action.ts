@@ -134,11 +134,11 @@ export const fetchPremiumOffers = createAsyncThunk<
   { extra: Extra }
 >(Action.FETCH_PREMIUM_OFFERS, async (cityName, { extra }) => {
   const { api } = extra;
-  const { data } = await api.get<Offer[]>(
+  const { data } = await api.get<APIOfferResponse[]>(
     `${ApiRoute.Premium}?city=${cityName}`
   );
-
-  return data;
+  const clientData = adaptOffersToClient(data);
+  return clientData;
 });
 
 export const fetchComments = createAsyncThunk<
