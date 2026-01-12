@@ -7,10 +7,7 @@ import {
   DEFAULT_STATIC_IMAGES,
   STATIC_RESOURCE_FIELDS,
 } from './path-transformer.constant.js';
-import {
-  STATIC_FILES_ROUTE,
-  STATIC_UPLOAD_ROUTE,
-} from '../../../../rest/index.js';
+import { StaticRoutes } from '../../../../rest/index.js';
 import { PathTransformerInterface } from './path-transformer.interface.js';
 /**
  * Transforms relative static resource paths into fully-qualified server URLs.
@@ -28,8 +25,8 @@ import { PathTransformerInterface } from './path-transformer.interface.js';
 
 @injectable()
 export class PathTransformer implements PathTransformerInterface {
-  private staticPath = STATIC_FILES_ROUTE;
-  private uploadPath = STATIC_UPLOAD_ROUTE;
+  private staticPath = StaticRoutes.StaticFiles;
+  private uploadPath = StaticRoutes.Upload;
   private serverHost: string;
   private serverPort: number;
 
