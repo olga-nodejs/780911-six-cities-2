@@ -77,21 +77,21 @@ export class DefaultUserService implements UserService, DocumentExists {
     return updatedUser;
   }
 
-  public async getFavorites({
-    userId,
-  }: {
-    userId: string;
-  }): Promise<DocumentType<OfferEntity>[]> {
+  public async getFavorites({ userId }: { userId: string }) {
     const user = await this.userModel.findById(userId);
     if (!user) throw new Error('User not found');
     const { favorites } = user;
 
     if (favorites.length) {
-      const offers = await this.offerModel.find({
-        _id: { $in: user.favorites },
-      });
+      const offers = await this.offerModel
+        .find({
+          _id: { $in: user.favorites },
+        })
+        .lean();
 
-      return offers;
+      return offers.map((offer) => {
+        return { ...offer, isFavorite: true };
+      });
     }
     return [];
   }

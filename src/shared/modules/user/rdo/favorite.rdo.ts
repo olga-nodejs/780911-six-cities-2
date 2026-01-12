@@ -24,4 +24,7 @@ export class FavoriteRDO {
 
   @Expose()
   public commentsCount!: number;
+
+  @Expose()
+  public isFavorite!: boolean;
 }
