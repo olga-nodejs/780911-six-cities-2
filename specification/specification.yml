@@ -177,9 +177,46 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/comment'
 
-  /users/registrate:
+  /offers/{offerId}/favorites:
+    parameters:
+      - $ref: '#/components/parameters/offerId'
+    post:
+      tags:
+        - offers
+      summary: Добавить объявление в избранное
+      description: Добавляет объявление пользователя в список избранного.
+      responses:
+        '201':
+          description: Объявление добавлено в избранное
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        '400':
+          description: Невальдный ID у объявления
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Объявление с указанным ID не найдено
+
+    delete:
+      tags:
+        - offers
+      summary: Удалить объявление из избранного
+      description: Удаляет объявление пользователя из списка избранного.
+      responses:
+        '204':
+          description: Объявление удалено из избранного
+        '400':
+          description: Невальдный ID у объявления
+        '401':
+          description: Пользователь не авторизован
+        '404':
+          description: Объявление с указанным ID не найдено
+
+  /register:
     post:
       tags:
         - users
@@ -200,23 +237,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/createUserRDO'
 
         '409':
           description: Пользователь с таким email уже существует.
 
-  /users/login:
+  /login:
     post:
       tags:
         - users
       summary: Авторизация пользователя
       description: Авторизует пользователя на основе логина и пароля
 
-    get:
-      tags:
-        - users
-      summary: Проверка состояния пользователя
-      description: Возвращает информацию по авторизованному пользователю
+      responses:
+        '200':
+          description: Пользователь авторизован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/loggedUser'
+
+        '404':
+          description: Пользователь не найден.
+
+        '401':
+          description: Email или password не верны.
 
   /users/{userId}/avatar:
     parameters:
@@ -227,6 +272,42 @@ paths:
       summary: Загрузить изображение аватара
       description: Загружает изображение аватара пользователя. Изображение
         аватара должно быть в формате `png` или `jpg`.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Аватар успешно загружен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  avatar:
+                    type: string
+                    format: uri
+                    example: /uploads/avatars/6329c3d6a04ab1061c6425ea.png
+        '400':
+          description: Невалидный id или нет файла | Количество файлов больше чем 1 | Изображение пользователя не в формате .jpg или .png;
+        '401':
+          description: Пользователь не авторизован
+
+  /logout:
+    post:
+      tags:
+        - users
+      summary: Выход пользователя
+      description: Логаут авторизованного пользователя
+      responses:
+        '204':
+          description: Пользователь вышел
 
 components:
   schemas:
@@ -256,7 +337,6 @@ components:
       required:
         - title
         - description
-        - publicationDate
         - city
         - previewImage
         - propertyPhotos
@@ -414,10 +494,12 @@ components:
 
         rentalCost:
           type: number
+
         features:
           type: array
           items:
             $ref: '#/components/schemas/propertyFeature'
+
         coordinates:
           type: array
           minItems: 2
@@ -452,6 +534,29 @@ components:
         userType:
           $ref: '#/components/schemas/userType'
 
+    createUserRDO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Keks
+
+        avatar:
+          type: string
+
+        userType:
+          $ref: '#/components/schemas/userType'
+
+    loggedUser:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR...
+
     user:
       type: object
 
@@ -466,6 +571,11 @@ components:
 
         userType:
           $ref: '#/components/schemas/userType'
+
+        avatar:
+          type: string
+          format: uri
+          example: /uploads/avatars/6329c3d6a04ab1061c6425ea.png
 
     comment:
       type: object

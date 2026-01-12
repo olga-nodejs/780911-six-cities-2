@@ -31,7 +31,6 @@ export class MongoDbClient implements DBClient {
     let attempt = 0;
     while (attempt < RETRY_COUNT) {
       try {
-        console.log({ uri });
         this.mongoose = await Mongoose.connect(uri);
         this.isConnected = true;
         this.logger.info('Database connection established.');
@@ -43,7 +42,7 @@ export class MongoDbClient implements DBClient {
           `Failed to connect to the database. Attempt ${attempt}`,
           error as Error
         );
-        console.log({ error });
+
         await setTimeout(RETRY_TIMEOUT);
       }
     }

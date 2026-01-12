@@ -10,3 +10,4 @@ export * from './rdo/logged-user.rdo.js';
 export * from './create-user-request.js';
 export * from './user.controller.js';
 export * from './login-user-request.js';
+export * from './user.constant.js';

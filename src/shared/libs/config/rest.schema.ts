@@ -5,6 +5,7 @@ convict.addFormats(validator);
 
 export type RestSchema = {
   PORT: number;
+  MOCK_API_PORT: number;
   SALT: string;
   DB_USER: string;
   DB_PASSWORD: string;
@@ -16,8 +17,9 @@ export type RestSchema = {
   ME_CONFIG_BASICAUTH_PASSWORD: string;
   DB_NAME: string;
   UPLOAD_DIRECTORY: string;
-  DEFAULT_USER_IMAGE: string;
   JWT_SECRET: string;
+  HOST: string;
+  STATIC_DIRECTORY_PATH: string;
 };
 
 export const configRestSchema = convict<RestSchema>({
@@ -26,6 +28,12 @@ export const configRestSchema = convict<RestSchema>({
     format: 'port',
     env: 'PORT',
     default: 4000,
+  },
+  MOCK_API_PORT: {
+    doc: 'Port for mock api json-server',
+    format: 'port',
+    env: 'MOCK_API_PORT',
+    default: 8000,
   },
   SALT: {
     doc: 'Salt for password hash',
@@ -93,16 +101,22 @@ export const configRestSchema = convict<RestSchema>({
     env: 'UPLOAD_DIRECTORY',
     default: null,
   },
-  DEFAULT_USER_IMAGE: {
-    doc: 'Default image for user',
-    format: String,
-    env: 'DEFAULT_USER_IMAGE',
-    default: 'upload/test.png',
-  },
   JWT_SECRET: {
     doc: 'Secret for sign JWT',
     format: String,
     env: 'JWT_SECRET',
     default: null,
+  },
+  HOST: {
+    doc: 'Host where started service',
+    format: String,
+    env: 'HOST',
+    default: 'localhost',
+  },
+  STATIC_DIRECTORY_PATH: {
+    doc: 'Path to directory with static resources',
+    format: String,
+    env: 'STATIC_DIRECTORY_PATH',
+    default: 'static',
   },
 });

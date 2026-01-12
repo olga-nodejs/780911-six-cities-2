@@ -3,7 +3,7 @@ import { UserType } from './index.js';
 export type User = {
   name: string;
   email: string;
-  image: string;
+  avatar: string;
   userType: UserType;
   favorites: Array<string>;
 };

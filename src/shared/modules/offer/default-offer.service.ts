@@ -19,6 +19,7 @@ import {
   OfferCount,
 } from './index.js';
 import { CommentEntity } from '../comment/index.js';
+import { UserEntity } from '../user/index.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService, DocumentExists {
@@ -27,7 +28,9 @@ export class DefaultOfferService implements OfferService, DocumentExists {
     @inject(Component.OfferModel)
     private readonly offerModel: types.ModelType<OfferEntity>,
     @inject(Component.CommentModel)
-    private readonly commentModel: types.ModelType<CommentEntity>
+    private readonly commentModel: types.ModelType<CommentEntity>,
+    @inject(Component.UserModel)
+    private readonly userModel: types.ModelType<UserEntity>
   ) {}
 
   public async exists(documentId: string): Promise<boolean> {
@@ -38,6 +41,11 @@ export class DefaultOfferService implements OfferService, DocumentExists {
   }
 
   public async create(dto: CreateOfferDTO): Promise<DocumentType<OfferEntity>> {
+    const userExists = await this.userModel.exists({ _id: dto.userId });
+
+    if (!userExists) {
+      throw new Error('User does not exist or was deleted');
+    }
     const offer = new OfferEntity(dto);
 
     const res = await this.offerModel.create(offer);

@@ -12,7 +12,7 @@ export interface UserService {
   updateAvatar(
     documentId: string,
     filePath: string
-  ): Promise<{ image: string }>;
+  ): Promise<{ avatar: string }>;
 
   addFavorite({
     offerId,

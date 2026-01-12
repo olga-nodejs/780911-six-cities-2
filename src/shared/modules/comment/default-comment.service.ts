@@ -19,7 +19,6 @@ export class DefaultCommentService implements CommentService {
     @inject(Component.OfferModel)
     private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
-  // TODO: comment creation is done by logged users only
 
   public async updateCommentsCount(offerId: string): Promise<void> {
     const result = await this.commentModel
@@ -30,7 +29,7 @@ export class DefaultCommentService implements CommentService {
       .exec();
 
     const commentsCount = result[0]?.commentsCount ?? 0;
-    console.log({ commentsCount, result });
+
     await this.offerModel.findByIdAndUpdate(offerId, {
       $set: { commentsCount },
     });
@@ -72,7 +71,7 @@ export class DefaultCommentService implements CommentService {
       offerId,
       userId,
     };
-    console.log({ commentData });
+
     const newComment = await this.commentModel.create(commentData);
 
     await this.updateOfferRating(offerId);

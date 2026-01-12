@@ -1,5 +1,5 @@
 import {
-  IsDateString,
+  // IsDateString,
   IsEnum,
   IsBoolean,
   IsInt,
@@ -11,6 +11,7 @@ import {
   ArrayMaxSize,
   IsString,
   Length,
+  IsUrl,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { City, PropertyType, PropertyFeature } from '../../../types/index.js';
@@ -27,19 +28,20 @@ export class CreateOfferDTO {
   })
   public description!: string;
 
-  @IsDateString(
-    {},
-    { message: OfferValidationMessage.publicationDate.invalidFormat }
-  )
-  public publicationDate!: Date;
+  // public publicationDate!: Date;
 
   @IsEnum(City, {
     message: OfferValidationMessage.city.invalid,
   })
   public city!: City;
 
+  @IsUrl()
   public previewImage!: string;
 
+  @IsArray()
+  @ArrayMinSize(6)
+  @ArrayMaxSize(6)
+  @IsUrl({}, { each: true })
   public propertyPhotos!: Array<string>;
 
   @IsBoolean({ message: OfferValidationMessage.premiumFlag.type })
@@ -47,13 +49,13 @@ export class CreateOfferDTO {
   public premiumFlag!: boolean;
 
   // favorite_flag!: '';
-  @Type(() => Number)
-  @IsNumber(
-    { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 1 },
-    { message: OfferValidationMessage.rating.invalidFormat }
-  )
-  @Min(1, { message: OfferValidationMessage.rating.minValue })
-  @Max(5, { message: OfferValidationMessage.rating.maxValue })
+  // @Type(() => Number)
+  // @IsNumber(
+  //   { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 1 },
+  //   { message: OfferValidationMessage.rating.invalidFormat }
+  // )
+  // @Min(1, { message: OfferValidationMessage.rating.minValue })
+  // @Max(5, { message: OfferValidationMessage.rating.maxValue })
   public rating!: number;
 
   @IsEnum(PropertyType, {
@@ -114,7 +116,7 @@ export class CreateOfferDTO {
   )
   public coordinates!: [number, number];
 
-  @Type(() => Number)
-  @IsInt({ message: OfferValidationMessage.commentsCount.invalidFormat })
-  public commentsCount!: number;
+  // @Type(() => Number)
+  // @IsInt({ message: OfferValidationMessage.commentsCount.invalidFormat })
+  // public commentsCount!: number;
 }

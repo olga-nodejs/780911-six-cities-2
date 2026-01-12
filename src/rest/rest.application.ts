@@ -1,18 +1,22 @@
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import { inject, injectable } from 'inversify';
+import cors from 'cors';
 import { RestApplicationInterface } from './rest.interface.js';
 import { type Logger } from '../shared/libs/Logger/index.js';
 import { Component } from '../shared/types/index.js';
 import { RestSchema, Config } from '../shared/libs/config/index.js';
-import { getMongoURI } from '../shared/helpers/common.js';
+import { getFullServerPath, getMongoURI } from '../shared/helpers/common.js';
 import { DBClient } from '../shared/libs/db-client/index.js';
 import {
   Controller,
   ExceptionFilter,
   ParseTokenMiddleware,
+  ValidationExceptionFilter,
+  HttpErrorExceptionFilter,
 } from '../shared/libs/rest/index.js';
 import { AuthExceptionFilter } from '../shared/modules/auth/index.js';
+import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from './rest.constant.js';
 
 @injectable()
 export class RestApplication implements RestApplicationInterface {
@@ -28,7 +32,11 @@ export class RestApplication implements RestApplicationInterface {
     @inject(Component.ExceptionFilter)
     private readonly appExceptionFilter: ExceptionFilter,
     @inject(Component.AuthExceptionFilter)
-    private readonly authExceptionFilter: AuthExceptionFilter
+    private readonly authExceptionFilter: AuthExceptionFilter,
+    @inject(Component.HttpErrorExceptionFilter)
+    private readonly httpExceptionFilter: HttpErrorExceptionFilter,
+    @inject(Component.ValidationExceptionFilter)
+    private readonly validationExceptionError: ValidationExceptionFilter
   ) {
     this.server = express();
   }
@@ -54,18 +62,23 @@ export class RestApplication implements RestApplicationInterface {
 
   private async initControllers() {
     this.server.use('/offers', this.offerController.router);
-    this.server.use('/users', this.userController.router);
+    this.server.use('/', this.userController.router);
   }
 
   private async initMiddleware() {
+    this.server.use(cors());
     const authenticateMiddleware = new ParseTokenMiddleware(
       this.config.get('JWT_SECRET')
     );
 
     this.server.use(express.json());
     this.server.use(
-      '/upload',
+      STATIC_UPLOAD_ROUTE,
       express.static(this.config.get('UPLOAD_DIRECTORY'))
+    );
+    this.server.use(
+      STATIC_FILES_ROUTE,
+      express.static(this.config.get('STATIC_DIRECTORY_PATH'))
     );
     this.server.use(
       authenticateMiddleware.execute.bind(authenticateMiddleware)
@@ -76,6 +89,15 @@ export class RestApplication implements RestApplicationInterface {
     this.server.use(
       this.authExceptionFilter.catch.bind(this.authExceptionFilter)
     );
+
+    this.server.use(
+      this.validationExceptionError.catch.bind(this.validationExceptionError)
+    );
+
+    this.server.use(
+      this.httpExceptionFilter.catch.bind(this.httpExceptionFilter)
+    );
+
     this.server.use(
       this.appExceptionFilter.catch.bind(this.appExceptionFilter)
     );
@@ -106,7 +128,10 @@ export class RestApplication implements RestApplicationInterface {
     this.logger.info('Server initialization completed');
 
     this.logger.info(
-      `🚀 Server started on http://localhost:${this.config.get('PORT')}`
+      `🚀 Server started on ${getFullServerPath(
+        this.config.get('HOST'),
+        this.config.get('PORT')
+      )}`
     );
   }
 }

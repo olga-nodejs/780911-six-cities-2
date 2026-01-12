@@ -12,5 +12,13 @@ export type MockServerData = {
   property_types: Array<PropertyType>;
   features: Array<PropertyFeature>;
   users: Array<MockUser>;
+  userData: {
+    names: Array<string>;
+    adjectives: Array<string>;
+    nouns: Array<string>;
+    domains: Array<string>;
+    userTypes: Array<string>;
+    passwords: Array<string>;
+  };
   coordinates: { [C in City]: [number, number][] };
 };

@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import * as crypto from 'node:crypto';
 import chalk from 'chalk';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
+import { ValidationError } from 'class-validator';
 
 import { Logger } from '../libs/Logger/index.js';
 
@@ -15,56 +16,71 @@ import {
   UserType,
 } from '../types/index.js';
 
-export const generateErrorMessage = (error: unknown, message: string) => {
+import { ApplicationError, ValidationErrorField } from '../libs/rest/index.js';
+
+export function generateErrorMessage(error: unknown, message: string) {
   console.error(chalk.red(message));
 
   if (error instanceof Error) {
     console.error(chalk.red(error.message));
   }
-};
+}
 
-export const generateRandomValue = (
+export function generateRandomValue(
   min: number,
   max: number,
   numAfterDigit = 0
-) => +(Math.random() * (max - min) + min).toFixed(numAfterDigit);
+) {
+  return +(Math.random() * (max - min) + min).toFixed(numAfterDigit);
+}
 
-export const getRandomItems = <T>(items: T[]): T[] => {
+export function getRandomItems<T>(items: T[]): T[] {
   const startPosition = generateRandomValue(0, items.length - 1);
   const endPosition =
     startPosition + generateRandomValue(startPosition, items.length);
   return items.slice(startPosition, endPosition);
-};
+}
 
-export const getRandomItem = <T>(items: T[]): T =>
-  items[generateRandomValue(0, items.length - 1)];
+export function getRandomItem<T>(items: T[]): T {
+  return items[generateRandomValue(0, items.length - 1)];
+}
 
-export const getDaysAgo = (daysAgo: number): Date => {
+export function getDaysAgo(daysAgo: number): Date {
   const today = new Date();
 
   const nDaysAgo = new Date(today);
   nDaysAgo.setUTCDate(today.getUTCDate() - Math.floor(daysAgo));
 
   return nDaysAgo;
-};
+}
 
-export const isNumber = (value: unknown): value is number =>
-  typeof value === 'number' && Number.isFinite(value);
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
 
-const createMockUser = (arr: Array<string>): MockUser => {
-  const keys = ['name', 'email', 'image', 'password', 'userType'] as const;
+export function generateRandomEmail(
+  adjectives: Array<string>,
+  nouns: Array<string>,
+  domains: Array<string>
+) {
+  return `${getRandomItem(adjectives)}.${getRandomItem(nouns)}@${getRandomItem(
+    domains
+  )}`;
+}
+export function createMockUser(values: string[]): MockUser {
+  const [name, email, password, userType, avatar] = values;
 
-  return keys.reduce((acc, key, index) => {
-    if (key === 'userType') {
-      acc.userType = arr[index] as UserType;
-    } else {
-      acc[key] = arr[index];
-    }
-    return acc;
-  }, {} as MockUser);
-};
+  return {
+    name,
+    email,
+    password,
+    userType: userType as UserType,
+    avatar,
+    favorites: [],
+  };
+}
 
-export const createMockOffer = (line: string): MockOffer => {
+export function createMockOffer(line: string): MockOffer {
   const values = line.trimEnd().split('\t');
   const [
     title,
@@ -105,7 +121,7 @@ export const createMockOffer = (line: string): MockOffer => {
   };
 
   return offer;
-};
+}
 
 export function isPlainObject(
   value: unknown
@@ -118,7 +134,11 @@ export function isPlainObject(
   );
 }
 
-export const valueToTSVString = (value: unknown) => {
+export function isObject(value: unknown): value is Record<string, object> {
+  return typeof value === 'object' && value !== null;
+}
+
+export function valueToTSVString(value: unknown) {
   if (Array.isArray(value)) {
     return value.join();
   }
@@ -136,19 +156,21 @@ export const valueToTSVString = (value: unknown) => {
   }
 
   return value as string;
-};
+}
 
-export const getCurrentDirectory = (path: URL | string) =>
-  dirname(fileURLToPath(path));
+export function getCurrentDirectory(path: URL | string) {
+  return dirname(fileURLToPath(path));
+}
 
-export const getMongoURI = (
+export function getMongoURI(
   login: string,
   password: string,
   host: string,
   port: string,
   dbName: string
-) =>
-  `mongodb://${login}:${password}@${host}:${port}/${dbName}?authSource=admin`;
+) {
+  return `mongodb://${login}:${password}@${host}:${port}/${dbName}?authSource=admin`;
+}
 // mongodb://admin:mypassword@example.com:27017/?authSource=admin
 
 export const createSHA256 = (line: string, salt: string): string => {
@@ -156,7 +178,7 @@ export const createSHA256 = (line: string, salt: string): string => {
   return shaHasher.update(line).digest('hex');
 };
 
-export const requireArgs = (logger: Logger, args: Record<string, unknown>) => {
+export function requireArgs(logger: Logger, args: Record<string, unknown>) {
   const missing = Object.entries(args)
     .filter(
       ([_, value]) => value === undefined || value === null || value === ''
@@ -171,7 +193,7 @@ export const requireArgs = (logger: Logger, args: Record<string, unknown>) => {
 
     throw new Error(`Missing required argument ${missing.join()}`);
   }
-};
+}
 
 export function fillDTO<T, V>(someDTO: ClassConstructor<T>, plainObject: V) {
   return plainToInstance(someDTO, plainObject, {
@@ -179,8 +201,28 @@ export function fillDTO<T, V>(someDTO: ClassConstructor<T>, plainObject: V) {
   });
 }
 
-export function createErrorObject(message: string) {
+export function createErrorObject(
+  errorType: ApplicationError,
+  error: string,
+  details: ValidationErrorField[] = []
+) {
   return {
-    error: message,
+    errorType,
+    error,
+    details,
   };
+}
+
+export function reduceValidationErrors(
+  errors: ValidationError[]
+): ValidationErrorField[] {
+  return errors.map(({ property, value, constraints }) => ({
+    property,
+    value,
+    messages: constraints ? Object.values(constraints) : [],
+  }));
+}
+
+export function getFullServerPath(host: string, port: number) {
+  return `http://${host}:${port}`;
 }

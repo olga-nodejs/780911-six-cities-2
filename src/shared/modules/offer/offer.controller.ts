@@ -30,6 +30,8 @@ import {
 import { fillDTO } from '../../helpers/common.js';
 import { RestSchema, Config } from '../../libs/config/index.js';
 import { UserService } from '../user/index.js';
+import { PathTransformerInterface } from '../../libs/rest/transform/index.js';
+import { LoggerMiddleware } from '../../libs/rest/middleware/loggerMiddleware.js';
 
 function buildOfferUpdateDTO(
   body: UpdateOfferDTO,
@@ -41,17 +43,16 @@ function buildOfferUpdateDTO(
   const dto: Partial<UpdateOfferDTO> = { ...body };
 
   if (files?.previewImage?.length) {
-    dto.previewImage = files.previewImage[0].path;
+    dto.previewImage = files.previewImage[0].filename;
   }
 
   if (files?.propertyPhotos?.length) {
-    dto.propertyPhotos = files.propertyPhotos.map((f) => f.path);
+    dto.propertyPhotos = files.propertyPhotos.map((f) => f.filename);
   }
 
   return dto;
 }
 
-// TODO: add pagination to offers
 @injectable()
 export class OfferController extends BaseController {
   constructor(
@@ -61,9 +62,10 @@ export class OfferController extends BaseController {
     private readonly configService: Config<RestSchema>,
     @inject(Component.CommentService)
     private readonly commentService: CommentService,
-    @inject(Component.UserService) private readonly userService: UserService
+    @inject(Component.UserService) private readonly userService: UserService,
+    @inject(Component.PathTransformer) pathTranformer: PathTransformerInterface
   ) {
-    super(logger);
+    super(logger, pathTranformer);
 
     this.logger.info('Register routes for OfferController…');
     // GET /offers?limit=5
@@ -74,27 +76,10 @@ export class OfferController extends BaseController {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new LoggerMiddleware(),
         new PrivateRouteMiddleware(),
-        new UploadMultipleFilesMiddleware(
-          this.configService.get('UPLOAD_DIRECTORY'),
-          [
-            { name: OfferFileFields.previewImage, maxCount: 1 },
-            { name: OfferFileFields.propertyPhotos, maxCount: 6 },
-          ]
-        ),
-        new ValidateImagesMiddleware([
-          {
-            name: OfferFileFields.previewImage,
-            maxCount: 1,
-            isRequired: true,
-          },
-          {
-            name: OfferFileFields.propertyPhotos,
-            maxCount: 6,
-            isRequired: true,
-          },
-        ]),
         new ValidateDTOMiddleware(CreateOfferDTO),
+        new LoggerMiddleware(),
       ],
     });
     // GET /offers/premium?city=Paris&limit=10
@@ -212,13 +197,13 @@ export class OfferController extends BaseController {
 
   public async create(req: CreateOfferRequest, res: Response): Promise<void> {
     const { body, tokenPayload } = req;
-    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    // const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
     const offerData = {
       ...body,
       userId: tokenPayload.id,
-      propertyPhotos: files?.propertyPhotos?.map((f) => f.path) ?? [],
-      previewImage: files?.previewImage?.[0]?.path,
+      // propertyPhotos: files?.propertyPhotos?.map((f) => f.filename) ?? [],
+      // previewImage: files?.previewImage?.[0]?.filename,
     };
 
     const offer = await this.offerService.create(offerData);

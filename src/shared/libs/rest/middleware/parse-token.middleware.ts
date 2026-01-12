@@ -24,7 +24,14 @@ export class ParseTokenMiddleware implements Middleware {
     _res: Response,
     next: NextFunction
   ): Promise<void> {
+    const publicRoutes = ['/login', '/register'];
+
+    if (publicRoutes.includes(req.path)) {
+      return next();
+    }
+
     const authorizationHeader = req.headers?.authorization?.split(' ');
+
     if (!authorizationHeader) {
       return next();
     }

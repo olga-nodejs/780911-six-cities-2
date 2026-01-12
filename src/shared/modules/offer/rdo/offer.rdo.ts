@@ -60,13 +60,14 @@ export class OfferRdo {
       return null;
     }
 
-    const { _id, name, image, userType } = obj.userId;
+    const { _id, name, avatar, userType, email } = obj.userId;
 
     return {
       _id: _id?.toString(),
       name,
-      image,
+      avatar,
       userType,
+      email,
     };
   })
   public user!: UserRdo | null;

@@ -8,6 +8,7 @@ import {
 
 import { User, UserType } from '../../types/index.js';
 import { createSHA256 } from '../../helpers/common.js';
+import { DEFAULT_USER_FILE } from './user.constant.js';
 
 export interface UserEntity extends defaultClasses.Base {}
 
@@ -21,14 +22,14 @@ export interface UserEntity extends defaultClasses.Base {}
   },
 })
 export class UserEntity extends defaultClasses.TimeStamps implements User {
-  @prop({ required: true, unique: true })
+  @prop({ required: true, unique: true, lowercase: true })
   public email: string;
 
   @prop({ required: true })
   public name: string;
 
   @prop({ required: false })
-  public image: string;
+  public avatar: string;
 
   @prop({
     type: () => String,
@@ -50,7 +51,7 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
 
     this.email = userData.email;
     this.name = userData.name;
-    this.image = userData.image ?? '';
+    this.avatar = userData.avatar ?? DEFAULT_USER_FILE;
     this.userType = userData.userType ?? 'starter';
     this.favorites = [];
   }

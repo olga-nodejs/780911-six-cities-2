@@ -53,7 +53,8 @@ export class ImportCommand implements Command {
     this.offerService = new DefaultOfferService(
       this.logger,
       OfferModel,
-      CommentModel
+      CommentModel,
+      UserModel
     );
   }
 

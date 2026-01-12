@@ -16,7 +16,7 @@
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "ts-node",
-    "start:mock-api": "npx json-server ./mocks/mock-server-data.json --port 4000"
+    "start:mock-api": "npx json-server ./mocks/mock-server-data.json --port 8000"
   },
   "devDependencies": {
     "@types/convict-format-with-validator": "^6.0.6",
@@ -43,12 +43,14 @@
   },
   "dependencies": {
     "@typegoose/typegoose": "^11.5.0",
+    "@types/cors": "^2.8.15",
     "axios": "^1.13.2",
     "chalk": "^5.6.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "convict": "^6.2.4",
     "convict-format-with-validator": "^6.2.0",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",

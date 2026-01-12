@@ -6,7 +6,6 @@ import {
   Min,
   Max,
   IsNumber,
-  // IsMongoId,
   IsArray,
   ArrayMinSize,
   ArrayMaxSize,
@@ -49,17 +48,6 @@ export class UpdateOfferDTO {
   @Type(() => Boolean)
   @IsBoolean({ message: OfferValidationMessage.premiumFlag.type })
   public premiumFlag?: boolean;
-
-  // favorite_flag?: '';
-  // @IsOptional()
-  // @Type(() => Number)
-  // @IsNumber(
-  //   { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 1 },
-  //   { message: OfferValidationMessage.rating.invalidFormat }
-  // )
-  // @Min(1, { message: OfferValidationMessage.rating.minValue })
-  // @Max(5, { message: OfferValidationMessage.rating.maxValue })
-  // public rating?: number;
 
   @IsOptional()
   @IsEnum(PropertyType, {

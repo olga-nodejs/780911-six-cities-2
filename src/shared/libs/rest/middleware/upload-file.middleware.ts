@@ -25,6 +25,15 @@ export class UploadFileMiddleware implements Middleware {
       this.fieldName
     );
 
-    uploadSingleFileMiddleware(req, res, next);
+    uploadSingleFileMiddleware(req, res, (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (!req.file) {
+        delete req.body[this.fieldName];
+      }
+      next();
+    });
   }
 }

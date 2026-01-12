@@ -1,10 +1,15 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response, NextFunction } from 'express';
 
-import { ExceptionFilter, HttpError } from '../../libs/rest/index.js';
+import {
+  ApplicationError,
+  ExceptionFilter,
+  HttpError,
+} from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
 import { Logger } from '../../libs/Logger/index.js';
 import { BaseUserException } from './errors/base-user.exception.js';
+import { createErrorObject } from '../../helpers/common.js';
 
 @injectable()
 export class AuthExceptionFilter implements ExceptionFilter {
@@ -23,9 +28,8 @@ export class AuthExceptionFilter implements ExceptionFilter {
     }
 
     this.logger.error(`[AuthModule] ${error.message}`, error);
-    res.status(error.httpStatusCode).json({
-      type: 'AUTHORIZATION',
-      error: error.message,
-    });
+    res
+      .status(error.httpStatusCode)
+      .json(createErrorObject(ApplicationError.Authorization, error.message));
   }
 }

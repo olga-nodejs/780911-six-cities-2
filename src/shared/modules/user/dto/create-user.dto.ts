@@ -1,6 +1,13 @@
 import { UserType } from '../../../types/index.js';
 
-import { IsEmail, IsOptional, IsEnum, IsString, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsOptional,
+  IsEnum,
+  IsString,
+  Length,
+  IsNotEmpty,
+} from 'class-validator';
 
 import { UserValidationMessage } from './user-validation.messages.js';
 
@@ -13,7 +20,9 @@ export class CreateUserDTO {
   public email!: string;
 
   @IsOptional()
-  public image!: string;
+  @IsNotEmpty()
+  @IsString()
+  public avatar!: string;
 
   @IsString({ message: UserValidationMessage.password.invalidFormat })
   @Length(6, 12, { message: UserValidationMessage.password.length })
