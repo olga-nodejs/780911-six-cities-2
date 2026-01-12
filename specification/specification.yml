@@ -212,12 +212,6 @@ paths:
       summary: Авторизация пользователя
       description: Авторизует пользователя на основе логина и пароля
 
-    get:
-      tags:
-        - users
-      summary: Проверка состояния пользователя
-      description: Возвращает информацию по авторизованному пользователю
-
       responses:
         '200':
           description: Пользователь авторизован
@@ -226,8 +220,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/loggedUser'
 
-        '409':
-          description: Пользователь с таким email уже существует.
+        '404':
+          description: Пользователь не найден.
+
+        '401':
+          description: Email или password не верны.
 
   /users/{userId}/avatar:
     parameters:
