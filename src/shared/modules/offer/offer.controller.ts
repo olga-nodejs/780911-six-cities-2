@@ -197,13 +197,10 @@ export class OfferController extends BaseController {
 
   public async create(req: CreateOfferRequest, res: Response): Promise<void> {
     const { body, tokenPayload } = req;
-    // const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
     const offerData = {
       ...body,
       userId: tokenPayload.id,
-      // propertyPhotos: files?.propertyPhotos?.map((f) => f.filename) ?? [],
-      // previewImage: files?.previewImage?.[0]?.filename,
     };
 
     const offer = await this.offerService.create(offerData);

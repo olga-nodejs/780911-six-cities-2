@@ -339,3 +339,135 @@ module-name/
 - конкретные реализации подключаются в контейнерах
 
 - упрощает тестирование и замену реализаций
+
+## Примеры использования API (cURL)
+
+### Объявления (Offers)
+
+- Получить список всех объявлений
+
+```
+curl --location 'http://localhost:4000/offers'
+```
+
+- Премиальные предложения
+
+```
+curl --location 'http://localhost:4000/offers/premium?city=Paris&limit=10'
+```
+
+- Получить объявление по ID
+
+```
+curl --location 'http://localhost:4000/offers/6959849afb2409fe2e0da21a'
+```
+
+- Создать новое объявление (с изображениями, требуется авторизация)
+
+```
+curl --location 'http://localhost:4000/offers' \
+--header 'Authorization: Bearer <TOKEN>' \
+--form 'title="test upload images"' \
+--form 'description="test RDO offer test RDO offer test RDO offer"' \
+--form 'publicationDate="2025-12-11T00:00:00.000Z"' \
+--form 'city="Paris"' \
+--form 'previewImage=@"./img/preview.jpg"' \
+--form 'propertyPhotos=@"./img/photo1.jpg"' \
+--form 'propertyPhotos=@"./img/photo2.jpg"' \
+--form 'propertyPhotos=@"./img/photo3.jpg"' \
+--form 'propertyPhotos=@"./img/photo4.jpg"' \
+--form 'propertyPhotos=@"./img/photo5.jpg"' \
+--form 'propertyPhotos=@"./img/photo6.jpg"' \
+--form 'premiumFlag="true"' \
+--form 'rating="1"' \
+--form 'propertyType="house"' \
+--form 'roomsNumber="3"' \
+--form 'guestsNumber="4"' \
+--form 'rentalCost="120"' \
+--form 'features="Breakfast"' \
+--form 'features="Washer"' \
+--form 'coordinates="52.3702"' \
+--form 'coordinates="4.8952"'
+```
+
+- Обновить объявление
+
+```
+curl --location --request PATCH 'http://localhost:4000/offers/6958211d27e9fbde77185217' \
+--header 'Authorization: Bearer <TOKEN>' \
+--form 'title="updated offer to check images"'
+```
+
+- Удалить объявление
+
+```
+curl --location --request DELETE 'http://localhost:4000/offers/6953a1a74d0e093cc6e9103a' \
+--header 'Authorization: Bearer <TOKEN>'
+```
+
+- Добавить объявление в избранное
+
+````
+curl --location --request POST 'http://localhost:4000/offers/6953a1a74d0e093cc6e9103a/favorites' \
+--header 'Authorization: Bearer <TOKEN>' ```
+````
+
+### Пользователи и авторизация
+
+- Регистрация пользователя
+
+```
+curl --location 'http://localhost:4000/register' \
+--form 'email="Monica@gmail.com"' \
+--form 'name="Monica"' \
+--form 'userType="starter"' \
+--form 'avatar=@"postman-cloud:///1f0e04b2-db98-4f70-aec0-ad179b8c3d84"' \
+--form 'password="helloWorld"'
+```
+
+- Логин
+
+```
+curl --location 'http://localhost:4000/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+"email": "test@react.com",
+"password": "qwerty123"
+}'
+```
+
+- Загрузка аватара
+
+```
+curl --location 'http://localhost:4000/users/<USER_ID>/avatar' \
+--header 'Authorization: Bearer <TOKEN>' \
+--form 'avatar=@"./img/avatar.jpg"'
+```
+
+- Выход из системы (logout)
+
+```
+curl --location --request POST 'http://localhost:4000/logout' \
+--header 'Authorization: Bearer <TOKEN>'
+```
+
+### Комментарии
+
+- Получить комментарии к объявлению
+
+  ```
+  curl --location 'http://localhost:4000/offers/<OFFER_ID>/comments'
+  ```
+
+- Создать комментарий
+
+````
+curl --location --request POST 'http://localhost:4000/offers/<OFFER_ID>/comments' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "userId": "6329c3d6a04ab1061c6425ea",
+  "offerId": "6329c3d6a04ab1061c6425ea",
+  "text": "looks nice",
+  "rating": 4
+}' ```
+````
