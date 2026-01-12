@@ -66,6 +66,7 @@ export class RestApplication implements RestApplicationInterface {
   }
 
   private async initMiddleware() {
+    this.server.use(cors());
     const authenticateMiddleware = new ParseTokenMiddleware(
       this.config.get('JWT_SECRET')
     );
@@ -82,8 +83,6 @@ export class RestApplication implements RestApplicationInterface {
     this.server.use(
       authenticateMiddleware.execute.bind(authenticateMiddleware)
     );
-
-    this.server.use(cors());
   }
 
   private async initExceptionFilters() {

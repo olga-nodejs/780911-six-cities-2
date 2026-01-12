@@ -97,9 +97,15 @@ export interface UnauthorizedErrorResponse {
   message: string;
 }
 
+export interface AuthorizationErrorResponse {
+  errorType: 'AUTHORIZATION';
+  error: string;
+}
+
 export type ApiErrorResponse =
   | ValidationErrorResponse
   | ServiceErrorResponse
   | NotFoundErrorResponse
   | UnauthorizedErrorResponse
+  | AuthorizationErrorResponse
   | { message: string };

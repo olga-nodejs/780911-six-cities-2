@@ -11,6 +11,7 @@ export const apiErrorHandle = (error: AxiosError) => {
   if (!('errorType' in data)) {
     return data.message;
   }
+
   switch (data.errorType) {
     case 'VALIDATION_ERROR':
       if (Array.isArray(data.details)) {
@@ -23,6 +24,8 @@ export const apiErrorHandle = (error: AxiosError) => {
     case 'SERVICE_ERROR':
       return data.error || data.message;
 
+    case 'AUTHORIZATION':
+      return data.error;
     case 'NOT_FOUND':
     case 'UNAUTHORIZED':
       return data.message;

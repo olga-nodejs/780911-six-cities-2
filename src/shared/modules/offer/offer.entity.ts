@@ -32,7 +32,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, default: '' })
   public description!: string;
 
-  @prop({ required: true })
+  @prop()
   public publicationDate!: Date;
 
   @prop({
@@ -92,12 +92,14 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
     this.title = offerData.title;
     this.description = offerData.description ?? '';
-    this.publicationDate = offerData.publicationDate;
+    this.publicationDate = offerData.publicationDate
+      ? new Date(offerData.publicationDate)
+      : new Date();
     this.city = offerData.city;
     this.previewImage = offerData.previewImage ?? '';
     this.propertyPhotos = offerData.propertyPhotos ?? [];
     this.premiumFlag = offerData.premiumFlag;
-    this.rating = offerData.rating;
+    this.rating = offerData.rating ?? 0;
     this.propertyType = offerData.propertyType;
     this.roomsNumber = offerData.roomsNumber;
     this.guestsNumber = offerData.guestsNumber;
@@ -105,7 +107,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
     this.features = offerData.features ?? [];
     this.userId = offerData.userId as unknown as Ref<UserEntity>;
     this.coordinates = offerData.coordinates;
-    this.commentsCount = offerData.commentsCount;
+    this.commentsCount = offerData.commentsCount ?? 0;
   }
 }
 

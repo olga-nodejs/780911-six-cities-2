@@ -6,19 +6,19 @@ import { MockUser } from './user.js';
 type BaseOffer = {
   title: string;
   description: string;
-  publicationDate: Date;
+  publicationDate?: Date;
   city: City;
   previewImage: string;
   propertyPhotos: Array<string>;
   premiumFlag: boolean;
-  rating: number;
+  rating?: number;
   propertyType: PropertyType;
   roomsNumber: number;
   guestsNumber: number;
   rentalCost: number;
   features: Array<PropertyFeature>;
   coordinates: [number, number];
-  commentsCount: number;
+  commentsCount?: number;
 };
 
 export type MockOffer = BaseOffer & {

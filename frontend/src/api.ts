@@ -28,10 +28,8 @@ export const createAPI = (): AxiosInstance => {
       return response;
     },
     (error: AxiosError) => {
-      console.log({ error });
       toast.dismiss();
       toast.warn(apiErrorHandle(error));
-
       return Promise.reject(error);
     }
   );

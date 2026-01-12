@@ -23,7 +23,6 @@ export abstract class BaseController implements Controller {
   }
 
   get router() {
-    console.log('GET ROUTER');
     return this._router;
   }
 

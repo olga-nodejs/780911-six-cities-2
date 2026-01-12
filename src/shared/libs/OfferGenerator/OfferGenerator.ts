@@ -62,7 +62,6 @@ export class OfferGenerator implements OfferGeneratorInterface {
       avatar: DEFAULT_USER_FILE,
     };
 
-    console.log({ user });
     return {
       title: getRandomItem(this.mockData.titles),
       description: getRandomItem(this.mockData.descriptions),

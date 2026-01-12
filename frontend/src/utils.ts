@@ -1,6 +1,6 @@
 import { MAX_PERCENT_STARS_WIDTH, STARS_COUNT, UserType } from './const';
 import { APIUserType, CreateUserDto, APIOfferResponse } from './dto/types';
-import { UserRegister, Offer } from './types/types';
+import { UserRegister, Offer, NewOffer } from './types/types';
 
 export const formatDate = (date: string) =>
   new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(
@@ -89,4 +89,21 @@ export const adaptOffersToClient = (
   return offers
     .filter((offer: APIOfferResponse) => offer.user !== null)
     .map((offer) => adaptOfferToClient(offer));
+};
+
+export const adaptOfferToAPI = (offer: NewOffer) => {
+  return {
+    title: offer.title,
+    description: offer.description,
+    city: offer.city.name,
+    previewImage: offer.previewImage,
+    propertyPhotos: offer.images,
+    premiumFlag: offer.isPremium,
+    propertyType: offer.type,
+    roomsNumber: offer.bedrooms,
+    guestsNumber: offer.maxAdults,
+    rentalCost: offer.price,
+    features: offer.goods,
+    coordinates: [offer.location.latitude, offer.location.longitude],
+  };
 };

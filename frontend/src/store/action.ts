@@ -14,6 +14,7 @@ import type {
 import { ApiRoute, AppRoute, HttpCode } from '../const';
 import {
   adaptOffersToClient,
+  adaptOfferToAPI,
   adaptOfferToClient,
   adaptRegisterUserToApi,
   Token,
@@ -78,7 +79,6 @@ export const fetchOffer = createAsyncThunk<
     );
 
     const clientData = adaptOfferToClient(data);
-    console.log({ data, clientData });
     return clientData;
   } catch (error) {
     const axiosError = error as AxiosError;
@@ -95,7 +95,10 @@ export const postOffer = createAsyncThunk<Offer, NewOffer, { extra: Extra }>(
   Action.POST_OFFER,
   async (newOffer, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.post<Offer>(ApiRoute.Offers, newOffer);
+    const res = adaptOfferToAPI(newOffer);
+
+    const { data } = await api.post<Offer>(ApiRoute.Offers, res);
+
     history.push(`${AppRoute.Property}/${data.id}`);
 
     return data;
@@ -179,10 +182,12 @@ export const loginUser = createAsyncThunk<
   { extra: Extra }
 >(Action.LOGIN_USER, async ({ email, password }, { extra }) => {
   const { api, history } = extra;
+
   const { data } = await api.post<User & { token: string }>(ApiRoute.Login, {
     email,
     password,
   });
+
   const { token } = data;
 
   Token.save(token);
