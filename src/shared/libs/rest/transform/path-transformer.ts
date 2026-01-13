@@ -58,13 +58,19 @@ export class PathTransformer implements PathTransformerInterface {
 
     while (stack.length > 0) {
       const current = stack.pop();
-      if (!current || typeof current !== 'object') continue;
+      if (!current || typeof current !== 'object') {
+        continue;
+      }
 
-      if (visited.has(current)) continue;
+      if (visited.has(current)) {
+        continue;
+      }
       visited.add(current);
 
       for (const key in current) {
-        if (!Object.hasOwn(current, key)) continue;
+        if (!Object.hasOwn(current, key)) {
+          continue;
+        }
 
         const value = current[key];
 
