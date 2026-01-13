@@ -83,7 +83,6 @@ export class OfferGenerator implements OfferGeneratorInterface {
       commentsCount: INITIAL_COMMENT_COUNT,
     };
 
-    console.log({ res });
     return res;
   }
 }

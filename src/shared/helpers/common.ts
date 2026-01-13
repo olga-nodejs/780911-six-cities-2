@@ -133,8 +133,6 @@ export function createMockOffer(line: string): MockOffer {
     commentsCount: Number(commentsCount),
   };
 
-  console.log({ offer });
-
   return offer;
 }
 

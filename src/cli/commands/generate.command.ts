@@ -20,7 +20,6 @@ export class GenerateCommand implements Command {
   private async getData(APIURL: string) {
     try {
       const response = await axios.get(APIURL || GenerateCommand.MOCK_API_URL);
-      console.log('Raw data fetched:', response.data);
 
       this.rawData = response.data;
     } catch (error) {
@@ -49,9 +48,9 @@ export class GenerateCommand implements Command {
 
       const [amount, outputPath, url] = args;
       const offerAmount = Number.parseInt(amount, 10);
-      console.log('HELLO 1');
+
       await this.getData(url);
-      console.log('HELLO 2');
+
       await this.write(offerAmount, outputPath);
       console.info(`File ${outputPath} was created!`);
     } catch (error: unknown) {

@@ -63,7 +63,6 @@ export const fetchFavoriteOffers = createAsyncThunk<
   const token = Token.get();
   if (token) {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    console.log({ payload });
   }
 
   const { api } = extra;
