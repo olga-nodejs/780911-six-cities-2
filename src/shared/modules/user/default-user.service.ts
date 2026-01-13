@@ -91,9 +91,7 @@ export class DefaultUserService implements UserService, DocumentExists {
         })
         .lean();
 
-      return offers.map((offer) => {
-        return { ...offer, isFavorite: true };
-      });
+      return offers.map((offer) => ({ ...offer, isFavorite: true }));
     }
     return [];
   }
