@@ -10,4 +10,7 @@ export class CheckAuthUserRdo {
 
   @Expose()
   public token!: string;
+
+  @Expose()
+  public avatar!: string;
 }

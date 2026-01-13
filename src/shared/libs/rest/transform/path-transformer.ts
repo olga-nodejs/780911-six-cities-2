@@ -4,6 +4,7 @@ import { Logger } from '../../Logger/index.js';
 import { Config, RestSchema } from '../../config/index.js';
 import { getFullServerPath, isPlainObject } from '../../../helpers/common.js';
 import {
+  AVATAR,
   DEFAULT_STATIC_IMAGES,
   STATIC_RESOURCE_FIELDS,
 } from './path-transformer.constant.js';
@@ -79,6 +80,20 @@ export class PathTransformer implements PathTransformerInterface {
 
           continue;
         }
+
+        if (
+          this.isStaticProperty(key) &&
+          typeof value === 'string' &&
+          key === AVATAR.avatar
+        ) {
+          current[key] = `${getFullServerPath(
+            this.serverHost,
+            this.serverPort
+          )}${this.rootPath(value)}/${value}`;
+
+          continue;
+        }
+
         if (Array.isArray(value)) {
           if (this.isStaticProperty(key)) {
             current[key] = value.map((item) =>
