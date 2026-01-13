@@ -79,7 +79,9 @@ export class DefaultUserService implements UserService, DocumentExists {
 
   public async getFavorites({ userId }: { userId: string }) {
     const user = await this.userModel.findById(userId);
-    if (!user) throw new Error('User not found');
+    if (!user) {
+      throw new Error('User not found');
+    }
     const { favorites } = user;
 
     if (favorites.length) {
@@ -95,6 +97,7 @@ export class DefaultUserService implements UserService, DocumentExists {
     }
     return [];
   }
+
   public async addFavorite({
     offerId,
     userId,

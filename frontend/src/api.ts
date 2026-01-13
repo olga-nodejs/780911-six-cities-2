@@ -24,9 +24,7 @@ export const createAPI = (): AxiosInstance => {
   });
 
   api.interceptors.response.use(
-    (response) => {
-      return response;
-    },
+    (response) => response,
     (error: AxiosError) => {
       toast.dismiss();
       toast.warn(apiErrorHandle(error));
