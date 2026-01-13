@@ -23,6 +23,7 @@ import {
   UserRdo,
   CreateUserDTO,
   LoggedUserRdo,
+  CheckAuthUserRdo,
   FavoriteRDO,
 } from './index.js';
 import { Component } from '../../types/index.js';
@@ -49,6 +50,13 @@ export class UserController extends BaseController {
       method: HttpMethod.Post,
       handler: this.login,
       middlewares: [new ValidateDTOMiddleware(LoginUserDTO)],
+    });
+
+    this.addRoute({
+      path: '/check-auth',
+      method: HttpMethod.Get,
+      handler: this.checkAuthenticate,
+      middlewares: [new PrivateRouteMiddleware()],
     });
 
     this.addRoute({
@@ -157,7 +165,7 @@ export class UserController extends BaseController {
       );
     }
 
-    this.ok(res, fillDTO(LoggedUserRdo, foundedUser));
+    this.ok(res, fillDTO(CheckAuthUserRdo, foundedUser));
   }
 
   public async logout({ tokenPayload }: Request, res: Response): Promise<void> {
