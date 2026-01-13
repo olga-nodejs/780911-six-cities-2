@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 
-import { City, Component, OfferFileFields } from '../../types/index.js';
+import { CityKey, Component, OfferFileFields } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
 import {
   OfferService,
@@ -188,7 +188,7 @@ export class OfferController extends BaseController {
     res: Response
   ): Promise<void> {
     const limit = Number(query.limit) || OfferCount.Default;
-    const city = query.city as City;
+    const city = query.city as CityKey;
     const userId = tokenPayload?.id;
     const offers = await this.offerService.find({ city, limit, userId });
 
@@ -210,7 +210,7 @@ export class OfferController extends BaseController {
   }
 
   public async getPremium({ query }: Request, res: Response): Promise<void> {
-    const city = query.city as City;
+    const city = query.city as CityKey;
     const limit = Number(query.limit) || OfferCount.Default;
     const offers = await this.offerService.findPremium({ city, limit });
     const responseData = fillDTO(OfferRDO, offers);

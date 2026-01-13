@@ -11,9 +11,15 @@ import {
   IsString,
   Length,
   IsUrl,
+  ValidateNested,
+  IsObject,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { City, PropertyType, PropertyFeature } from '../../../types/index.js';
+import {
+  PropertyType,
+  PropertyFeature,
+  CityData,
+} from '../../../types/index.js';
 import { OfferValidationMessage } from './offer-validation.messages.js';
 
 export class CreateOfferDTO {
@@ -27,10 +33,10 @@ export class CreateOfferDTO {
   })
   public description!: string;
 
-  @IsEnum(City, {
-    message: OfferValidationMessage.city.invalid,
-  })
-  public city!: City;
+  @IsObject({ message: OfferValidationMessage.city.invalid })
+  @ValidateNested()
+  @Type(() => Object)
+  public city!: CityData;
 
   @IsUrl()
   public previewImage!: string;

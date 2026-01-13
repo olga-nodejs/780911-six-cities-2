@@ -8,12 +8,13 @@ import { ValidationError } from 'class-validator';
 import { Logger } from '../libs/Logger/index.js';
 
 import {
-  City,
   MockOffer,
   PropertyType,
   PropertyFeature,
   MockUser,
   UserType,
+  CityKey,
+  MockCityData,
 } from '../types/index.js';
 
 import { ApplicationError, ValidationErrorField } from '../libs/rest/index.js';
@@ -80,6 +81,18 @@ export function createMockUser(values: string[]): MockUser {
   };
 }
 
+const createDBMockCity = (values: string[]): MockCityData => {
+  const [name, latitude, longitude] = values;
+
+  return {
+    name: name as CityKey,
+    location: {
+      latitude: Number(latitude),
+      longitude: Number(longitude),
+    },
+  };
+};
+// TODO: uncomment city to use new city type with coordinates
 export function createMockOffer(line: string): MockOffer {
   const values = line.trimEnd().split('\t');
   const [
@@ -105,7 +118,7 @@ export function createMockOffer(line: string): MockOffer {
     title,
     description,
     publicationDate: new Date(publicationDate),
-    city: city as City,
+    city: createDBMockCity(city.split(',')),
     previewImage,
     propertyPhotos: propertyPhotos.split(','),
     premiumFlag: premiumFlag === 'true',
@@ -119,6 +132,8 @@ export function createMockOffer(line: string): MockOffer {
     coordinates: coordinates.split(',').map(Number) as [number, number],
     commentsCount: Number(commentsCount),
   };
+
+  console.log({ offer });
 
   return offer;
 }

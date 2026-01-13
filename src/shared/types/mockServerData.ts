@@ -1,4 +1,4 @@
-import { City } from './city.enum.js';
+import { CityData, CityKey } from './city.enum.js';
 import { PropertyFeature } from './propertyFeature.enum.js';
 import { PropertyType } from './propertyType.enum.js';
 import { MockUser } from './user.js';
@@ -6,7 +6,7 @@ import { MockUser } from './user.js';
 export type MockServerData = {
   descriptions: Array<string>;
   titles: Array<string>;
-  cities: Array<City>;
+  cities: Array<CityData>;
   preview_images: Array<string>;
   property_photos: Array<Array<string>>;
   property_types: Array<PropertyType>;
@@ -20,5 +20,5 @@ export type MockServerData = {
     userTypes: Array<string>;
     passwords: Array<string>;
   };
-  coordinates: { [C in City]: [number, number][] };
+  coordinates: { [C in CityKey]: [number, number][] };
 };

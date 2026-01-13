@@ -4,11 +4,11 @@ import { DocumentType, types } from '@typegoose/typegoose';
 import { Logger } from '../../libs/Logger/index.js';
 
 import {
-  City,
   Component,
   SortType,
   DocumentExists,
   ALLOWED_UPDATE_FIELDS,
+  CityKey,
 } from '../../types/index.js';
 
 import {
@@ -58,11 +58,11 @@ export class DefaultOfferService implements OfferService, DocumentExists {
     limit = OfferCount.Default,
     userId,
   }: {
-    city: City;
+    city: CityKey;
     limit?: number;
     userId?: string;
   }) {
-    const query: Partial<Record<'city', City>> = {};
+    const query: Partial<Record<'city', CityKey>> = {};
     let favorites: string[] = [];
     if (city) {
       query.city = city;
@@ -73,7 +73,6 @@ export class DefaultOfferService implements OfferService, DocumentExists {
       favorites = user?.favorites ?? [];
     }
 
-    console.log({ favorites });
     const offers = await this.offerModel
       .find(query)
       .sort({ publicationDate: SortType.Down, _id: 1 })
@@ -156,7 +155,7 @@ export class DefaultOfferService implements OfferService, DocumentExists {
     city,
     limit = OfferCount.Premium,
   }: {
-    city: City;
+    city: CityKey;
     limit: number;
   }) {
     return this.offerModel

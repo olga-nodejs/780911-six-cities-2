@@ -62,7 +62,7 @@ export class OfferGenerator implements OfferGeneratorInterface {
       avatar: DEFAULT_USER_FILE,
     };
 
-    return {
+    const res = {
       title: getRandomItem(this.mockData.titles),
       description: getRandomItem(this.mockData.descriptions),
       publicationDate: getDaysAgo(
@@ -79,8 +79,11 @@ export class OfferGenerator implements OfferGeneratorInterface {
       rentalCost: generateRandomValue(RentalCost.Min, RentalCost.Max),
       features: getRandomItems(this.mockData.features),
       user,
-      coordinates: getRandomItem(this.mockData.coordinates[city]),
+      coordinates: getRandomItem(this.mockData.coordinates[city.name]),
       commentsCount: INITIAL_COMMENT_COUNT,
     };
+
+    console.log({ res });
+    return res;
   }
 }

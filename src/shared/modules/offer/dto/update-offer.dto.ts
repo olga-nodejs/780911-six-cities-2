@@ -13,7 +13,12 @@ import {
   Length,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { City, PropertyType, PropertyFeature } from '../../../types/index.js';
+import {
+  City,
+  PropertyType,
+  PropertyFeature,
+  CityData,
+} from '../../../types/index.js';
 import { OfferValidationMessage } from './offer-validation.messages.js';
 
 export class UpdateOfferDTO {
@@ -38,7 +43,7 @@ export class UpdateOfferDTO {
     message: OfferValidationMessage.city.invalid,
   })
   @IsOptional()
-  public city?: City;
+  public city?: CityData;
 
   public previewImage?: string;
 
