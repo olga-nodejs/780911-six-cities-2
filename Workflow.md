@@ -340,29 +340,9 @@ module-name/
 
 - упрощает тестирование и замену реализаций
 
-## Примеры использования API (cURL)
+## Примеры использования API (cURL) [Сценарии](https://up.htmlacademy.ru/nodejs-api-individual/2/project/scripts) 
 
-### Объявления (Offers)
-
-- Получить список всех объявлений
-
-```
-curl --location 'http://localhost:4000/offers'
-```
-
-- Премиальные предложения
-
-```
-curl --location 'http://localhost:4000/offers/premium?city=Paris&limit=10'
-```
-
-- Получить объявление по ID
-
-```
-curl --location 'http://localhost:4000/offers/6959849afb2409fe2e0da21a'
-```
-
-- Создать новое объявление (с изображениями, требуется авторизация)
+- Создание нового предложения
 
 ```
 curl --location 'http://localhost:4000/offers' \
@@ -394,89 +374,130 @@ curl --location 'http://localhost:4000/offers' \
 '
 ```
 
-- Обновить объявление
+- Редактирование предложения
 
 ```
-curl --location --request PATCH 'http://localhost:4000/offers/6958211d27e9fbde77185217' \
---header 'Authorization: Bearer <TOKEN>' \
---form 'title="updated offer to check images"'
+curl --location --request PATCH 'http://localhost:4000/offers/6965ffbdd6630e59d473e92c' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA' \
+--data '{
+"title": "here is new updated title",
+"description": "The description is also new, I test update offer feature",
+"city": "Paris",
+"previewImage": "https://picsum.photos/id/1025/300/200",
+"propertyPhotos": [
+"https://picsum.photos/id/1/300/200",
+"https://picsum.photos/id/2/300/200",
+"https://picsum.photos/id/3/300/200",
+"https://picsum.photos/id/4/300/200",
+"https://picsum.photos/id/5/300/200",
+"https://picsum.photos/id/6/300/200"
+],
+"premiumFlag": true,
+"rating": 1,
+"propertyType": "house",
+"roomsNumber": 3,
+"guestsNumber": 4,
+"rentalCost": 120,
+"features": ["Breakfast", "Washer"],
+"coordinates": [52.3702, 4.8952]
+}
+'
 ```
 
-- Удалить объявление
+- Удаление предложения
 
 ```
-curl --location --request DELETE 'http://localhost:4000/offers/6953a1a74d0e093cc6e9103a' \
---header 'Authorization: Bearer <TOKEN>'
+curl --location --request DELETE 'http://localhost:4000/offers/69660927bffaa1663d602a60' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA'
 ```
 
-- Получить список избранных предложений
+- Получение списка предложений по аренде
 
 ```
-curl --location 'http://localhost:4000/users/6960f2209778b376e97db074/favorites' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAcmVha3Rvci5jb20iLCJpZCI6IjY5NjBmMjIwOTc3OGIzNzZlOTdkYjA3NCIsImlhdCI6MTc2ODIyNTI5MSwiZXhwIjoxNzY4Mzk4MDkxfQ.JX9VJ9S6LkeJf49tRweGf-0w2SFRUhaEur9Uw_G7CRA'
+curl --location 'http://localhost:4000/offers'
 ```
 
-- Добавить объявление в избранное
+- Получение детальной информации о предложении
 
-````
-curl --location --request POST 'http://localhost:4000/offers/6953a1a74d0e093cc6e9103a/favorites' \
---header 'Authorization: Bearer <TOKEN>' ```
-````
+```
+curl --location 'http://localhost:4000/offers/6959849afb2409fe2e0da21a'
+```
 
-### Пользователи и авторизация
+- Получение списка комментариев для предложения
 
-- Регистрация пользователя
+```
+curl --location 'http://localhost:4000/offers/69610404dee4835074d6dc8b/comments'
+```
+
+- Добавление комментария для предложения
+
+```
+curl --location 'http://localhost:4000/offers/69610404dee4835074d6dc8b/comments' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA' \
+--data '{
+"text": "test RDO!",
+"rating": 4,
+"publicationDate": "2025-12-12T00:00:00.000Z",
+"offerId": "693159fb87987631da7e5a9e"
+}'
+```
+
+- Создание нового пользователя
 
 ```
 curl --location 'http://localhost:4000/register' \
---form 'email="Monica@gmail.com"' \
---form 'name="Monica"' \
+--form 'email="joel@gmail.com"' \
+--form 'name="Joel"' \
 --form 'userType="starter"' \
 --form 'avatar=@"postman-cloud:///1f0e04b2-db98-4f70-aec0-ad179b8c3d84"' \
---form 'password="helloWorld"'
+--form 'password="qwerty1"'
+
 ```
 
-- Логин
+- Вход в закрытую часть приложения
 
 ```
 curl --location 'http://localhost:4000/login' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-"email": "test@react.com",
-"password": "qwerty123"
+  "email": "joel@gmail.com",
+  "password": "qwerty1"
 }'
 ```
 
-- Загрузка аватара
-
-```
-curl --location 'http://localhost:4000/users/<USER_ID>/avatar' \
---header 'Authorization: Bearer <TOKEN>' \
---form 'avatar=@"./img/avatar.jpg"'
-```
-
-- Выход из системы (logout)
+- Выход из закрытой части приложения
 
 ```
 curl --location --request POST 'http://localhost:4000/logout' \
---header 'Authorization: Bearer <TOKEN>'
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA' \
+--data ''
 ```
 
-### Комментарии
+- Проверка состояния пользователя.
 
-- Получить комментарии к объявлению
-
-  ```
-  curl --location 'http://localhost:4000/offers/<OFFER_ID>/comments'
-  ```
-
-- Создать комментарий
+- Получение списка премиальных предложений для города.
 
 ```
-curl --location 'http://localhost:4000/offers/69610404dee4835074d6dc8b/comments' \
---header 'Content-Type: application/json' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAcmVha3Rvci5jb20iLCJpZCI6IjY5NjBmMjIwOTc3OGIzNzZlOTdkYjA3NCIsImlhdCI6MTc2ODIyNTI5MSwiZXhwIjoxNzY4Mzk4MDkxfQ.JX9VJ9S6LkeJf49tRweGf-0w2SFRUhaEur9Uw_G7CRA' \
---data '{"text": "test comment",
-"rating": 4
-}'
+curl --location 'http://localhost:4000/offers/premium?city=Paris&limit=10'
+```
+
+- Получения списка предложений, добавленных в избранное.
+
+```
+curl --location 'http://localhost:4000/users/6965fc0cd6630e59d473e8f2/favorites' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAcmVha3Rvci5jb20iLCJpZCI6IjY5NjBmMjIwOTc3OGIzNzZlOTdkYjA3NCIsImlhdCI6MTc2ODIyNTI5MSwiZXhwIjoxNzY4Mzk4MDkxfQ.JX9VJ9S6LkeJf49tRweGf-0w2SFRUhaEur9Uw_G7CRA'
+```
+
+- Добавление/удаление предложения в/из избранное.
+
+```
+curl --location --request POST 'http://localhost:4000/offers/696103c4dee4835074d6dc6b/favorites' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA'
+```
+
+```
+curl --location --request DELETE 'http://localhost:4000/offers/695977728ae3ecead9be144c/favorites' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA'
 ```
