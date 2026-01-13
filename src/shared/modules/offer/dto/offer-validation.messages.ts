@@ -16,9 +16,9 @@ export const OfferValidationMessage = {
     invalidFormat: 'PostDate must be a valid ISO date',
   },
   city: {
-    invalid: `City type must one of next values ${Object.values(City).join(
+    invalid: `City type must one of next values ${Object.keys(City).join(
       ', '
-    )}`,
+    )} and has correct coordinates`,
   },
   premiumFlag: {
     type: 'Premium flag value must be boolean',

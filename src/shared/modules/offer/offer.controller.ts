@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 
-import { CityKey, Component, OfferFileFields } from '../../types/index.js';
+import { CityKey, Component } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
 import {
   OfferService,
@@ -23,42 +23,17 @@ import {
   ValidateObjectIdMiddleware,
   ValidateDTOMiddleware,
   DocumentExistsMiddleware,
-  UploadMultipleFilesMiddleware,
-  ValidateImagesMiddleware,
   PrivateRouteMiddleware,
 } from '../../libs/rest/index.js';
 import { fillDTO } from '../../helpers/common.js';
-import { RestSchema, Config } from '../../libs/config/index.js';
 import { UserService } from '../user/index.js';
 import { PathTransformerInterface } from '../../libs/rest/transform/index.js';
-
-function buildOfferUpdateDTO(
-  body: UpdateOfferDTO,
-  files?: {
-    previewImage?: Express.Multer.File[];
-    propertyPhotos?: Express.Multer.File[];
-  }
-): Partial<UpdateOfferDTO> {
-  const dto: Partial<UpdateOfferDTO> = { ...body };
-
-  if (files?.previewImage?.length) {
-    dto.previewImage = files.previewImage[0].filename;
-  }
-
-  if (files?.propertyPhotos?.length) {
-    dto.propertyPhotos = files.propertyPhotos.map((f) => f.filename);
-  }
-
-  return dto;
-}
 
 @injectable()
 export class OfferController extends BaseController {
   constructor(
     @inject(Component.Logger) protected readonly logger: Logger,
     @inject(Component.OfferService) private readonly offerService: OfferService,
-    @inject(Component.Config)
-    private readonly configService: Config<RestSchema>,
     @inject(Component.CommentService)
     private readonly commentService: CommentService,
     @inject(Component.UserService) private readonly userService: UserService,
@@ -102,25 +77,6 @@ export class OfferController extends BaseController {
       handler: this.update,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new UploadMultipleFilesMiddleware(
-          this.configService.get('UPLOAD_DIRECTORY'),
-          [
-            { name: OfferFileFields.previewImage, maxCount: 1 },
-            { name: OfferFileFields.propertyPhotos, maxCount: 6 },
-          ]
-        ),
-        new ValidateImagesMiddleware([
-          {
-            name: OfferFileFields.previewImage,
-            maxCount: 1,
-            isRequired: false,
-          },
-          {
-            name: OfferFileFields.propertyPhotos,
-            maxCount: 6,
-            isRequired: false,
-          },
-        ]),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDTOMiddleware(UpdateOfferDTO),
         new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
@@ -266,22 +222,13 @@ export class OfferController extends BaseController {
     const { offerId } = params;
     const { id: userId } = tokenPayload;
 
-    const files = req.files as
-      | {
-          previewImage?: Express.Multer.File[];
-          propertyPhotos?: Express.Multer.File[];
-        }
-      | undefined;
-
-    const updateDTO = buildOfferUpdateDTO(body, files);
-
     const offer = await this.offerService.updateById({
       offerId,
       userId,
-      dto: updateDTO,
+      dto: body,
     });
-    const responseData = fillDTO(OfferRDO, offer);
 
+    const responseData = fillDTO(OfferRDO, offer);
     this.ok(res, responseData);
   }
 

@@ -11,10 +11,11 @@ import {
   ArrayMaxSize,
   IsOptional,
   Length,
+  ValidateNested,
+  IsObject,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import {
-  City,
   PropertyType,
   PropertyFeature,
   CityData,
@@ -39,9 +40,9 @@ export class UpdateOfferDTO {
   @IsOptional()
   public publicationDate?: Date;
 
-  @IsEnum(City, {
-    message: OfferValidationMessage.city.invalid,
-  })
+  @IsObject({ message: OfferValidationMessage.city.invalid })
+  @ValidateNested()
+  @Type(() => Object)
   @IsOptional()
   public city?: CityData;
 

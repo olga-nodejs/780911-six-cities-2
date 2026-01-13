@@ -1,6 +1,7 @@
 import { Expose, Transform } from 'class-transformer';
 import { ObjectId } from 'mongoose';
 import { UserRdo } from '../../user/index.js';
+import { CityData } from '../../../types/city.js';
 
 /* eslint-disable indent */
 export class OfferRDO {
@@ -18,7 +19,19 @@ export class OfferRDO {
   public publicationDate!: Date;
 
   @Expose()
-  public city!: string;
+  @Transform(({ obj }) => {
+    const { name, location } = obj.city;
+    // const { latitude, longitude } = location;
+    return {
+      name,
+      location,
+      // location: {
+      //   latitude,
+      //   longitude,
+      // },
+    };
+  })
+  public city!: CityData;
 
   @Expose()
   public previewImage!: string;

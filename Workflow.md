@@ -346,13 +346,20 @@ module-name/
 
 ```
 curl --location 'http://localhost:4000/offers' \
+curl --location 'http://localhost:4000/offers' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY2OWZkMWU3ZDJiNzY3YzcyZGI3NDYiLCJpYXQiOjE3NjgzMzMyNzIsImV4cCI6MTc2ODUwNjA3Mn0.OKInqK52sUVxyKW5Qf679Fs8B_gJ2S6YG-7VoSjnIKc' \
 --data '{
   "title": "test upload images before final check",
   "description": "test RDO offer test RDO offer test RDO offer",
   "publicationDate": "2025-12-11T00:00:00.000Z",
-  "city": "Paris",
+  "city": {
+    "name": "Paris",
+    "location": {
+      "latitude": 48.85661,
+      "longitude": 2.351499
+    }
+  },
   "previewImage": "https://picsum.photos/id/1025/300/200",
   "propertyPhotos": [
     "https://picsum.photos/id/1/300/200",
