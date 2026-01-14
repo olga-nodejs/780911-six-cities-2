@@ -11,9 +11,15 @@ import {
   ArrayMaxSize,
   IsOptional,
   Length,
+  ValidateNested,
+  IsObject,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { City, PropertyType, PropertyFeature } from '../../../types/index.js';
+import {
+  PropertyType,
+  PropertyFeature,
+  CityData,
+} from '../../../types/index.js';
 import { OfferValidationMessage } from './offer-validation.messages.js';
 
 export class UpdateOfferDTO {
@@ -34,11 +40,11 @@ export class UpdateOfferDTO {
   @IsOptional()
   public publicationDate?: Date;
 
-  @IsEnum(City, {
-    message: OfferValidationMessage.city.invalid,
-  })
+  @IsObject({ message: OfferValidationMessage.city.invalid })
+  @ValidateNested()
+  @Type(() => Object)
   @IsOptional()
-  public city?: City;
+  public city?: CityData;
 
   public previewImage?: string;
 
@@ -92,9 +98,6 @@ export class UpdateOfferDTO {
     message: OfferValidationMessage.features.invalidValue,
   })
   public features?: Array<PropertyFeature>;
-
-  // @IsMongoId({ message: OfferValidationMessage.userId.invalidId })
-  // public userId!: string;
 
   @IsOptional()
   @Transform(({ value }) => (Array.isArray(value) ? value.map(Number) : value))

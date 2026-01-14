@@ -7,6 +7,8 @@ export * from './dto/login-user.dto.js';
 export * from './dto/user-validation.messages.js';
 export * from './rdo/user.rdo.js';
 export * from './rdo/logged-user.rdo.js';
+export * from './rdo/favorite.rdo.js';
+export * from './rdo/check-auth.rdo.js';
 export * from './create-user-request.js';
 export * from './user.controller.js';
 export * from './login-user-request.js';

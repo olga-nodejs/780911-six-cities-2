@@ -7,15 +7,30 @@ import {
 } from '@typegoose/typegoose';
 import { UserEntity } from '../user/index.js';
 import {
-  City,
   PropertyType,
   PropertyFeature,
   Offer,
+  CityData,
 } from '../../types/index.js';
-// import { CommentEntity } from '../comment/comment.entity.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export interface OfferEntity extends defaultClasses.Base {}
+
+class CityLocation {
+  @prop({ required: true, _id: false })
+  public latitude!: number;
+
+  @prop({ required: true, _id: false })
+  public longitude!: number;
+}
+
+class CitySubDocument {
+  @prop({ required: true })
+  public name!: string;
+
+  @prop({ required: true, _id: false, type: () => CityLocation })
+  public location!: CityLocation;
+}
 
 @modelOptions({
   schemaOptions: {
@@ -35,11 +50,18 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop()
   public publicationDate!: Date;
 
+  // @prop({
+  //   type: () => String,
+  //   enum: City,
+  // })
+  // public city!: City;
+
   @prop({
-    type: () => String,
-    enum: City,
+    required: true,
+    _id: false,
+    type: () => CitySubDocument,
   })
-  public city!: City;
+  public city!: CityData;
 
   @prop()
   public previewImage!: string;
@@ -50,7 +72,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public premiumFlag!: boolean;
 
-  // favorite_flag: '';
   @prop({ required: true })
   public rating!: number;
 

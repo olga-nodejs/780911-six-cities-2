@@ -1,16 +1,16 @@
+/* eslint-disable indent */
+
 import { inject, injectable } from 'inversify';
 import { Component } from '../../../types/index.js';
 import { Logger } from '../../Logger/index.js';
 import { Config, RestSchema } from '../../config/index.js';
 import { getFullServerPath, isPlainObject } from '../../../helpers/common.js';
 import {
+  AVATAR,
   DEFAULT_STATIC_IMAGES,
   STATIC_RESOURCE_FIELDS,
 } from './path-transformer.constant.js';
-import {
-  STATIC_FILES_ROUTE,
-  STATIC_UPLOAD_ROUTE,
-} from '../../../../rest/index.js';
+import { StaticRoutes } from '../../../../rest/index.js';
 import { PathTransformerInterface } from './path-transformer.interface.js';
 /**
  * Transforms relative static resource paths into fully-qualified server URLs.
@@ -28,8 +28,8 @@ import { PathTransformerInterface } from './path-transformer.interface.js';
 
 @injectable()
 export class PathTransformer implements PathTransformerInterface {
-  private staticPath = STATIC_FILES_ROUTE;
-  private uploadPath = STATIC_UPLOAD_ROUTE;
+  private staticPath = StaticRoutes.StaticFiles;
+  private uploadPath = StaticRoutes.Upload;
   private serverHost: string;
   private serverPort: number;
 
@@ -56,49 +56,78 @@ export class PathTransformer implements PathTransformerInterface {
 
   public execute(data: Record<string, unknown>): Record<string, unknown> {
     const stack = [data];
+    const visited = new WeakSet<object>();
 
     while (stack.length > 0) {
       const current = stack.pop();
+      if (!current || typeof current !== 'object') {
+        continue;
+      }
+
+      if (visited.has(current)) {
+        continue;
+      }
+      visited.add(current);
 
       for (const key in current) {
-        if (Object.hasOwn(current, key)) {
-          const value = current[key];
+        if (!Object.hasOwn(current, key)) {
+          continue;
+        }
 
-          if (
-            this.isStaticProperty(key) &&
-            typeof value === 'string' &&
-            this.hasDefaultImage(value)
-          ) {
-            current[key] = `${getFullServerPath(
-              this.serverHost,
-              this.serverPort
-            )}${this.rootPath(value)}/${value}`;
-          }
+        const value = current[key];
 
-          if (Array.isArray(value)) {
-            if (this.isStaticProperty(key)) {
-              current[key] = value.map(
-                (item) =>
-                  `${getFullServerPath(
+        if (
+          this.isStaticProperty(key) &&
+          typeof value === 'string' &&
+          this.hasDefaultImage(value)
+        ) {
+          current[key] = `${getFullServerPath(
+            this.serverHost,
+            this.serverPort
+          )}${this.rootPath(value)}/${value}`;
+
+          continue;
+        }
+
+        if (
+          this.isStaticProperty(key) &&
+          typeof value === 'string' &&
+          key === AVATAR.avatar
+        ) {
+          current[key] = `${getFullServerPath(
+            this.serverHost,
+            this.serverPort
+          )}${this.rootPath(value)}/${value}`;
+
+          continue;
+        }
+
+        if (Array.isArray(value)) {
+          if (this.isStaticProperty(key)) {
+            current[key] = value.map((item) =>
+              this.hasDefaultImage(item)
+                ? `${getFullServerPath(
                     this.serverHost,
                     this.serverPort
                   )}${this.rootPath(item)}/${item}`
-              );
-            } else {
-              for (const item of value) {
-                if (isPlainObject(item)) {
-                  stack.push(item);
-                }
+                : item
+            );
+          } else {
+            for (const item of value) {
+              if (isPlainObject(item)) {
+                stack.push(item);
               }
-              continue;
             }
-          } else if (isPlainObject(value)) {
-            stack.push(value);
-            continue;
           }
+          continue;
+        }
+
+        if (isPlainObject(value)) {
+          stack.push(value);
         }
       }
     }
+
     return data;
   }
 }

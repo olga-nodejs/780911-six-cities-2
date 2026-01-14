@@ -3,7 +3,8 @@ import { CreateOfferDTO } from './dto/create-offer.dto.js';
 import { OfferEntity } from './offer.entity.js';
 import { UpdateOfferDTO } from './dto/update-offer.dto.js';
 import { CommentEntity } from '../comment/comment.entity.js';
-import { City } from '../../types/index.js';
+import { CityKey } from '../../types/index.js';
+import { OfferWithFavorite } from './type/offer-with-favorite.type.js';
 
 export interface OfferService {
   exists(documentId: string): Promise<boolean>;
@@ -11,10 +12,12 @@ export interface OfferService {
   find({
     city,
     limit,
+    userId,
   }: {
-    city?: City;
+    city?: CityKey;
     limit?: number;
-  }): Promise<Array<DocumentType<OfferEntity> | null>>;
+    userId?: string;
+  }): Promise<Array<OfferWithFavorite> | null>;
   findById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
   updateById({
     offerId,
@@ -39,7 +42,7 @@ export interface OfferService {
     city,
     limit,
   }: {
-    city: City;
+    city: CityKey;
     limit?: number;
   }): Promise<Array<DocumentType<OfferEntity> | null>>;
 }

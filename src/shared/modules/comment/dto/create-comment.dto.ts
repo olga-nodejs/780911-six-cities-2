@@ -1,7 +1,6 @@
 import {
   MaxLength,
   MinLength,
-  IsDateString,
   Min,
   Max,
   IsNumber,
@@ -26,12 +25,6 @@ export class CreateCommentDTO {
   @Min(1, { message: CommentValidationMessage.rating.minValue })
   @Max(5, { message: CommentValidationMessage.rating.maxValue })
   public rating!: number;
-
-  @IsDateString(
-    {},
-    { message: CommentValidationMessage.publicationDate.invalidFormat }
-  )
-  public publicationDate!: Date;
 
   public userId!: string;
 

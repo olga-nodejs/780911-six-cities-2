@@ -44,17 +44,13 @@ export const adaptRegisterUserToApi = (user: UserRegister): CreateUserDto => ({
   favorites: [],
 });
 
-export const adaptOfferToClient = (
-  offer: APIOfferResponse,
-  userFavorites?: string[]
-): Offer => {
+export const adaptOfferToClient = (offer: APIOfferResponse): Offer => {
   return {
     id: offer._id,
     price: offer.rentalCost,
     rating: offer.rating,
     title: offer.title,
     isPremium: offer.premiumFlag,
-    isFavorite: !!userFavorites?.includes(offer._id),
     city: {
       name: offer.city,
       location: {
@@ -79,13 +75,11 @@ export const adaptOfferToClient = (
     },
     images: offer.propertyPhotos,
     maxAdults: offer.guestsNumber,
+    isFavorite: offer.isFavorite || false,
   };
 };
 
-export const adaptOffersToClient = (
-  offers: APIOfferResponse[],
-  userFavorites?: string[]
-): Offer[] => {
+export const adaptOffersToClient = (offers: APIOfferResponse[]): Offer[] => {
   return offers
     .filter((offer: APIOfferResponse) => offer.user !== null)
     .map((offer) => adaptOfferToClient(offer));

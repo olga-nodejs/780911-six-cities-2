@@ -6,13 +6,16 @@ import { UserService } from './user-service.interface.js';
 import { UserEntity } from './user.entity.js';
 import { Component, DocumentExists } from '../../types/index.js';
 import { Logger } from '../../libs/Logger/index.js';
+import { OfferEntity } from '../offer/offer.entity.js';
 
 @injectable()
 export class DefaultUserService implements UserService, DocumentExists {
   constructor(
     @inject(Component.Logger) private readonly logger: Logger,
     @inject(Component.UserModel)
-    private readonly userModel: types.ModelType<UserEntity>
+    private readonly userModel: types.ModelType<UserEntity>,
+    @inject(Component.OfferModel)
+    private readonly offerModel: types.ModelType<OfferEntity>
   ) {}
 
   public async create(
@@ -72,6 +75,25 @@ export class DefaultUserService implements UserService, DocumentExists {
     }
 
     return updatedUser;
+  }
+
+  public async getFavorites({ userId }: { userId: string }) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const { favorites } = user;
+
+    if (favorites.length) {
+      const offers = await this.offerModel
+        .find({
+          _id: { $in: user.favorites },
+        })
+        .lean();
+
+      return offers.map((offer) => ({ ...offer, isFavorite: true }));
+    }
+    return [];
   }
 
   public async addFavorite({

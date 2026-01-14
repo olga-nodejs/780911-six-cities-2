@@ -7,8 +7,14 @@ export const DEFAULT_STATIC_IMAGES = [
   'default_property_image_2.png',
 ];
 
+export enum AVATAR {
+  avatar = 'avatar',
+}
+
 export const STATIC_RESOURCE_FIELDS = [
   'avatar',
   'previewImage',
   'propertyPhotos',
 ];
+
+export type StaticResourceField = (typeof STATIC_RESOURCE_FIELDS)[number];

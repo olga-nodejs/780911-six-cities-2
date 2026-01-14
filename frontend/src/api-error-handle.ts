@@ -1,7 +1,6 @@
 import { AxiosError } from 'axios';
 import { ApiErrorResponse, ValidationErrorDetail } from './types/types';
 
-// TODO: remove logs
 export const apiErrorHandle = (error: AxiosError) => {
   if (!error.response) {
     return 'Network error. Please check your connection.';

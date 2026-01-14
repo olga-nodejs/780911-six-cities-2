@@ -1,5 +1,4 @@
 import {
-  // IsDateString,
   IsEnum,
   IsBoolean,
   IsInt,
@@ -12,9 +11,15 @@ import {
   IsString,
   Length,
   IsUrl,
+  ValidateNested,
+  IsObject,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { City, PropertyType, PropertyFeature } from '../../../types/index.js';
+import {
+  PropertyType,
+  PropertyFeature,
+  CityData,
+} from '../../../types/index.js';
 import { OfferValidationMessage } from './offer-validation.messages.js';
 
 export class CreateOfferDTO {
@@ -28,12 +33,10 @@ export class CreateOfferDTO {
   })
   public description!: string;
 
-  // public publicationDate!: Date;
-
-  @IsEnum(City, {
-    message: OfferValidationMessage.city.invalid,
-  })
-  public city!: City;
+  @IsObject({ message: OfferValidationMessage.city.invalid })
+  @ValidateNested()
+  @Type(() => Object)
+  public city!: CityData;
 
   @IsUrl()
   public previewImage!: string;
@@ -48,14 +51,6 @@ export class CreateOfferDTO {
   @Type(() => Boolean)
   public premiumFlag!: boolean;
 
-  // favorite_flag!: '';
-  // @Type(() => Number)
-  // @IsNumber(
-  //   { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 1 },
-  //   { message: OfferValidationMessage.rating.invalidFormat }
-  // )
-  // @Min(1, { message: OfferValidationMessage.rating.minValue })
-  // @Max(5, { message: OfferValidationMessage.rating.maxValue })
   public rating!: number;
 
   @IsEnum(PropertyType, {
@@ -115,8 +110,4 @@ export class CreateOfferDTO {
     }
   )
   public coordinates!: [number, number];
-
-  // @Type(() => Number)
-  // @IsInt({ message: OfferValidationMessage.commentsCount.invalidFormat })
-  // public commentsCount!: number;
 }

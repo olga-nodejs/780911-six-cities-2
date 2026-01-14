@@ -23,6 +23,7 @@ import {
   UserModel,
 } from '../../shared/modules/user/index.js';
 import { CommentModel } from '../../shared/modules/comment/comment.entity.js';
+import { CityData } from '../../shared/types/city.js';
 
 dotenv.config();
 
@@ -49,7 +50,11 @@ export class ImportCommand implements Command {
     this.dbClient = new MongoDbClient(this.logger);
     this.onImportedLine = this.onImportedLine.bind(this);
     this.onCompleteImport = this.onCompleteImport.bind(this);
-    this.userService = new DefaultUserService(this.logger, UserModel);
+    this.userService = new DefaultUserService(
+      this.logger,
+      UserModel,
+      OfferModel
+    );
     this.offerService = new DefaultOfferService(
       this.logger,
       OfferModel,
@@ -68,7 +73,9 @@ export class ImportCommand implements Command {
       const user = await this.findOrCreateUser(offerDTO.user);
       await this.createOffer({
         ...offerDTO,
+        rating: offerDTO.rating ?? 0,
         userId: user._id.toString(),
+        city: offerDTO.city as unknown as CityData,
       });
     })();
 

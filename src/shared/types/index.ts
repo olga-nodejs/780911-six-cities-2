@@ -1,4 +1,4 @@
-export * from './city.enum.js';
+export * from './city.js';
 export * from './component.enum.js';
 export * from './mockServerData.js';
 export * from './nodeEnv.js';

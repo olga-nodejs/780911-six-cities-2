@@ -60,6 +60,11 @@ export const fetchFavoriteOffers = createAsyncThunk<
   undefined,
   { extra: Extra }
 >(Action.FETCH_FAVORITE_OFFERS, async (_, { extra }) => {
+  const token = Token.get();
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+  }
+
   const { api } = extra;
   const { data } = await api.get<Offer[]>(ApiRoute.Favorite);
 
@@ -251,8 +256,12 @@ export const postFavorite = createAsyncThunk<
   const { api, history } = extra;
 
   try {
-    const { data } = await api.post<Offer>(`${ApiRoute.Favorite}/${id}`);
+    const token = Token.get();
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+    }
 
+    const { data } = await api.post(`/offers/${id}${ApiRoute.Favorite}`);
     return data;
   } catch (error) {
     const axiosError = error as AxiosError;

@@ -69,6 +69,7 @@ export type APIOfferResponse = APIBaseOfferDTO & {
   _id: string;
   previewImage: string;
   propertyPhotos: string[];
+  isFavorite?: boolean;
   user: {
     _id: string;
     name: string;

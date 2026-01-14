@@ -50,6 +50,7 @@ export class GenerateCommand implements Command {
       const offerAmount = Number.parseInt(amount, 10);
 
       await this.getData(url);
+
       await this.write(offerAmount, outputPath);
       console.info(`File ${outputPath} was created!`);
     } catch (error: unknown) {

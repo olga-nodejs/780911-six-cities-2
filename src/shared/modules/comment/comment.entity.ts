@@ -19,7 +19,7 @@ export class CommentEntity extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public text!: string;
 
-  @prop({ required: true })
+  @prop({ default: () => new Date() })
   public publicationDate!: Date;
 
   @prop({ required: true })
@@ -41,7 +41,9 @@ export class CommentEntity extends defaultClasses.TimeStamps {
     super();
     const { text, publicationDate, rating, userId, offerId } = commentData;
     this.text = text;
-    this.publicationDate = publicationDate;
+    this.publicationDate = publicationDate
+      ? new Date(publicationDate)
+      : new Date();
     this.rating = rating;
     this.userId = userId as unknown as Ref<UserEntity>;
     this.offerId = offerId as unknown as Ref<OfferEntity>;

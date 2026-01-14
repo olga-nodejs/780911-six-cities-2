@@ -16,7 +16,7 @@ import {
   HttpErrorExceptionFilter,
 } from '../shared/libs/rest/index.js';
 import { AuthExceptionFilter } from '../shared/modules/auth/index.js';
-import { STATIC_FILES_ROUTE, STATIC_UPLOAD_ROUTE } from './rest.constant.js';
+import { StaticRoutes } from './rest.constant.js';
 
 @injectable()
 export class RestApplication implements RestApplicationInterface {
@@ -73,11 +73,11 @@ export class RestApplication implements RestApplicationInterface {
 
     this.server.use(express.json());
     this.server.use(
-      STATIC_UPLOAD_ROUTE,
+      StaticRoutes.Upload,
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
     this.server.use(
-      STATIC_FILES_ROUTE,
+      StaticRoutes.StaticFiles,
       express.static(this.config.get('STATIC_DIRECTORY_PATH'))
     );
     this.server.use(

@@ -1,8 +1,6 @@
-export enum JWT_ALGORITHM {
-  HS256 = 'HS256',
-}
-export enum JWT_EXPIRED {
-  twoDays = '2d',
+export enum JWT_CONFIG {
+  AlgorithmHS256 = 'HS256',
+  ExpiresIn = '2d',
 }
 
 export enum AuthErrorMessage {

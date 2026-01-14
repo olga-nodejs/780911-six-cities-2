@@ -3,8 +3,7 @@ import * as crypto from 'node:crypto';
 import { SignJWT } from 'jose';
 import {
   AuthService,
-  JWT_ALGORITHM,
-  JWT_EXPIRED,
+  JWT_CONFIG,
   TokenPayload,
   UserNotFoundException,
   UserPasswordIncorrectException,
@@ -34,9 +33,9 @@ export class DefaultAuthService implements AuthService {
     this.logger.info(`Create token for ${user.email}`);
 
     return new SignJWT(tokenPayload)
-      .setProtectedHeader({ alg: JWT_ALGORITHM.HS256 })
+      .setProtectedHeader({ alg: JWT_CONFIG.AlgorithmHS256 })
       .setIssuedAt()
-      .setExpirationTime(JWT_EXPIRED.twoDays)
+      .setExpirationTime(JWT_CONFIG.ExpiresIn)
       .sign(secretKey);
   }
 
