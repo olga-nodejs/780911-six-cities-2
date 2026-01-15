@@ -1,6 +1,12 @@
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
+import { ObjectId } from 'mongoose';
 
+/* eslint-disable indent */
 export class FavoriteRDO {
+  @Expose()
+  @Transform((value) => value.obj._id.toString())
+  _id!: ObjectId;
+
   @Expose()
   public title!: string;
 
