@@ -12,12 +12,20 @@ export class ValidateImagesMiddleware implements Middleware {
   constructor(private rules: readonly ImageRule[]) {}
 
   execute(req: Request, _res: Response, next: NextFunction) {
-    const files = req.files as
+    const filesMap = req.files as
       | Record<string, Express.Multer.File[]>
       | undefined;
 
+    const singleFile = req.file;
+
     for (const rule of this.rules) {
-      const uploadedFiles = files?.[rule.name];
+      let uploadedFiles: Express.Multer.File[] | undefined;
+
+      if (rule.name && singleFile && rule.name === singleFile.fieldname) {
+        uploadedFiles = [singleFile];
+      } else {
+        uploadedFiles = filesMap?.[rule.name];
+      }
 
       if (rule.isRequired && (!uploadedFiles || uploadedFiles.length === 0)) {
         throw new HttpError(
