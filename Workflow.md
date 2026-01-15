@@ -339,3 +339,315 @@ module-name/
 - конкретные реализации подключаются в контейнерах
 
 - упрощает тестирование и замену реализаций
+
+## 🚀 Как запустить и использовать проект
+
+1. Установка зависимостей
+
+Из корневой папки проекта выполните:
+
+```
+npm install
+```
+
+2. Настройка переменных окружения
+
+Создайте файл .env в корне проекта и скопируйте в него содержимое из .env.local.example (или используйте существующий .env).
+
+3. Запуск MongoDB (через Docker)
+
+Из корневой папки выполните:
+
+```
+docker compose up -d
+```
+
+Вы должны увидеть логи успешного запуска контейнеров.
+
+Проверка:
+
+MongoDB: localhost:27017
+
+Mongo Express UI: http://localhost:8081
+
+При открытии Mongo Express будет запрошен логин и пароль.
+Они указаны в вашем .env файле:
+
+```
+ME_CONFIG_BASICAUTH_USERNAME
+ME_CONFIG_BASICAUTH_PASSWORD
+```
+
+❓❓Как остановить контейнеры
+
+```
+docker compose stop
+```
+
+4. Запуск backend-сервера (dev-режим)
+
+Из корневой папки выполните:
+
+```
+npm run start:dev
+```
+
+Если всё запущено корректно, вы увидите логи с:
+
+- Инициализацией контроллеров
+
+- Подключением к MongoDB
+
+- Запуском сервера
+
+В конце будет строка:
+
+```
+🚀 Server started on http://localhost:4000
+```
+
+Проверка
+
+Откройте:
+
+👉 http://localhost:4000/offers
+
+Вы получите пустой массив [], так как в базе пока нет данных.
+
+5. Запуск mock API сервера
+
+Mock API используется для генерации данных.
+
+Запуск:
+
+```
+npm run start:mock-api
+```
+
+Откройте:
+
+👉 http://localhost:8000/api
+
+Вы должны увидеть мок-данные.
+
+6. Генерация TSV-файла с мок-данными
+
+```
+npm run ts ./src/main.cli.ts -- --generate 10 ./mocks/mock-data.tsv http://localhost:8000
+
+```
+
+7. Импорт TSV-файла в MongoDB
+
+```
+npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test localhost 27017 six-cities a8f7d9e2b4c1f6g3
+```
+
+8. Проверка данных
+   Через API:
+
+```
+   curl http://localhost:4000/offers
+```
+
+Через Mongo Express
+
+Перейдите на:
+
+👉 http://localhost:8081
+
+Можно также использовать GUI tool MongoDB Compass
+
+9. Работа с API
+
+Теперь вы можете использовать REST API.
+
+Примеры запросов находятся в разделе ниже
+
+Рекомендуемый порядок:
+
+- Создайте пользователя (/register)
+
+- Войдите в систему (/login)
+
+- Сохраните accessToken
+
+- Используйте этот токен для Bearer Auth
+
+- Выполняйте CRUD-запросы
+
+- Используйте реальные ID из базы данных
+
+## Примеры использования API (cURL) [Сценарии](https://up.htmlacademy.ru/nodejs-api-individual/2/project/scripts) 
+
+- Создание нового предложения
+
+```
+curl --location 'http://localhost:4000/offers' \
+curl --location 'http://localhost:4000/offers' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY2OWZkMWU3ZDJiNzY3YzcyZGI3NDYiLCJpYXQiOjE3NjgzMzMyNzIsImV4cCI6MTc2ODUwNjA3Mn0.OKInqK52sUVxyKW5Qf679Fs8B_gJ2S6YG-7VoSjnIKc' \
+--data '{
+  "title": "test upload images before final check",
+  "description": "test RDO offer test RDO offer test RDO offer",
+  "publicationDate": "2025-12-11T00:00:00.000Z",
+  "city": {
+    "name": "Paris",
+    "location": {
+      "latitude": 48.85661,
+      "longitude": 2.351499
+    }
+  },
+  "previewImage": "https://picsum.photos/id/1025/300/200",
+  "propertyPhotos": [
+    "https://picsum.photos/id/1/300/200",
+    "https://picsum.photos/id/2/300/200",
+    "https://picsum.photos/id/3/300/200",
+    "https://picsum.photos/id/4/300/200",
+    "https://picsum.photos/id/5/300/200",
+    "https://picsum.photos/id/6/300/200"
+    ],
+  "premiumFlag": true,
+  "rating": 1,
+  "propertyType": "house",
+  "roomsNumber": 3,
+  "guestsNumber": 4,
+  "rentalCost": 120,
+  "features": ["Breakfast", "Washer"],
+  "coordinates": [52.3702, 4.8952]
+}
+'
+```
+
+- Редактирование предложения
+
+```
+curl --location --request PATCH 'http://localhost:4000/offers/6965ffbdd6630e59d473e92c' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA' \
+--data '{
+"title": "here is new updated title",
+"description": "The description is also new, I test update offer feature",
+"city": "Paris",
+"previewImage": "https://picsum.photos/id/1025/300/200",
+"propertyPhotos": [
+"https://picsum.photos/id/1/300/200",
+"https://picsum.photos/id/2/300/200",
+"https://picsum.photos/id/3/300/200",
+"https://picsum.photos/id/4/300/200",
+"https://picsum.photos/id/5/300/200",
+"https://picsum.photos/id/6/300/200"
+],
+"premiumFlag": true,
+"rating": 1,
+"propertyType": "house",
+"roomsNumber": 3,
+"guestsNumber": 4,
+"rentalCost": 120,
+"features": ["Breakfast", "Washer"],
+"coordinates": [52.3702, 4.8952]
+}
+'
+```
+
+- Удаление предложения
+
+```
+curl --location --request DELETE 'http://localhost:4000/offers/69660927bffaa1663d602a60' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA'
+```
+
+- Получение списка предложений по аренде
+
+```
+curl --location 'http://localhost:4000/offers'
+```
+
+- Получение детальной информации о предложении
+
+```
+curl --location 'http://localhost:4000/offers/6959849afb2409fe2e0da21a'
+```
+
+- Получение списка комментариев для предложения
+
+```
+curl --location 'http://localhost:4000/offers/69610404dee4835074d6dc8b/comments'
+```
+
+- Добавление комментария для предложения
+
+```
+curl --location 'http://localhost:4000/offers/69610404dee4835074d6dc8b/comments' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA' \
+--data '{
+"text": "test RDO!",
+"rating": 4,
+"publicationDate": "2025-12-12T00:00:00.000Z",
+"offerId": "693159fb87987631da7e5a9e"
+}'
+```
+
+- Создание нового пользователя
+
+```
+curl --location 'http://localhost:4000/register' \
+--form 'email="joel@gmail.com"' \
+--form 'name="Joel"' \
+--form 'userType="starter"' \
+--form 'avatar=@"postman-cloud:///1f0e04b2-db98-4f70-aec0-ad179b8c3d84"' \
+--form 'password="qwerty1"'
+
+```
+
+- Вход в закрытую часть приложения
+
+```
+curl --location 'http://localhost:4000/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "email": "joel@gmail.com",
+  "password": "qwerty1"
+}'
+```
+
+- Выход из закрытой части приложения
+
+```
+curl --location --request POST 'http://localhost:4000/logout' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA' \
+--data ''
+```
+
+- Проверка состояния пользователя.
+
+```
+curl --location 'http://localhost:4000/check-auth' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA'
+```
+
+- Получение списка премиальных предложений для города.
+
+```
+curl --location 'http://localhost:4000/offers/premium?city=Paris&limit=10'
+```
+
+- Получения списка предложений, добавленных в избранное.
+
+```
+curl --location 'http://localhost:4000/users/6965fc0cd6630e59d473e8f2/favorites' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAcmVha3Rvci5jb20iLCJpZCI6IjY5NjBmMjIwOTc3OGIzNzZlOTdkYjA3NCIsImlhdCI6MTc2ODIyNTI5MSwiZXhwIjoxNzY4Mzk4MDkxfQ.JX9VJ9S6LkeJf49tRweGf-0w2SFRUhaEur9Uw_G7CRA'
+```
+
+- Добавление/удаление предложения в/из избранное.
+
+```
+curl --location --request POST 'http://localhost:4000/offers/696103c4dee4835074d6dc6b/favorites' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA'
+```
+
+```
+curl --location --request DELETE 'http://localhost:4000/offers/695977728ae3ecead9be144c/favorites' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA'
+```
