@@ -292,10 +292,10 @@ paths:
         '401':
           description: Email или password не верны.
 
-  /users/{userId}/avatar:
-    parameters:
-      - $ref: '#/components/parameters/userId'
+  /avatar:
     post:
+      security:
+        - bearerAuth: []
       tags:
         - users
       summary: Загрузить изображение аватара

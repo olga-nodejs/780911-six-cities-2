@@ -629,6 +629,14 @@ curl --location 'http://localhost:4000/check-auth' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY1ZmMwY2Q2NjMwZTU5ZDQ3M2U4ZjIiLCJpYXQiOjE3NjgyOTE0ODcsImV4cCI6MTc2ODQ2NDI4N30.-htxduxYOSeVoBhH4thcw0iBXzGccSEvzmoe-PR-mQA'
 ```
 
+- Загрузка аватара
+
+```
+curl --location 'http://localhost:4000/avatar' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY4Y2JjNGViY2IzN2U1MTMzOTYxNDAiLCJpYXQiOjE3Njg0ODUwMDgsImV4cCI6MTc2ODY1NzgwOH0.kIhBnuupJ7lIQ-dXAAU2sg2A9xzt5Xo6WlXz1nlnzJM' \
+--form 'avatar=@"postman-cloud:///1f0e04b2-dc41-46c0-8f28-d5947cefc4f5"'
+```
+
 - Получение списка премиальных предложений для города.
 
 ```

@@ -7,7 +7,6 @@ import {
   HttpMethod,
   UploadFileMiddleware,
   ValidateDTOMiddleware,
-  ValidateObjectIdMiddleware,
   PrivateRouteMiddleware,
   AuthorizationErrorMessage,
   ValidateImagesMiddleware,
@@ -80,12 +79,11 @@ export class UserController extends BaseController {
     });
 
     this.addRoute({
-      path: '/users/:userId/avatar',
+      path: '/avatar',
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
         new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('userId'),
         new UploadFileMiddleware(
           this.configService.get('UPLOAD_DIRECTORY'),
           'avatar'
@@ -171,7 +169,7 @@ export class UserController extends BaseController {
 
   public async getFavorites(req: Request, res: Response) {
     const { tokenPayload } = req;
-    console.log({ tokenPayload });
+
     const { id } = tokenPayload;
     const favorites = await this.userService.getFavorites({ userId: id });
 
