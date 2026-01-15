@@ -638,8 +638,8 @@ curl --location 'http://localhost:4000/offers/premium?city=Paris&limit=10'
 - Получения списка предложений, добавленных в избранное.
 
 ```
-curl --location 'http://localhost:4000/users/6965fc0cd6630e59d473e8f2/favorites' \
---header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3RAcmVha3Rvci5jb20iLCJpZCI6IjY5NjBmMjIwOTc3OGIzNzZlOTdkYjA3NCIsImlhdCI6MTc2ODIyNTI5MSwiZXhwIjoxNzY4Mzk4MDkxfQ.JX9VJ9S6LkeJf49tRweGf-0w2SFRUhaEur9Uw_G7CRA'
+curl --location 'http://localhost:4000/favorites' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImpvZWxAZ21haWwuY29tIiwiaWQiOiI2OTY4Y2JjNGViY2IzN2U1MTMzOTYxNDAiLCJpYXQiOjE3Njg0NzU1OTUsImV4cCI6MTc2ODY0ODM5NX0.YbkX3mS-uzsNqMWOnqi_Pl0s-sOk_MrxpicWJ3Xu9ck'
 ```
 
 - Добавление/удаление предложения в/из избранное.

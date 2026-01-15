@@ -97,13 +97,10 @@ export class UserController extends BaseController {
     });
 
     this.addRoute({
-      path: '/users/:userId/favorites',
+      path: '/favorites',
       method: HttpMethod.Get,
       handler: this.getFavorites,
-      middlewares: [
-        new PrivateRouteMiddleware(),
-        new ValidateObjectIdMiddleware('userId'),
-      ],
+      middlewares: [new PrivateRouteMiddleware()],
     });
   }
 
@@ -174,6 +171,7 @@ export class UserController extends BaseController {
 
   public async getFavorites(req: Request, res: Response) {
     const { tokenPayload } = req;
+    console.log({ tokenPayload });
     const { id } = tokenPayload;
     const favorites = await this.userService.getFavorites({ userId: id });
 
