@@ -21,14 +21,9 @@ export class OfferRDO {
   @Expose()
   @Transform(({ obj }) => {
     const { name, location } = obj.city;
-    // const { latitude, longitude } = location;
     return {
       name,
       location,
-      // location: {
-      //   latitude,
-      //   longitude,
-      // },
     };
   })
   public city!: CityData;

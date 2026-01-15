@@ -92,7 +92,7 @@ const createDBMockCity = (values: string[]): MockCityData => {
     },
   };
 };
-// TODO: uncomment city to use new city type with coordinates
+
 export function createMockOffer(line: string): MockOffer {
   const values = line.trimEnd().split('\t');
   const [
