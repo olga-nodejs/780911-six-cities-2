@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { ValidationError } from 'class-validator';
 
-import { Logger } from '../libs/logger/index.js';
+import { Logger } from '../libs/logger-temp/index.js';
 
 import {
   MockOffer,

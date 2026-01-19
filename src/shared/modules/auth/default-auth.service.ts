@@ -9,7 +9,7 @@ import {
   UserPasswordIncorrectException,
 } from './index.js';
 import { Component } from '../../types/index.js';
-import { Logger } from '../../libs/logger/index.js';
+import { Logger } from '../../libs/logger-temp/index.js';
 import { LoginUserDTO, UserEntity, UserService } from '../user/index.js';
 import { Config, RestSchema } from '../../libs/config/index.js';
 

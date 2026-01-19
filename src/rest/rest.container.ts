@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 import dotenv from 'dotenv';
-import { Logger, PinoLogger } from '../shared/libs/logger/index.js';
+import { Logger, PinoLogger } from '../shared/libs/logger-temp/index.js';
 import { RestApplication } from './index.js';
 import { RestConfig, RestSchema, Config } from '../shared/libs/config/index.js';
 import { NodeEnv, Component } from '../shared/types/index.js';

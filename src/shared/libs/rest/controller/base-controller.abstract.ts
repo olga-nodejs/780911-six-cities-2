@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import { Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import asyncHandler from 'express-async-handler';
-import { Logger } from '../../logger/index.js';
+import { Logger } from '../../logger-temp/index.js';
 import { Controller } from './controller.interface.js';
 import { Route } from '../types/index.js';
 import { Component } from '../../../types/index.js';

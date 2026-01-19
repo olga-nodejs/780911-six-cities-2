@@ -1,7 +1,7 @@
 import { injectable, inject } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
 
-import { Logger } from '../../libs/logger/index.js';
+import { Logger } from '../../libs/logger-temp/index.js';
 
 import {
   Component,

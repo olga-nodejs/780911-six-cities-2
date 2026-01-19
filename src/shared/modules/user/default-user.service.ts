@@ -5,7 +5,7 @@ import { CreateUserDTO } from './dto/create-user.dto.js';
 import { UserService } from './user-service.interface.js';
 import { UserEntity } from './user.entity.js';
 import { Component, DocumentExists } from '../../types/index.js';
-import { Logger } from '../../libs/logger/index.js';
+import { Logger } from '../../libs/logger-temp/index.js';
 import { OfferEntity } from '../offer/offer.entity.js';
 
 @injectable()

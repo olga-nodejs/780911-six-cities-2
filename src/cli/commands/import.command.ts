@@ -8,7 +8,7 @@ import {
   requireArgs,
   createMockOffer,
 } from '../../shared/helpers/index.js';
-import { Logger } from '../../shared/libs/logger/index.js';
+import { Logger } from '../../shared/libs/logger-temp/index.js';
 import { DBClient, MongoDbClient } from '../../shared/libs/db-client/index.js';
 import {
   CreateOfferDTO,
