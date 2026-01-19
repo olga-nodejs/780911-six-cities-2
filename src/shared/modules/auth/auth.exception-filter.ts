@@ -7,7 +7,7 @@ import {
   HttpError,
 } from '../../libs/rest/index.js';
 import { Component } from '../../types/component.enum.js';
-import { Logger } from '../../libs/logger-temp/index.js';
+import { Logger } from '../../libs/logger/index.js';
 import { BaseUserException } from './errors/base-user.exception.js';
 import { createErrorObject } from '../../helpers/common.js';
 

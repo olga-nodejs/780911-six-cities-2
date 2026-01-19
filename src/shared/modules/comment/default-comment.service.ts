@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import { DocumentType, types } from '@typegoose/typegoose';
 import { Types } from 'mongoose';
 
-import { Logger } from '../../libs/logger-temp/index.js';
+import { Logger } from '../../libs/logger/index.js';
 
 import { Component } from '../../types/component.enum.js';
 import { CommentService } from './comment-service.interface.js';

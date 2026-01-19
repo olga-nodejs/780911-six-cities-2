@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 
 import { CityKey, Component } from '../../types/index.js';
-import { Logger } from '../../libs/logger-temp/index.js';
+import { Logger } from '../../libs/logger/index.js';
 import {
   OfferService,
   OfferCount,

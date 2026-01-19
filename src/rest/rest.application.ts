@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { inject, injectable } from 'inversify';
 import cors from 'cors';
 import { RestApplicationInterface } from './rest.interface.js';
-import { type Logger } from '../shared/libs/logger-temp/index.js';
+import { type Logger } from '../shared/libs/logger/index.js';
 import { Component } from '../shared/types/index.js';
 import { RestSchema, Config } from '../shared/libs/config/index.js';
 import { getFullServerPath, getMongoURI } from '../shared/helpers/common.js';

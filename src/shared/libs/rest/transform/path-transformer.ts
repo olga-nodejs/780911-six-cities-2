@@ -2,7 +2,7 @@
 
 import { inject, injectable } from 'inversify';
 import { Component } from '../../../types/index.js';
-import { Logger } from '../../logger-temp/index.js';
+import { Logger } from '../../logger/index.js';
 import { Config, RestSchema } from '../../config/index.js';
 import { getFullServerPath, isPlainObject } from '../../../helpers/common.js';
 import {
